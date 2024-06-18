@@ -2,9 +2,9 @@ package com.rebeyka.acapi.entities;
 
 public abstract class Actionable {
 
-	private Script parent;
+	private Play parent;
 
-	public Actionable(Script parent) {
+	public Actionable(Play parent) {
 		this.parent = parent;
 	}
 
@@ -12,7 +12,7 @@ public abstract class Actionable {
 
 	public abstract void rollback();
 
-	public Script getParent() {
+	public Play getParent() {
 		return parent;
 	}
 

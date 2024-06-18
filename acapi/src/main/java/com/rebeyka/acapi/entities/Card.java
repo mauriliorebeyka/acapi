@@ -8,6 +8,6 @@ public class Card {
 
 	private List<Attribute<?>> attributes;
 
-	private List<Cost> costs;
+	private List<Play> scripts;
 
 }
