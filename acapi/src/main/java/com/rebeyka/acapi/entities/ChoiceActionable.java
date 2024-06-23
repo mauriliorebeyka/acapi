@@ -10,10 +10,6 @@ public abstract class ChoiceActionable extends Actionable {
 
 	private boolean set;
 
-	public ChoiceActionable(Play parent) {
-		super(parent);
-	}
-
 	public List<Actionable> getChoices() {
 		return choices;
 	}

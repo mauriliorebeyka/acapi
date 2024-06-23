@@ -4,8 +4,9 @@ public abstract class Actionable {
 
 	private Play parent;
 
-	public Actionable(Play parent) {
-		this.parent = parent;
+	private Playable playable;
+
+	public Actionable() {
 	}
 
 	public abstract void execute();
@@ -16,4 +17,15 @@ public abstract class Actionable {
 		return parent;
 	}
 
+	public void setParent(Play parent) {
+		this.parent = parent;
+	}
+
+	public Playable getPlayable() {
+		return playable;
+	}
+
+	public void setPlayable(Playable target) {
+		this.playable = target;
+	}
 }

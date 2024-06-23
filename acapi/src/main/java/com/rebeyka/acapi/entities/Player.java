@@ -1,10 +1,28 @@
 package com.rebeyka.acapi.entities;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Player {
+public class Player extends Playable {
 
-	private List<Deck> decks;
+	private Map<String, Deck> decks;
 
 	private boolean automatic;
+
+	public Player() {
+		this.decks = new HashMap<>();
+	}
+
+	public Map<String, Deck> getDecks() {
+		return decks;
+	}
+
+	public boolean isAutomatic() {
+		return automatic;
+	}
+
+	public void setAutomatic(boolean automatic) {
+		this.automatic = automatic;
+	}
+
 }

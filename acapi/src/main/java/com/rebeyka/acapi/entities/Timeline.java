@@ -17,6 +17,13 @@ public class Timeline {
 		currentPosition = 0;
 	}
 
+	public Actionable getCurrent() {
+		if (currentPosition == 0 || currentPosition == actionables.size()) {
+			return null;
+		}
+		return actionables.get(currentPosition);
+	}
+
 	public void queue(Play script) {
 		if (script.getCost() != null) {
 			actionables.add(script.getCost().generateActionable());
@@ -62,9 +69,9 @@ public class Timeline {
 		actionable.execute();
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
-			actionables.addAll(currentPosition, game.getTriggeringActionables(actionables.get(currentPosition)));
+			actionables.addAll(currentPosition, game.getFutureTriggerActionables(actionables.get(currentPosition)));
 		}
-		actionables.addAll(currentPosition, game.getTriggeredActionables(actionable));
+		actionables.addAll(currentPosition, game.getPastTriggerActionablesActionables(actionable));
 	}
 
 	public void cancelCurrentPlay() {

@@ -210,8 +210,8 @@ public class TimelineTest {
 
 		timeline.queue(play1);
 		timeline.executeNext();
-		verify(game).getTriggeredActionables(mockActionable1);
-		verify(game).getTriggeringActionables(mockActionable2);
+		verify(game).getPastTriggerActionablesActionables(mockActionable1);
+		verify(game).getFutureTriggerActionables(mockActionable2);
 		verifyNoMoreInteractions(game);
 	}
 }

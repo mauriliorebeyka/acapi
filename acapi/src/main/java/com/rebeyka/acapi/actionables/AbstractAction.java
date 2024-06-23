@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.actions;
+package com.rebeyka.acapi.actionables;
 
 public abstract class AbstractAction {
 

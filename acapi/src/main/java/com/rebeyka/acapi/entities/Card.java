@@ -1,13 +1,18 @@
 package com.rebeyka.acapi.entities;
 
-import java.util.List;
-
-public class Card {
+public class Card extends Playable {
 
 	private String name;
 
-	private List<Attribute<?>> attributes;
+	public Card() {
+	}
 
-	private List<Play> scripts;
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 }
