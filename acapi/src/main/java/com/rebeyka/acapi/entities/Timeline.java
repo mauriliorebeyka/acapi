@@ -25,9 +25,7 @@ public class Timeline {
 	}
 
 	public void queue(Play script) {
-		if (script.getCost() != null) {
-			actionables.add(script.getCost().generateActionable());
-		}
+		actionables.add(script.getCost().generateActionable());
 		actionables.addAll(actionables.size(), script.getActionables());
 	}
 

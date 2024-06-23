@@ -5,9 +5,7 @@ import java.util.function.Predicate;
 
 public class Play {
 
-	private Card origin;
-
-	private Player owner;
+	private Playable origin;
 
 	private Cost cost;
 
@@ -15,29 +13,22 @@ public class Play {
 
 	private List<Actionable> actionables;
 
-	public Play(Card origin, Player owner, List<Actionable> actionables) {
+	public Play(Playable origin, Cost cost, List<Actionable> actionables) {
 		this.origin = origin;
-		this.owner = owner;
+		this.cost = cost;
 		this.actionables = actionables;
 		this.condition = i -> true;
 
 		this.actionables.stream().forEach(a -> a.setParent(this));
+		this.cost.generateActionable().setParent(this);
 	}
 
-	public Card getOrigin() {
+	public Playable getOrigin() {
 		return origin;
 	}
 
-	public void setOrigin(Card origin) {
+	public void setOrigin(Playable origin) {
 		this.origin = origin;
-	}
-
-	public Player getOwner() {
-		return owner;
-	}
-
-	public void setOwner(Player owner) {
-		this.owner = owner;
 	}
 
 	public Cost getCost() {

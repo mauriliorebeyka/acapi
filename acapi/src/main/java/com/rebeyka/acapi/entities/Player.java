@@ -17,6 +17,10 @@ public class Player extends Playable {
 		return decks;
 	}
 
+	public Deck getDeck(String name) {
+		return decks.get(name);
+	}
+
 	public boolean isAutomatic() {
 		return automatic;
 	}

@@ -28,7 +28,10 @@ public class Trigger {
 	}
 
 	public boolean test(Playable test) {
-		System.out.println("Testing trigger against %s".formatted(test.getAttribute("value").getValue()));
+		if (test == null) {
+			return false;
+		}
+		System.out.println("Testing trigger against %s".formatted(test));
 		if (condition.test(test)) {
 			playable = test;
 			return true;

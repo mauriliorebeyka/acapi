@@ -17,8 +17,8 @@ public class Game {
 
 	private List<Trigger> futureTriggers;
 
-	public Game(List<Player> players) {
-		this.players = players;
+	public Game() {
+		this.players = new ArrayList<>();
 		this.decks = new HashMap<>();
 		timeline = new Timeline(this);
 		pastTriggers = new ArrayList<>();
