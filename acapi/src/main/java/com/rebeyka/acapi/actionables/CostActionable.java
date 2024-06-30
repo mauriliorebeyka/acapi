@@ -1,10 +1,13 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.actionables;
+
+import com.rebeyka.acapi.entities.Cost;
 
 public abstract class CostActionable extends ChoiceActionable {
 
 	private Cost cost;
 
-	public CostActionable(Cost cost) {
+	public CostActionable(String actionableId, Cost cost) {
+		super(actionableId);
 		this.cost = cost;
 	}
 

@@ -1,5 +1,8 @@
 package com.rebeyka.acapi.entities;
 
+import com.rebeyka.acapi.actionables.CostActionable;
+import com.rebeyka.acapi.actionables.FreeCostActionable;
+
 public class FreeCost extends Cost {
 
 	private CostActionable actionable;

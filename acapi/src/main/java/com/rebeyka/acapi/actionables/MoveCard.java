@@ -2,7 +2,6 @@ package com.rebeyka.acapi.actionables;
 
 import java.util.function.Supplier;
 
-import com.rebeyka.acapi.entities.Actionable;
 import com.rebeyka.acapi.entities.Card;
 import com.rebeyka.acapi.entities.Deck;
 
@@ -12,7 +11,8 @@ public class MoveCard extends Actionable {
 
 	private Supplier<Deck> targetDeck;
 
-	public MoveCard(Supplier<Deck> origin, Supplier<Deck> target) {
+	public MoveCard(String actionableId, Supplier<Deck> origin, Supplier<Deck> target) {
+		super(actionableId);
 		this.originDeck = origin;
 		this.targetDeck = target;
 	}

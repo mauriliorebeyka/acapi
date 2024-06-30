@@ -1,9 +1,11 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.actionables;
+
+import com.rebeyka.acapi.entities.FreeCost;
 
 public class FreeCostActionable extends CostActionable {
 
 	public FreeCostActionable(FreeCost cost) {
-		super(cost);
+		super("Free Cost", cost);
 		set(true);
 	}
 

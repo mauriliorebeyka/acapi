@@ -1,17 +1,27 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.actionables;
+
+import com.rebeyka.acapi.entities.Play;
+import com.rebeyka.acapi.entities.Playable;
 
 public abstract class Actionable {
+
+	private String actionableId;
 
 	private Play parent;
 
 	private Playable playable;
 
-	public Actionable() {
+	public Actionable(String actionableId) {
+		this.actionableId = actionableId;
 	}
 
 	public abstract void execute();
 
 	public abstract void rollback();
+
+	public String getActionableId() {
+		return actionableId;
+	}
 
 	public Play getParent() {
 		return parent;

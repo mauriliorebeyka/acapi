@@ -1,6 +1,6 @@
 package com.rebeyka.acapi.entities;
 
-public class Attribute<T> {
+public class Attribute<T extends Comparable<? super T>> implements Comparable<Attribute<T>> {
 
 	private String name;
 
@@ -27,4 +27,8 @@ public class Attribute<T> {
 		this.value = value;
 	}
 
+	@Override
+	public int compareTo(Attribute<T> o) {
+		return this.getValue().compareTo(o.getValue());
+	}
 }

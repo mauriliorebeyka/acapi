@@ -2,7 +2,11 @@ package com.rebeyka.acapi.entities;
 
 import java.util.function.Predicate;
 
+import com.rebeyka.acapi.actionables.Actionable;
+
 public class Trigger {
+
+	private String actionableId;
 
 	private Predicate<Playable> condition;
 
@@ -13,6 +17,10 @@ public class Trigger {
 	public Trigger(Predicate<Playable> condition, Actionable trigger) {
 		this.condition = condition;
 		this.actionable = trigger;
+	}
+
+	public Trigger(Predicate<Playable> condition) {
+		this(condition, null);
 	}
 
 	public Trigger(Actionable trigger) {
@@ -27,7 +35,8 @@ public class Trigger {
 		this.condition = condition;
 	}
 
-	public boolean test(Playable test) {
+	public boolean test(Actionable actionable) {
+		Playable test = actionable.getPlayable();
 		if (test == null) {
 			return false;
 		}

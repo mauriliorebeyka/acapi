@@ -1,7 +1,13 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.entities.gameflow;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.actionables.ChoiceActionable;
+import com.rebeyka.acapi.actionables.CostActionable;
+import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.Play;
 
 public class Timeline {
 

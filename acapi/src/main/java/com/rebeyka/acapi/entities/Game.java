@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.entities.gameflow.InactivePlayerOrder;
+import com.rebeyka.acapi.entities.gameflow.PlayerOrder;
+import com.rebeyka.acapi.entities.gameflow.Timeline;
+
 public class Game {
 
 	private List<Player> players;
@@ -17,12 +22,15 @@ public class Game {
 
 	private List<Trigger> futureTriggers;
 
-	public Game() {
-		this.players = new ArrayList<>();
+	private PlayerOrder playerOrder;
+
+	public Game(List<Player> players) {
+		this.players = players;
 		this.decks = new HashMap<>();
 		timeline = new Timeline(this);
 		pastTriggers = new ArrayList<>();
 		futureTriggers = new ArrayList<>();
+		playerOrder = new InactivePlayerOrder(this, players);
 	}
 
 	public void deplarePlay(Player player, Play play) {
@@ -49,8 +57,9 @@ public class Game {
 		return players;
 	}
 
-	public void setPlayers(List<Player> players) {
-		this.players = players;
+	public Attribute<?> getModifiedPlayerAttribute(Player player, String attributeName) {
+		// TODO Implement modifiers
+		return player.getAttribute(attributeName);
 	}
 
 	public Deck getDeck(String name) {
@@ -74,7 +83,7 @@ public class Game {
 	}
 
 	public List<Actionable> getPastTriggerActionablesActionables(Actionable actionable) {
-		return pastTriggers.stream().filter(t -> t.test(actionable.getPlayable())).map(t -> t.getActionable()).toList();
+		return pastTriggers.stream().filter(t -> t.test(actionable)).map(t -> t.getActionable()).toList();
 	}
 
 	public void registerFutureTrigger(Trigger trigger) {
@@ -86,7 +95,6 @@ public class Game {
 	}
 
 	public List<Actionable> getFutureTriggerActionables(Actionable actionable) {
-		return futureTriggers.stream().filter(t -> t.test(actionable.getPlayable())).map(t -> t.getActionable())
-				.toList();
+		return futureTriggers.stream().filter(t -> t.test(actionable)).map(t -> t.getActionable()).toList();
 	}
 }

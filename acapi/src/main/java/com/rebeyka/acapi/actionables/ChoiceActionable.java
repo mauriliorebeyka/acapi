@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.actionables;
 
 import java.util.List;
 
@@ -9,6 +9,10 @@ public abstract class ChoiceActionable extends Actionable {
 	private List<Actionable> chosen;
 
 	private boolean set;
+
+	public ChoiceActionable(String actionableId) {
+		super(actionableId);
+	}
 
 	public List<Actionable> getChoices() {
 		return choices;

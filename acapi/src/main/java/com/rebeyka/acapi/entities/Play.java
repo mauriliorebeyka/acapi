@@ -3,6 +3,8 @@ package com.rebeyka.acapi.entities;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.rebeyka.acapi.actionables.Actionable;
+
 public class Play {
 
 	private Playable origin;
