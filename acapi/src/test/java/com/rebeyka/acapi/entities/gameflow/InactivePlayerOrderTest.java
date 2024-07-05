@@ -21,6 +21,6 @@ public class InactivePlayerOrderTest {
 		assertThat(playerOrder.getPlayersInOrder()).isEqualTo(players);
 		assertThat(playerOrder.getFirstPlayer()).isEqualTo(players.get(0));
 		assertThat(playerOrder.getCurrentPlayer()).isNull();
-		assertThat(playerOrder.endTurn()).isFalse();
+		assertThat(playerOrder.endTurn()).isTrue();
 	}
 }

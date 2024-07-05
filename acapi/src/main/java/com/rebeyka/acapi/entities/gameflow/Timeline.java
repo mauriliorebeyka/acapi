@@ -3,6 +3,9 @@ package com.rebeyka.acapi.entities.gameflow;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.ChoiceActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
@@ -10,6 +13,8 @@ import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
 
 public class Timeline {
+
+	private static final Logger LOG = LogManager.getLogger();
 
 	private List<Actionable> actionables;
 
@@ -30,13 +35,10 @@ public class Timeline {
 		return actionables.get(currentPosition);
 	}
 
-	public void queue(Play script) {
-		actionables.add(script.getCost().generateActionable());
-		actionables.addAll(actionables.size(), script.getActionables());
-	}
-
-	public void queueNext(Play script) {
-		actionables.addAll(currentPosition, script.getActionables());
+	public void queue(Play play) {
+		LOG.info("Declaring play {} from {}", play.getId(), play.getOrigin());
+		actionables.add(play.getCost().generateActionable());
+		actionables.addAll(actionables.size(), play.getActionables());
 	}
 
 	public void executeNext() {
@@ -71,6 +73,7 @@ public class Timeline {
 	private void execute() {
 		Actionable actionable = actionables.get(currentPosition);
 		actionable.execute();
+		LOG.info(actionable.getMessage());
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
 			actionables.addAll(currentPosition, game.getFutureTriggerActionables(actionables.get(currentPosition)));

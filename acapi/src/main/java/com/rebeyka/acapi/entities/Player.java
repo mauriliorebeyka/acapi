@@ -29,4 +29,11 @@ public class Player extends Playable {
 		this.automatic = automatic;
 	}
 
+	@Override
+	public String toString() {
+		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
+			return value;
+		}
+		return "unamed player";
+	}
 }

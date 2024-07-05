@@ -14,8 +14,6 @@ import org.mockito.Mock;
 
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.gameflow.PlayerOrder;
-import com.rebeyka.acapi.entities.gameflow.RoundRobinPlayerOrder;
 
 public class RoundRobinPlayerOrderTest {
 
@@ -97,8 +95,7 @@ public class RoundRobinPlayerOrderTest {
 			randomPlayers.add(mock(Player.class));
 		}
 
-		playerOrder = new RoundRobinPlayerOrder(game, randomPlayers, true,
-				PlayerOrder.FirstPlayerPolicy.RANDOM);
+		playerOrder = new RoundRobinPlayerOrder(game, randomPlayers, true, PlayerOrder.FirstPlayerPolicy.RANDOM);
 		playerOrder.newRound();
 		assertThat(playerOrder.getCurrentPlayer()).isNotEqualTo(randomPlayers.get(0));
 		assertThat(playerOrder.getPlayersInOrder()).containsAll(randomPlayers).hasSize(1000);

@@ -38,9 +38,9 @@ public class PredefinedPlayerOrderTest {
 	public void setup() {
 		openMocks(this);
 
-		doReturn(new SimpleIntegerAttribute("VP", 10)).when(game).getModifiedPlayerAttribute(player1, "VP");
-		doReturn(new SimpleIntegerAttribute("VP", 20)).when(game).getModifiedPlayerAttribute(player2, "VP");
-		doReturn(new SimpleIntegerAttribute("VP", 5)).when(game).getModifiedPlayerAttribute(player3, "VP");
+		doReturn(new SimpleIntegerAttribute(10)).when(game).getModifiedPlayerAttribute(player1, "VP");
+		doReturn(new SimpleIntegerAttribute(20)).when(game).getModifiedPlayerAttribute(player2, "VP");
+		doReturn(new SimpleIntegerAttribute(5)).when(game).getModifiedPlayerAttribute(player3, "VP");
 		players = Arrays.asList(player1, player2, player3);
 	}
 

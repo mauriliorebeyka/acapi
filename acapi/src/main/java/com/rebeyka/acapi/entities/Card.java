@@ -2,17 +2,15 @@ package com.rebeyka.acapi.entities;
 
 public class Card extends Playable {
 
-	private String name;
-
 	public Card() {
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	@Override
+	public String toString() {
+		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
+			return value;
+		}
+		return "unamed card";
 	}
 
 }

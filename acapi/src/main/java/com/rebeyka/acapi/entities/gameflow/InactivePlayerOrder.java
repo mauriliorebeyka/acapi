@@ -28,7 +28,7 @@ public class InactivePlayerOrder extends PlayerOrder {
 
 	@Override
 	public boolean endTurn() {
-		return false;
+		return true;
 	}
 
 }

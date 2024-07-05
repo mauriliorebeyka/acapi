@@ -21,4 +21,8 @@ public class FreeCostActionable extends CostActionable {
 
 	}
 
+	@Override
+	public String getMessage() {
+		return "Free cost";
+	}
 }

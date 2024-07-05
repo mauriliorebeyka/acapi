@@ -4,13 +4,13 @@ public class SimpleIntegerAttribute extends Attribute<Integer> {
 
 	private int maxValue;
 
-	public SimpleIntegerAttribute(String name, int value, int maxValue) {
-		super(name, value);
+	public SimpleIntegerAttribute(int value, int maxValue) {
+		super(value);
 		this.maxValue = maxValue;
 	}
 
-	public SimpleIntegerAttribute(String name, int value) {
-		this(name, value, value);
+	public SimpleIntegerAttribute(int value) {
+		this(value, value);
 	}
 
 	public int getMaxValue() {

@@ -70,6 +70,14 @@ public class Game {
 		return decks;
 	}
 
+	public PlayerOrder getPlayerOrder() {
+		return playerOrder;
+	}
+
+	public void setPlayerOrder(PlayerOrder playerOrder) {
+		this.playerOrder = playerOrder;
+	}
+
 	public void executeNext() {
 		timeline.executeNext();
 	}

@@ -20,8 +20,6 @@ public class MoveCard extends Actionable {
 	@Override
 	public void execute() {
 		Card card = originDeck.get().draw();
-		System.out.println("moving %s from %s to %s".formatted(card.getAttribute("value").getValue(), originDeck.get(),
-				targetDeck.get()));
 		setPlayable(card);
 		targetDeck.get().add(card);
 	}
@@ -31,4 +29,8 @@ public class MoveCard extends Actionable {
 		originDeck.get().add(targetDeck.get().getCards().get(targetDeck.get().getCards().size() - 1));
 	}
 
+	@Override
+	public String getMessage() {
+		return "moving %s from %s to %s".formatted(getPlayable(), originDeck.get(), targetDeck.get());
+	}
 }

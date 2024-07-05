@@ -19,6 +19,8 @@ public abstract class Actionable {
 
 	public abstract void rollback();
 
+	public abstract String getMessage();
+
 	public String getActionableId() {
 		return actionableId;
 	}
