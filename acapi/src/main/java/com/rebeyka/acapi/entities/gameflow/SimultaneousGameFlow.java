@@ -4,22 +4,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 
-public class SimultenousPlayerOrder extends PlayerOrder {
+public class SimultaneousGameFlow extends GameFlow {
 
 	private boolean[] endedTurnPlayers;
 
-	public SimultenousPlayerOrder(Game game, List<Player> players, boolean staggerNewRound,
-			FirstPlayerPolicy firstPlayerPolicy) {
-		super(game, players, staggerNewRound, firstPlayerPolicy);
+	public SimultaneousGameFlow(GameFlowBuilder builder) {
+		super(builder);
 
 		endedTurnPlayers = new boolean[players.size()];
-	}
-
-	public SimultenousPlayerOrder(Game game, List<Player> players) {
-		this(game, players, true, FirstPlayerPolicy.SAME);
 	}
 
 	private void reset() {
@@ -46,11 +40,11 @@ public class SimultenousPlayerOrder extends PlayerOrder {
 	}
 
 	@Override
-	public boolean endTurn() {
+	public boolean nextTurn() {
 		if (allPlayersFinished()) {
 			if (!staggerNewRound) {
 				reset();
-				newRound();
+				nextRound();
 			}
 			return true;
 		} else {
@@ -60,7 +54,7 @@ public class SimultenousPlayerOrder extends PlayerOrder {
 
 	public boolean endTurn(Player player) {
 		endedTurnPlayers[players.indexOf(player)] = true;
-		return endTurn();
+		return nextTurn();
 	}
 
 	private boolean allPlayersFinished() {

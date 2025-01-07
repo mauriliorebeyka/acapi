@@ -5,24 +5,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 
-public class PredefinedPlayerOrder extends RoundRobinPlayerOrder {
+public class CustomOrderedGameFlow extends RoundRobinGameFlow {
 
 	private int[] playerOrder;
 
 	private int[] newOrder;
 
-	public PredefinedPlayerOrder(Game game, List<Player> players, boolean staggerNewRound) {
-		super(game, players, staggerNewRound, FirstPlayerPolicy.SAME);
-		setOrder(players);
-		playerOrder = Arrays.copyOf(newOrder, newOrder.length);
-	}
-
-	public PredefinedPlayerOrder(Game game, List<Player> players, boolean staggerNewRound, String orderAttribute,
-			boolean reverse) {
-		this(game, players, staggerNewRound);
+	public CustomOrderedGameFlow(GameFlowBuilder builder, String orderAttribute, boolean reverse) {
+		super(builder);
 		setOrder(orderAttribute, reverse);
 		playerOrder = Arrays.copyOf(newOrder, newOrder.length);
 	}
@@ -55,8 +47,8 @@ public class PredefinedPlayerOrder extends RoundRobinPlayerOrder {
 	}
 
 	@Override
-	public boolean endTurn() {
-		boolean endRound = super.endTurn();
+	public boolean nextTurn() {
+		boolean endRound = super.nextTurn();
 		if (endRound) {
 			playerOrder = Arrays.copyOf(newOrder, newOrder.length);
 		}

@@ -15,7 +15,7 @@ import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
 
-public class PredefinedPlayerOrderTest {
+public class CustomOrderedGameFlowTest {
 
 	@Mock
 	private Game game;
@@ -32,7 +32,9 @@ public class PredefinedPlayerOrderTest {
 	@Mock
 	private List<Player> players;
 
-	private PredefinedPlayerOrder playerOrder;
+	private CustomOrderedGameFlow playerOrder;
+
+	private GameFlowBuilder builder;
 
 	@BeforeEach
 	public void setup() {
@@ -42,27 +44,30 @@ public class PredefinedPlayerOrderTest {
 		doReturn(new SimpleIntegerAttribute(20)).when(game).getModifiedPlayerAttribute(player2, "VP");
 		doReturn(new SimpleIntegerAttribute(5)).when(game).getModifiedPlayerAttribute(player3, "VP");
 		players = Arrays.asList(player1, player2, player3);
+
+		builder = new GameFlowBuilder().withGame(game).withPlayers(players).withStaggerNewRound(true);
 	}
 
 	@Test
 	public void testPlayersCreatedInOrder() {
-		playerOrder = new PredefinedPlayerOrder(game, players, true, "VP", true);
+
+		playerOrder = new CustomOrderedGameFlow(builder, "VP", true);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player2);
-		assertThat(playerOrder.endTurn()).isEqualTo(false);
+		assertThat(playerOrder.nextTurn()).isEqualTo(false);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player1);
-		assertThat(playerOrder.endTurn()).isEqualTo(false);
+		assertThat(playerOrder.nextTurn()).isEqualTo(false);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player3);
-		assertThat(playerOrder.endTurn()).isEqualTo(true);
+		assertThat(playerOrder.nextTurn()).isEqualTo(true);
 	}
 
 	@Test
 	public void testPlayerOrderChangeEndOfTurn() {
-		playerOrder = new PredefinedPlayerOrder(game, players, true, "VP", false);
+		playerOrder = new CustomOrderedGameFlow(builder, "VP", false);
 		playerOrder.setOrder(players);
 		assertThat(playerOrder.getPlayersInOrder()).containsExactly(player3, player1, player2);
-		playerOrder.endTurn();
-		playerOrder.endTurn();
-		playerOrder.endTurn();
+		playerOrder.nextTurn();
+		playerOrder.nextTurn();
+		playerOrder.nextTurn();
 		assertThat(playerOrder.getPlayersInOrder()).containsExactly(player1, player2, player3);
 	}
 }

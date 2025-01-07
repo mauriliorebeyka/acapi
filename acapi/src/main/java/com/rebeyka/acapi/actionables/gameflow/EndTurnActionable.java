@@ -1,13 +1,13 @@
 package com.rebeyka.acapi.actionables.gameflow;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.entities.gameflow.PlayerOrder;
+import com.rebeyka.acapi.entities.gameflow.GameFlow;
 
 public class EndTurnActionable extends Actionable {
 
-	private PlayerOrder playerOrder;
+	private GameFlow playerOrder;
 
-	public EndTurnActionable(PlayerOrder playerOrder) {
+	public EndTurnActionable(GameFlow playerOrder) {
 		super("EndTurn");
 		this.playerOrder = playerOrder;
 	}
@@ -15,7 +15,7 @@ public class EndTurnActionable extends Actionable {
 	@Override
 	public void execute() {
 		setPlayable(playerOrder.getCurrentPlayer());
-		playerOrder.endTurn();
+		playerOrder.nextTurn();
 	}
 
 	@Override

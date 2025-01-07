@@ -3,20 +3,14 @@ package com.rebeyka.acapi.entities.gameflow;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 
-public class RoundRobinPlayerOrder extends PlayerOrder {
+public class RoundRobinGameFlow extends GameFlow {
 
 	protected int currentPlayer;
 
-	public RoundRobinPlayerOrder(Game game, List<Player> players, boolean staggerNewRound,
-			PlayerOrder.FirstPlayerPolicy firstPlayerPolicy) {
-		super(game, players, staggerNewRound, firstPlayerPolicy);
-	}
-
-	public RoundRobinPlayerOrder(Game game, List<Player> players) {
-		this(game, players, false, PlayerOrder.FirstPlayerPolicy.SAME);
+	public RoundRobinGameFlow(GameFlowBuilder builder) {
+		super(builder);
 	}
 
 	@Override
@@ -43,13 +37,13 @@ public class RoundRobinPlayerOrder extends PlayerOrder {
 	}
 
 	@Override
-	public boolean endTurn() {
+	public boolean nextTurn() {
 		currentPlayer = (currentPlayer + 1) % players.size();
 		if (getFirstPlayer() == getCurrentPlayer()) {
 			if (staggerNewRound) {
 				currentPlayer = -1;
 			} else {
-				newRound();
+				nextRound();
 			}
 			return true;
 		} else {
@@ -58,8 +52,8 @@ public class RoundRobinPlayerOrder extends PlayerOrder {
 	}
 
 	@Override
-	public void newRound() {
-		super.newRound();
+	public void nextRound() {
+		super.nextRound();
 		if (staggerNewRound) {
 			currentPlayer = firstPlayer;
 		}

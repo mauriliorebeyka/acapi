@@ -2,13 +2,12 @@ package com.rebeyka.acapi.entities.gameflow;
 
 import java.util.List;
 
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 
-public class InactivePlayerOrder extends PlayerOrder {
+public class NoPlayerGameFlow extends GameFlow {
 
-	public InactivePlayerOrder(Game game, List<Player> players) {
-		super(game, players, false, FirstPlayerPolicy.SAME);
+	public NoPlayerGameFlow(GameFlowBuilder builder) {
+		super(builder);
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class InactivePlayerOrder extends PlayerOrder {
 	}
 
 	@Override
-	public boolean endTurn() {
+	public boolean nextTurn() {
 		return true;
 	}
 

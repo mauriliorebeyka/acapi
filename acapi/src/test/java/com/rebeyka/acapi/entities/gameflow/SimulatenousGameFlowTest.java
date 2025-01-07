@@ -12,8 +12,9 @@ import org.mockito.Mock;
 
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
+import com.rebeyka.acapi.entities.gameflow.GameFlow.FirstPlayerPolicy;
 
-public class SimulatenousPlayerOrderTest {
+public class SimulatenousGameFlowTest {
 
 	@Mock
 	private Game game;
@@ -29,7 +30,9 @@ public class SimulatenousPlayerOrderTest {
 
 	private List<Player> players;
 
-	private SimultenousPlayerOrder playerOrder;
+	private SimultaneousGameFlow playerOrder;
+
+	private GameFlowBuilder builder;
 
 	@BeforeEach
 	public void setup() {
@@ -37,11 +40,13 @@ public class SimulatenousPlayerOrderTest {
 
 		players = Arrays.asList(player1, player2, player3);
 
+		builder = new GameFlowBuilder().withGame(game).withPlayers(players)
+				.withFirstPlayerPolicy(FirstPlayerPolicy.NEXT);
 	}
 
 	@Test
 	public void testEndTurn() {
-		playerOrder = new SimultenousPlayerOrder(game, players, false, PlayerOrder.FirstPlayerPolicy.NEXT);
+		playerOrder = new SimultaneousGameFlow(builder.withStaggerNewRound(false));
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player1);
 		assertThat(playerOrder.isPlayerActive(player1)).isTrue();
 		assertThat(playerOrder.isPlayerActive(player2)).isTrue();
@@ -60,7 +65,7 @@ public class SimulatenousPlayerOrderTest {
 
 	@Test
 	public void testNewRound() {
-		playerOrder = new SimultenousPlayerOrder(game, players);
+		playerOrder = new SimultaneousGameFlow(builder.withStaggerNewRound(true));
 		assertThat(playerOrder.getPlayersInOrder()).containsExactly(player1, player2, player3);
 		assertThat(playerOrder.endTurn(player1)).isFalse();
 		assertThat(playerOrder.endTurn(player2)).isFalse();

@@ -42,7 +42,6 @@ public class TimelineTest {
 		Actionable mockActionable2 = mock(Actionable.class);
 		Play script1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1, mockActionable2));
 		Actionable mockActionable3 = mock(Actionable.class);
-		Play script2 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable3));
 
 		timeline.queue(script1);
 		timeline.executeNext();

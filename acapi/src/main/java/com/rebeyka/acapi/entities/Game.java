@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.entities.gameflow.InactivePlayerOrder;
-import com.rebeyka.acapi.entities.gameflow.PlayerOrder;
+import com.rebeyka.acapi.entities.gameflow.GameFlow;
+import com.rebeyka.acapi.entities.gameflow.GameFlowBuilder;
+import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
 
 public class Game {
@@ -22,7 +23,7 @@ public class Game {
 
 	private List<Trigger> futureTriggers;
 
-	private PlayerOrder playerOrder;
+	private GameFlow playerOrder;
 
 	public Game(List<Player> players) {
 		this.players = players;
@@ -30,7 +31,7 @@ public class Game {
 		timeline = new Timeline(this);
 		pastTriggers = new ArrayList<>();
 		futureTriggers = new ArrayList<>();
-		playerOrder = new InactivePlayerOrder(this, players);
+		playerOrder = new NoPlayerGameFlow(new GameFlowBuilder().withGame(this).withPlayers(players));
 	}
 
 	public void deplarePlay(Player player, Play play) {
@@ -70,11 +71,11 @@ public class Game {
 		return decks;
 	}
 
-	public PlayerOrder getPlayerOrder() {
+	public GameFlow getPlayerOrder() {
 		return playerOrder;
 	}
 
-	public void setPlayerOrder(PlayerOrder playerOrder) {
+	public void setPlayerOrder(GameFlow playerOrder) {
 		this.playerOrder = playerOrder;
 	}
 
