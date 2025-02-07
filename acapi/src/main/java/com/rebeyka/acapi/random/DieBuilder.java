@@ -12,14 +12,26 @@ public class DieBuilder<T> {
 	private Random seed;
 
 	private List<DieFace<T>> faces;
+	
+	private static Random globalSeed = new Random(System.nanoTime());
 
 	public DieBuilder<T> withSeed(Random seed) {
 		this.seed = seed;
 		return this;
 	}
 
+	public DieBuilder<T> withSeed(String seedString) {
+		long salt = seedString.hashCode();
+		this.seed = new Random(salt);
+		return this;
+	}
+	
 	public DieBuilder<T> withRandomSeed() {
-		this.seed = new Random(System.currentTimeMillis());
+		long salt = 0;
+		synchronized (globalSeed) {
+			salt = globalSeed.nextLong();
+		}
+		this.seed = new Random(System.nanoTime() + salt);
 		return this;
 	}
 
@@ -70,6 +82,14 @@ public class DieBuilder<T> {
 		return new DieBuilder<Integer>().withRandomSeed().withFaces(numberOfFaces).build();
 	}
 
+	public static DiceSet<Integer> buildBasicDiceSet(int numberOfDie, int numberOfFaces) {
+		List<Die<Integer>> dice = new ArrayList<>();
+		for (int i=0; i<numberOfDie; i++) {
+			dice.add(buildBasicDie(numberOfFaces));
+		}
+		return new DiceSet<Integer>(dice);
+	}
+	
 	public static Coin buildCoin() {
 		DieBuilder<CoinSides> builder = new DieBuilder<CoinSides>().withRandomSeed().withFaces(CoinSides.values());
 		return new Coin(builder.faces, builder.seed);

@@ -37,4 +37,8 @@ public class DiceSet<T> {
 	public Map<T, Integer> getOcurrenceMap() {
 		return dice.stream().collect(Collectors.toMap(Die::getValue, t -> 1, Integer::sum));
 	}
+	
+	public int getCount() {
+		return dice.size();
+	}
 }

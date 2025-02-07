@@ -41,26 +41,21 @@ public class Timeline {
 		actionables.addAll(actionables.size(), play.getActionables());
 	}
 
-	public void executeNext() {
+	public boolean executeNext() {
+		LOG.debug("Executing next actionable. Still {} in the list ",actionables.size() - currentPosition);
 		if (currentPosition < actionables.size()) {
 			Actionable actionable = actionables.get(currentPosition);
-			switch (actionable) {
-			case CostActionable costActionable:
-				if (costActionable.isSet()) {
-					execute();
-				} else {
+			if (actionable instanceof ChoiceActionable choiceActionable && !choiceActionable.isSet()) {
+				if (choiceActionable instanceof CostActionable) {
 					cancelCurrentPlay();
 				}
-				break;
-			case ChoiceActionable choiceActionable:
-				if (choiceActionable.isSet()) {
-					execute();
-				}
-				break;
-			default:
+				return false;
+			} else {
 				execute();
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public void rollbackLast() {

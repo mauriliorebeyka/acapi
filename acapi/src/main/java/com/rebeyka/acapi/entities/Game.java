@@ -23,7 +23,9 @@ public class Game {
 
 	private List<Trigger> futureTriggers;
 
-	private GameFlow playerOrder;
+	private List<GameFlow> playerOrder;
+	
+	private int currentGameFlow;
 
 	public Game(List<Player> players) {
 		this.players = players;
@@ -31,7 +33,10 @@ public class Game {
 		timeline = new Timeline(this);
 		pastTriggers = new ArrayList<>();
 		futureTriggers = new ArrayList<>();
-		playerOrder = new NoPlayerGameFlow(new GameFlowBuilder().withGame(this).withPlayers(players));
+		List<GameFlow> gameFlow = new ArrayList<>();
+		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder().withGame(this).withPlayers(players)));
+		setCurrentGameFlow(0);
+		playerOrder = gameFlow;
 	}
 
 	public void deplarePlay(Player player, Play play) {
@@ -72,17 +77,38 @@ public class Game {
 	}
 
 	public GameFlow getPlayerOrder() {
-		return playerOrder;
+		return playerOrder.get(getCurrentGameFlow());
 	}
 
-	public void setPlayerOrder(GameFlow playerOrder) {
+	public void setPlayerOrder(List<GameFlow> playerOrder) {
 		this.playerOrder = playerOrder;
 	}
-
-	public void executeNext() {
-		timeline.executeNext();
+	
+	public void setPlayerOrder(GameFlow playerOrder) {
+		this.playerOrder = new ArrayList<>();
+		this.playerOrder.add(playerOrder);
+	}
+	
+	private int getCurrentGameFlow() {
+		return currentGameFlow;
 	}
 
+	private void setCurrentGameFlow(int currentGameFlow) {
+		this.currentGameFlow = currentGameFlow;
+	}
+
+	public boolean executeNext() {
+		return timeline.executeNext();
+	}
+
+	public boolean executeAll() {
+		boolean oneExecution = false; 
+		while (executeNext()) {
+			oneExecution = true;
+		}
+		return oneExecution;
+	}
+	
 	public void registerPastTrigger(Trigger t) {
 		pastTriggers.add(t);
 	}
