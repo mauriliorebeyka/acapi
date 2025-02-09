@@ -11,7 +11,7 @@ public abstract class Playable {
 
 	private Map<String, Attribute<?>> attributes;
 
-	public Game game;
+	private Game game;
 
 	public Playable() {
 		plays = new ArrayList<>();

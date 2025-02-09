@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.ChoiceActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
+import com.rebeyka.acapi.builders.PlayBuilder;
 import com.rebeyka.acapi.entities.Cost;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
@@ -27,6 +28,8 @@ public class TimelineTest {
 
 	private Timeline timeline;
 
+	private PlayBuilder builder;
+	
 	@Mock
 	private Game game;
 
@@ -34,13 +37,14 @@ public class TimelineTest {
 	public void before() {
 		openMocks(this);
 		timeline = new Timeline(game);
+		builder = new PlayBuilder().withId("id");
 	}
 
 	@Test
 	public void testQueue() {
 		Actionable mockActionable1 = mock(Actionable.class);
 		Actionable mockActionable2 = mock(Actionable.class);
-		Play script1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1, mockActionable2));
+		Play script1 = new Play(builder.withActionables(Arrays.asList(mockActionable1, mockActionable2)));
 		Actionable mockActionable3 = mock(Actionable.class);
 
 		timeline.queue(script1);
@@ -55,7 +59,7 @@ public class TimelineTest {
 	public void TestQueuePayCost() {
 		Actionable mockActionable1 = mock(Actionable.class);
 		Cost mockCost = mock(Cost.class);
-		Play play1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1));
+		Play play1 = new Play(builder.withActionables(Arrays.asList(mockActionable1)));
 		play1.setCost(mockCost);
 
 		timeline.queue(play1);
@@ -71,7 +75,7 @@ public class TimelineTest {
 	public void testRollback() {
 		Actionable mockActionable1 = mock(Actionable.class);
 		Actionable mockActionable2 = mock(Actionable.class);
-		Play script1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1, mockActionable2));
+		Play script1 = new Play(builder.withActionables(Arrays.asList(mockActionable1)));
 
 		timeline.queue(script1);
 		timeline.executeNext();
@@ -88,14 +92,13 @@ public class TimelineTest {
 		Actionable mockActionable5 = mock(Actionable.class);
 		Actionable mockActionable6 = mock(Actionable.class);
 
-		Play play1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1));
+		Play play1 = new Play(builder.withActionables(Arrays.asList(mockActionable1)));
 		when(mockActionable1.getParent()).thenReturn(play1);
-		Play play2 = new Play("id", null, Cost.FREE, i -> true,
-				Arrays.asList(mockActionable2, mockActionable3, mockActionable4));
+		Play play2 = new Play(builder.withActionables(Arrays.asList(mockActionable2, mockActionable3, mockActionable4)));
 		when(mockActionable2.getParent()).thenReturn(play2);
 		when(mockActionable3.getParent()).thenReturn(play2);
 		when(mockActionable4.getParent()).thenReturn(play2);
-		Play play3 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable5, mockActionable6));
+		Play play3 = new Play(builder.withActionables(Arrays.asList(mockActionable5, mockActionable6)));
 		when(mockActionable5.getParent()).thenReturn(play3);
 		when(mockActionable6.getParent()).thenReturn(play3);
 
@@ -135,7 +138,8 @@ public class TimelineTest {
 	@Test
 	public void testCancelPlayCompleted() {
 		Actionable mockActionable1 = mock(Actionable.class);
-		Play play1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1));
+		PlayBuilder builder = new PlayBuilder().withId("id").withActionables(Arrays.asList(mockActionable1));
+		Play play1 = new Play(builder);
 		when(mockActionable1.getParent()).thenReturn(play1);
 
 		timeline.queue(play1);
@@ -154,7 +158,7 @@ public class TimelineTest {
 	public void testCancelPlayNoFurtherActionable() {
 		Actionable mockActionable1 = mock(Actionable.class);
 		Actionable mockActionable2 = mock(Actionable.class);
-		Play play1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1, mockActionable2));
+		Play play1 = new Play(builder.withActionables(Arrays.asList(mockActionable1, mockActionable2)));
 		when(mockActionable1.getParent()).thenReturn(play1);
 		when(mockActionable2.getParent()).thenReturn(play1);
 
@@ -182,7 +186,7 @@ public class TimelineTest {
 		Cost mockCost = mock(Cost.class);
 		when(mockCost.generateActionable()).thenReturn(mockCostActionable);
 		when(mockCostActionable.isSet()).thenReturn(true);
-		Play play1 = new Play("id", null, mockCost, i -> true, Arrays.asList(mockActionable1));
+		Play play1 = new Play(builder.withCost(mockCost).withActionables(Arrays.asList(mockActionable1)));
 
 		timeline.queue(play1);
 		timeline.executeNext();
@@ -203,7 +207,7 @@ public class TimelineTest {
 		CostActionable mockCostActionable = mock(CostActionable.class);
 		Cost mockCost = mock(Cost.class);
 		when(mockCost.generateActionable()).thenReturn(mockCostActionable);
-		Play play1 = new Play("id", null, mockCost, i -> true, Arrays.asList(mockActionable1));
+		Play play1 = new Play(builder.withCost(mockCost).withActionables(Arrays.asList(mockActionable1)));
 		play1.setCost(mockCost);
 		when(mockCostActionable.getParent()).thenReturn(play1);
 		when(mockActionable1.getParent()).thenReturn(play1);
@@ -223,7 +227,7 @@ public class TimelineTest {
 		ChoiceActionable mockActionable1 = mock(ChoiceActionable.class);
 		ChoiceActionable mockActionable2 = mock(ChoiceActionable.class);
 		when(mockActionable1.isSet()).thenReturn(true);
-		Play play1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1, mockActionable2));
+		Play play1 = new Play(builder.withActionables(Arrays.asList(mockActionable1, mockActionable2)));
 
 		timeline.queue(play1);
 		timeline.executeNext();
@@ -242,7 +246,7 @@ public class TimelineTest {
 	public void testGameTriggersOrder() {
 		Actionable mockActionable1 = mock(Actionable.class);
 		Actionable mockActionable2 = mock(Actionable.class);
-		Play play1 = new Play("id", null, Cost.FREE, i -> true, Arrays.asList(mockActionable1, mockActionable2));
+		Play play1 = new Play(builder.withActionables(Arrays.asList(mockActionable1,mockActionable2)));
 
 		timeline.queue(play1);
 		timeline.executeNext();

@@ -37,9 +37,10 @@ public class Game {
 		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder().withGame(this).withPlayers(players)));
 		setCurrentGameFlow(0);
 		playerOrder = gameFlow;
+		this.players.stream().forEach(p -> p.setGame(this));
 	}
 
-	public void deplarePlay(Player player, Play play) {
+	public void declarePlay(Player player, Play play) {
 		if (play.getCondition().test(this)) {
 			timeline.queue(play);
 		}
@@ -107,6 +108,12 @@ public class Game {
 			oneExecution = true;
 		}
 		return oneExecution;
+	}
+	
+	public void end() {
+		timeline.clear();
+		pastTriggers.clear();
+		futureTriggers.clear();
 	}
 	
 	public void registerPastTrigger(Trigger t) {

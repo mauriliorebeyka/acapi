@@ -54,9 +54,10 @@ public class Trigger {
 		if (test == null) {
 			return false;
 		}
-		LOG.info("Testing trigger %s against %s".formatted(actionableId, test));
+		LOG.info("Testing trigger %s against %s".formatted(actionableId, actionable.getActionableId()));
 		boolean matchingId = actionableId.equals("ALL") || actionableId.equals(actionable.getActionableId());
 		if (matchingId && condition.test(test)) {
+			LOG.debug("Test passed");
 			playable = test;
 			return true;
 		} else {

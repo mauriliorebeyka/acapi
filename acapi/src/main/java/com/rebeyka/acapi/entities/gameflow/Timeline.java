@@ -42,8 +42,8 @@ public class Timeline {
 	}
 
 	public boolean executeNext() {
-		LOG.debug("Executing next actionable. Still {} in the list ",actionables.size() - currentPosition);
 		if (currentPosition < actionables.size()) {
+			LOG.debug("Executing {}. Still {} actionables in the list ",actionables.get(currentPosition).getActionableId(), actionables.size() - currentPosition);
 			Actionable actionable = actionables.get(currentPosition);
 			if (actionable instanceof ChoiceActionable choiceActionable && !choiceActionable.isSet()) {
 				if (choiceActionable instanceof CostActionable) {
@@ -55,6 +55,7 @@ public class Timeline {
 				return true;
 			}
 		}
+		LOG.debug("No actionables to execute");
 		return false;
 	}
 
@@ -86,6 +87,12 @@ public class Timeline {
 		}
 		while (currentPosition < actionables.size() && actionables.get(currentPosition).getParent().equals(play)) {
 			actionables.remove(currentPosition);
+		}
+	}
+	
+	public void clear() {
+		while (currentPosition < actionables.size() - 1) {
+			actionables.remove(actionables.size() - 1);
 		}
 	}
 }

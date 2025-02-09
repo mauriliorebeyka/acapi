@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class DiceSet<T> {
+public class DiceSet<T> implements Comparable<DiceSet<T>> {
 
 	private List<Die<T>> dice;
 
@@ -40,5 +40,11 @@ public class DiceSet<T> {
 	
 	public int getCount() {
 		return dice.size();
+	}
+
+	@Override
+	public int compareTo(DiceSet<T> o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

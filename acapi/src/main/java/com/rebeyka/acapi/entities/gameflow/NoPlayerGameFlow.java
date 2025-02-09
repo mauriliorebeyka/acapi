@@ -2,12 +2,14 @@ package com.rebeyka.acapi.entities.gameflow;
 
 import java.util.List;
 
+import org.assertj.core.util.Arrays;
+
 import com.rebeyka.acapi.entities.Player;
 
 public class NoPlayerGameFlow extends GameFlow {
 
 	public NoPlayerGameFlow(GameFlowBuilder builder) {
-		super(builder);
+		super(builder.withGamePhases(List.of("TEST")));
 	}
 
 	@Override

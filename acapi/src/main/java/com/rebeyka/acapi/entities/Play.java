@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.builders.PlayBuilder;
 
 public class Play {
 
@@ -18,19 +19,15 @@ public class Play {
 
 	private List<Actionable> actionables;
 
-	public Play(String id, Playable origin, Cost cost, Predicate<Game> condition, List<Actionable> actionables) {
-		this.id = id;
-		this.origin = origin;
-		this.cost = cost;
-		this.condition = condition;
-		this.actionables = actionables;
+	public Play(PlayBuilder builder) {
+		this.id = builder.getId();
+		this.origin = builder.getOrigin();
+		this.cost = builder.getCost();
+		this.condition = builder.getCondition();
+		this.actionables = builder.getActionables();
 
 		this.actionables.stream().forEach(a -> a.setParent(this));
 		this.cost.generateActionable().setParent(this);
-	}
-
-	public Play(String id, Playable origin, Actionable actionable) {
-		this(id, origin, Cost.FREE, i -> true, Arrays.asList(actionable));
 	}
 
 	public String getId() {
