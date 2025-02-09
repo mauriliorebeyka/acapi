@@ -35,7 +35,7 @@ public class DiceSet<T> implements Comparable<DiceSet<T>> {
 	}
 
 	public Map<T, Integer> getOcurrenceMap() {
-		return dice.stream().collect(Collectors.toMap(Die::getValue, t -> 1, Integer::sum));
+		return dice.stream().collect(Collectors.toMap(Die::getValue, _ -> 1, Integer::sum));
 	}
 	
 	public int getCount() {
@@ -44,7 +44,11 @@ public class DiceSet<T> implements Comparable<DiceSet<T>> {
 
 	@Override
 	public int compareTo(DiceSet<T> o) {
-		// TODO Auto-generated method stub
-		return 0;
+		return Integer.compare(getSum(), o.getSum());
+	}
+	
+	@Override
+	public String toString() {
+		return dice.toString();
 	}
 }

@@ -41,6 +41,10 @@ public class Timeline {
 		actionables.addAll(actionables.size(), play.getActionables());
 	}
 
+	public void queue(Actionable actionable) {
+		actionables.add(actionable);
+	}
+	
 	public boolean executeNext() {
 		if (currentPosition < actionables.size()) {
 			LOG.debug("Executing {}. Still {} actionables in the list ",actionables.get(currentPosition).getActionableId(), actionables.size() - currentPosition);
@@ -72,9 +76,9 @@ public class Timeline {
 		LOG.info(actionable.getMessage());
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
-			actionables.addAll(currentPosition, game.getFutureTriggerActionables(actionables.get(currentPosition)));
+			actionables.addAll(currentPosition, game.getBeforeTriggerActionables(actionables.get(currentPosition)));
 		}
-		actionables.addAll(currentPosition, game.getPastTriggerActionablesActionables(actionable));
+		actionables.addAll(currentPosition, game.getAfterTriggerActionables(actionable));
 	}
 
 	public void cancelCurrentPlay() {

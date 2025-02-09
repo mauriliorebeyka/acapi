@@ -16,7 +16,7 @@ public class EndGameActionable extends Actionable {
 
 	@Override
 	public void execute() {
-		game.setPlayerOrder(new NoPlayerGameFlow(new GameFlowBuilder().withGame(game).withPlayers(game.getPlayers())));
+		game.setGameFlow(new NoPlayerGameFlow(new GameFlowBuilder().withGame(game).withPlayers(game.getPlayers())));
 		game.end();
 	}
 

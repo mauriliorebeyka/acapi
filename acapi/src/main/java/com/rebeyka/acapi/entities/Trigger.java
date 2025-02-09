@@ -11,52 +11,48 @@ public class Trigger {
 
 	private static final Logger LOG = LogManager.getLogger();
 
-	private String actionableId;
+	private String triggerOnActionableId;
 
-	private Predicate<Playable> condition;
+	private Predicate<Game> condition;
 
-	private Actionable actionable;
+	private Actionable actionableToTrigger;
 
 	private Playable playable;
 
-	public Trigger(Predicate<Playable> condition, Actionable trigger, String actionableId) {
+	public Trigger(Predicate<Game> condition, Actionable actionableToTrigger, String triggerOnActionableId) {
 		this.condition = condition;
-		this.actionable = trigger;
-		this.actionableId = actionableId;
-	}
-
-	public Trigger(Predicate<Playable> condition) {
-		this(condition, null, "ALL");
+		this.actionableToTrigger = actionableToTrigger;
+		this.triggerOnActionableId = triggerOnActionableId;
 	}
 
 	public Trigger(Actionable trigger) {
 		this(i -> true, trigger, "ALL");
 	}
 
-	public String getActionableId() {
-		return actionableId;
+	public String getTriggerOnActionableId() {
+		return triggerOnActionableId;
 	}
 
-	public void setActionableId(String actionableId) {
-		this.actionableId = actionableId;
+	public void setTriggerOnActionableId(String triggerOnActionableId) {
+		this.triggerOnActionableId = triggerOnActionableId;
 	}
 
-	public Predicate<Playable> getCondition() {
+	public Predicate<Game> getCondition() {
 		return condition;
 	}
 
-	public void setCondition(Predicate<Playable> condition) {
+	public void setCondition(Predicate<Game> condition) {
 		this.condition = condition;
 	}
 
-	public boolean test(Actionable actionable) {
-		Playable test = actionable.getPlayable();
+	public boolean test(Actionable triggeringActionable) {
+		Playable test = triggeringActionable.getPlayable();
 		if (test == null) {
 			return false;
 		}
-		LOG.info("Testing trigger %s against %s".formatted(actionableId, actionable.getActionableId()));
-		boolean matchingId = actionableId.equals("ALL") || actionableId.equals(actionable.getActionableId());
-		if (matchingId && condition.test(test)) {
+		LOG.info("Testing trigger %s against %s".formatted(triggerOnActionableId, triggeringActionable.getActionableId()));
+		boolean matchingId = triggerOnActionableId.equals("ALL") || triggerOnActionableId.equals(triggeringActionable.getActionableId());
+		if (matchingId && condition.test(test.getGame())) {
 			LOG.debug("Test passed");
 			playable = test;
 			return true;
@@ -65,12 +61,12 @@ public class Trigger {
 		}
 	}
 
-	public Actionable getActionable() {
-		return actionable;
+	public Actionable getActionableToTrigger() {
+		return actionableToTrigger;
 	}
 
-	public void setActionable(Actionable trigger) {
-		this.actionable = trigger;
+	public void setActionableToTrigger(Actionable actionableToTrigger) {
+		this.actionableToTrigger = actionableToTrigger;
 	}
 
 	public Playable getPlayable() {

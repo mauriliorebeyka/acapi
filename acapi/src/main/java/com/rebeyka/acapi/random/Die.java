@@ -72,4 +72,9 @@ public class Die<T> {
 	public boolean isRolled() {
 		return rolled;
 	}
+	
+	@Override
+	public String toString() {
+		return rolled ? getValue().toString() : "NOT ROLLED";
+	}
 }

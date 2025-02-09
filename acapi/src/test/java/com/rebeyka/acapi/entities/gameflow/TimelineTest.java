@@ -251,10 +251,10 @@ public class TimelineTest {
 		timeline.queue(play1);
 		timeline.executeNext();
 		timeline.executeNext();
-		verify(game).getPastTriggerActionablesActionables(Cost.FREE.generateActionable());
-		verify(game).getFutureTriggerActionables(mockActionable1);
-		verify(game).getPastTriggerActionablesActionables(mockActionable1);
-		verify(game).getFutureTriggerActionables(mockActionable2);
+		verify(game).getAfterTriggerActionables(Cost.FREE.generateActionable());
+		verify(game).getBeforeTriggerActionables(mockActionable1);
+		verify(game).getAfterTriggerActionables(mockActionable1);
+		verify(game).getBeforeTriggerActionables(mockActionable2);
 		verifyNoMoreInteractions(game);
 	}
 }

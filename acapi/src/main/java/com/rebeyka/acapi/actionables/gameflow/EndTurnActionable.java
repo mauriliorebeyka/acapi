@@ -12,7 +12,7 @@ public class EndTurnActionable extends Actionable {
 
 	@Override
 	public void execute() {
-		getPlayable().getGame().getPlayerOrder().nextTurn();
+		getPlayable().getGame().getGameFlow().nextTurn();
 	}
 
 	@Override
@@ -23,7 +23,7 @@ public class EndTurnActionable extends Actionable {
 
 	@Override
 	public String getMessage() {
-		return "%s ended their turn. Currently on round %s".formatted(getPlayable(),getPlayable().getGame().getPlayerOrder().getRound());
+		return "%s ended their turn. Currently on round %s".formatted(getPlayable(),getPlayable().getGame().getGameFlow().getRound());
 	}
 
 }

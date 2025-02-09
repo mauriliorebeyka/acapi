@@ -72,7 +72,7 @@ public abstract class GameFlow {
 	public abstract List<Player> getPlayersInOrder();
 
 	public abstract Player getCurrentPlayer();
-
+	
 	public abstract boolean isPlayerActive(Player player);
 
 	public boolean nextPhase() {

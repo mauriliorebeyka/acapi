@@ -19,24 +19,26 @@ public class Game {
 
 	private Timeline timeline;
 
-	private List<Trigger> pastTriggers;
+	private List<Trigger> afterTriggers;
 
-	private List<Trigger> futureTriggers;
+	private List<Trigger> beforeTriggers;
 
-	private List<GameFlow> playerOrder;
+	private List<GameFlow> gameFlow;
 	
 	private int currentGameFlow;
+	
+	private Actionable gameEndActionable;
 
 	public Game(List<Player> players) {
 		this.players = players;
 		this.decks = new HashMap<>();
 		timeline = new Timeline(this);
-		pastTriggers = new ArrayList<>();
-		futureTriggers = new ArrayList<>();
+		afterTriggers = new ArrayList<>();
+		beforeTriggers = new ArrayList<>();
 		List<GameFlow> gameFlow = new ArrayList<>();
 		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder().withGame(this).withPlayers(players)));
 		setCurrentGameFlow(0);
-		playerOrder = gameFlow;
+		this.gameFlow = gameFlow;
 		this.players.stream().forEach(p -> p.setGame(this));
 	}
 
@@ -77,23 +79,23 @@ public class Game {
 		return decks;
 	}
 
-	public GameFlow getPlayerOrder() {
-		return playerOrder.get(getCurrentGameFlow());
+	public GameFlow getGameFlow() {
+		return gameFlow.get(getCurrentGameFlow());
 	}
 
-	public void setPlayerOrder(List<GameFlow> playerOrder) {
-		this.playerOrder = playerOrder;
+	public void setGameFlow(List<GameFlow> gameFlow) {
+		this.gameFlow = gameFlow;
 	}
 	
-	public void setPlayerOrder(GameFlow playerOrder) {
-		this.playerOrder = new ArrayList<>();
-		this.playerOrder.add(playerOrder);
+	public void setGameFlow(GameFlow gameFlow) {
+		this.gameFlow = new ArrayList<>();
+		this.gameFlow.add(gameFlow);
 	}
 	
 	private int getCurrentGameFlow() {
 		return currentGameFlow;
 	}
-
+	
 	private void setCurrentGameFlow(int currentGameFlow) {
 		this.currentGameFlow = currentGameFlow;
 	}
@@ -112,31 +114,42 @@ public class Game {
 	
 	public void end() {
 		timeline.clear();
-		pastTriggers.clear();
-		futureTriggers.clear();
+		afterTriggers.clear();
+		beforeTriggers.clear();
+		if (gameEndActionable != null) {
+			timeline.queue(gameEndActionable);
+		}
 	}
 	
-	public void registerPastTrigger(Trigger t) {
-		pastTriggers.add(t);
+	public void registerAfterTrigger(Trigger t) {
+		afterTriggers.add(t);
 	}
 
-	public void unregisterPastTrigger(Trigger t) {
-		pastTriggers.remove(t);
+	public void unregisterAfterTrigger(Trigger t) {
+		afterTriggers.remove(t);
 	}
 
-	public List<Actionable> getPastTriggerActionablesActionables(Actionable actionable) {
-		return pastTriggers.stream().filter(t -> t.test(actionable)).map(t -> t.getActionable()).toList();
+	public List<Actionable> getAfterTriggerActionables(Actionable triggeringActionable) {
+		return afterTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger()).toList();
 	}
 
-	public void registerFutureTrigger(Trigger trigger) {
-		futureTriggers.add(trigger);
+	public void registerBeforeTrigger(Trigger trigger) {
+		beforeTriggers.add(trigger);
 	}
 
-	public void unregisterFutureTrigger(Trigger trigger) {
-		futureTriggers.remove(trigger);
+	public void unregisterBeforeTrigger(Trigger trigger) {
+		beforeTriggers.remove(trigger);
 	}
 
-	public List<Actionable> getFutureTriggerActionables(Actionable actionable) {
-		return futureTriggers.stream().filter(t -> t.test(actionable)).map(t -> t.getActionable()).toList();
+	public List<Actionable> getBeforeTriggerActionables(Actionable triggeringActionable) {
+		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger()).toList();
+	}
+
+	public Actionable getGameEndActionable() {
+		return gameEndActionable;
+	}
+
+	public void setGameEndActionable(Actionable gameEndActionable) {
+		this.gameEndActionable = gameEndActionable;
 	}
 }
