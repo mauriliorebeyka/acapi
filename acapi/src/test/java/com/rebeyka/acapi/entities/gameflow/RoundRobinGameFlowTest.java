@@ -2,6 +2,7 @@ package com.rebeyka.acapi.entities.gameflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.ArrayList;
@@ -12,9 +13,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.gameflow.GameFlow.FirstPlayerPolicy;
 
 public class RoundRobinGameFlowTest {
 
@@ -41,9 +42,9 @@ public class RoundRobinGameFlowTest {
 		openMocks(this);
 
 		players = Arrays.asList(player1, player2, player3);
-		builder = new GameFlowBuilder();
-		builder.withGame(game).withPlayers(players).withStaggerNewRound(false)
-				.withFirstPlayerPolicy(FirstPlayerPolicy.SAME);
+		when(game.getPlayers()).thenReturn(players);
+		builder = new GameFlowBuilder(game);
+		builder.withStaggerNewRound(false).withFirstPlayerPolicy(new SamePlayerFirstPlayerPolicy());
 		playerOrder = new RoundRobinGameFlow(builder);
 	}
 
@@ -74,11 +75,12 @@ public class RoundRobinGameFlowTest {
 		assertThat(playerOrder.isPlayerActive(player1)).isEqualTo(true);
 		assertThat(playerOrder.isPlayerActive(player2)).isEqualTo(false);
 		assertThat(playerOrder.isPlayerActive(player3)).isEqualTo(false);
+
 	}
 
 	@Test
 	public void testNewRounNextPolicy() {
-		builder.withStaggerNewRound(true).withFirstPlayerPolicy(FirstPlayerPolicy.NEXT);
+		builder.withStaggerNewRound(true).withFirstPlayerPolicy(new NextPlayerFirstPlayerPolicy());
 		playerOrder = new RoundRobinGameFlow(builder);
 		playerOrder.nextRound();
 		playerOrder.nextTurn();
@@ -88,7 +90,7 @@ public class RoundRobinGameFlowTest {
 
 	@Test
 	public void testNewRoundStaggered() {
-		builder.withStaggerNewRound(true).withFirstPlayerPolicy(FirstPlayerPolicy.RANDOM);
+		builder.withStaggerNewRound(true).withFirstPlayerPolicy(new RandomPlayerFirstPlayerPolicy());
 		playerOrder = new RoundRobinGameFlow(builder);
 		for (int i = 0; i < 3; i++) {
 			playerOrder.nextTurn();
@@ -97,13 +99,32 @@ public class RoundRobinGameFlowTest {
 	}
 
 	@Test
+	public void testNextNewRoundNotStaggered() {
+		builder.withStaggerNewRound(false).withFirstPlayerPolicy(new NextPlayerFirstPlayerPolicy());
+		playerOrder = new RoundRobinGameFlow(builder);
+		for (int i = 0; i < 3; i++) {
+			assertThat(playerOrder.getFirstPlayer()).isEqualTo(player1);
+			playerOrder.nextTurn();
+		}
+		for (int i = 0; i < 3; i++) {
+			assertThat(playerOrder.getFirstPlayer()).isEqualTo(player2);
+			playerOrder.nextTurn();
+		}
+		for (int i = 0; i < 3; i++) {
+			assertThat(playerOrder.getFirstPlayer()).isEqualTo(player3);
+			playerOrder.nextTurn();
+		}
+	}
+
+	@Test
 	public void testNewRoundRandomPolicy() {
 		List<Player> randomPlayers = new ArrayList<>();
 		for (int i = 0; i < 1000; i++) {
 			randomPlayers.add(mock(Player.class));
 		}
-
-		builder.withPlayers(randomPlayers).withStaggerNewRound(true).withFirstPlayerPolicy(FirstPlayerPolicy.RANDOM);
+		when(game.getPlayers()).thenReturn(randomPlayers);
+		builder = new GameFlowBuilder(game);
+		builder.withStaggerNewRound(true).withFirstPlayerPolicy(new RandomPlayerFirstPlayerPolicy());
 		playerOrder = new RoundRobinGameFlow(builder);
 		playerOrder.nextRound();
 		assertThat(playerOrder.getCurrentPlayer()).isNotEqualTo(randomPlayers.get(0));
@@ -112,7 +133,7 @@ public class RoundRobinGameFlowTest {
 
 	@Test
 	public void testNewRoundSamePolicy() {
-		builder.withStaggerNewRound(true).withFirstPlayerPolicy(FirstPlayerPolicy.SAME);
+		builder.withStaggerNewRound(true).withFirstPlayerPolicy(new SamePlayerFirstPlayerPolicy());
 		playerOrder = new RoundRobinGameFlow(builder);
 		playerOrder.nextRound();
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player1);

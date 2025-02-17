@@ -12,7 +12,7 @@ public class MoveCard extends Actionable {
 	private Supplier<Deck> targetDeck;
 
 	public MoveCard(String actionableId, Supplier<Deck> origin, Supplier<Deck> target) {
-		super(actionableId);
+		super(actionableId, null);
 		this.originDeck = origin;
 		this.targetDeck = target;
 	}

@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Coin extends Die<CoinSides> {
 
-	public Coin(List<DieFace<CoinSides>> faces, Random seed) {
+	public Coin(List<DieFace<CoinSides>> faces, Seed seed) {
 		super(faces, seed);
 	}
 

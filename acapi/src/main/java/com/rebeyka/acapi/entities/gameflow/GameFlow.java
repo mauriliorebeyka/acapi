@@ -3,14 +3,11 @@ package com.rebeyka.acapi.entities.gameflow;
 import java.util.List;
 import java.util.Random;
 
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 
 public abstract class GameFlow {
-
-	public static enum FirstPlayerPolicy {
-		SAME, NEXT, RANDOM
-	}
 
 	protected int firstPlayer;
 
@@ -42,12 +39,10 @@ public abstract class GameFlow {
 		this.players = builder.getPlayers();
 		this.gamePhases = builder.getGamePhases();
 		this.firstPlayerPolicy = builder.getFirstPlayerPolicy();
+		this.firstPlayerPolicy.setPlayers(players);
 		this.staggerNewRound = builder.isStaggerNewRound();
 
-		this.round = 0;
-		if (!staggerNewRound) {
-			nextRound();
-		}
+		this.round = 1;
 	}
 
 	public int getRound() {
@@ -56,9 +51,7 @@ public abstract class GameFlow {
 
 	public void nextRound() {
 		round++;
-		if (staggerNewRound) {
-			firstPlayer = getNewFirstPlayer();
-		}
+		firstPlayer = firstPlayerPolicy.getNewFirstPlayer();
 	}
 
 	public Player getFirstPlayer() {
@@ -72,7 +65,7 @@ public abstract class GameFlow {
 	public abstract List<Player> getPlayersInOrder();
 
 	public abstract Player getCurrentPlayer();
-	
+
 	public abstract boolean isPlayerActive(Player player);
 
 	public boolean nextPhase() {
@@ -87,11 +80,4 @@ public abstract class GameFlow {
 
 	public abstract boolean nextTurn();
 
-	private int getNewFirstPlayer() {
-		return switch (firstPlayerPolicy) {
-		case NEXT -> ((firstPlayer + 1) % players.size());
-		case RANDOM -> new Random(System.currentTimeMillis()).nextInt(players.size());
-		case SAME -> firstPlayer;
-		};
-	}
 }

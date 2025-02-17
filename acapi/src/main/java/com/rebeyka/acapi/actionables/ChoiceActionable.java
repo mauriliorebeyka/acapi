@@ -11,7 +11,8 @@ public abstract class ChoiceActionable extends Actionable {
 	private boolean set;
 
 	public ChoiceActionable(String actionableId) {
-		super(actionableId);
+		//TODO add playable?
+		super(actionableId, null);
 	}
 
 	public List<Actionable> getChoices() {

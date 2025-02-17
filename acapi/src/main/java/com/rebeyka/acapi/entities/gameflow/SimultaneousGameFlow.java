@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Player;
 
 public class SimultaneousGameFlow extends GameFlow {

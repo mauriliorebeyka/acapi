@@ -43,7 +43,7 @@ public class DieTest {
 
 	@Test
 	public void testWeightedRoll() {
-		Die<Integer> die = new DieBuilder<Integer>().withSeed(new Random(0)).withFaces(4).withWeightedValue(1, 3)
+		Die<Integer> die = new DieBuilder<Integer>().withSeed(new Seed(0)).withFaces(4).withWeightedValue(1, 3)
 				.build();
 		int ones = 0;
 		for (int i = 0; i < 1000; i++) {

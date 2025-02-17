@@ -116,9 +116,11 @@ public class TimelineTest {
 
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
+		verify(mockActionable1).getActionableId();
 		verify(mockActionable1).setParent(play1);
 		verify(mockActionable2).execute();
 		verify(mockActionable2).getMessage();
+		verify(mockActionable2).getActionableId();
 		verify(mockActionable2, times(2)).getParent();
 		verify(mockActionable2).rollback();
 		verify(mockActionable2).setParent(play2);
@@ -128,6 +130,7 @@ public class TimelineTest {
 		verify(mockActionable4).setParent(play2);
 		verify(mockActionable5).execute();
 		verify(mockActionable5).getMessage();
+		verify(mockActionable5).getActionableId();
 		verify(mockActionable5).setParent(play3);
 		verify(mockActionable6).setParent(play3);
 		verifyNoMoreInteractions(mockActionable1, mockActionable2, mockActionable3, mockActionable4, mockActionable5,
@@ -150,6 +153,7 @@ public class TimelineTest {
 		verify(mockActionable1).execute();
 		verify(mockActionable1).setParent(play1);
 		verify(mockActionable1).getMessage();
+		verify(mockActionable1).getActionableId();
 		verifyNoMoreInteractions(mockActionable1);
 		assertThat(timeline.getCurrent()).isNull();
 	}
@@ -170,6 +174,7 @@ public class TimelineTest {
 
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
+		verify(mockActionable1).getActionableId();
 		verify(mockActionable1).rollback();
 		verify(mockActionable1, times(2)).getParent();
 		verify(mockActionable1).setParent(play1);
@@ -193,10 +198,12 @@ public class TimelineTest {
 		timeline.executeNext();
 		verify(mockCostActionable).execute();
 		verify(mockCostActionable).getMessage();
+		verify(mockCostActionable).getActionableId();
 		verify(mockCostActionable).isSet();
 		verify(mockCostActionable).setParent(play1);
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
+		verify(mockActionable1).getActionableId();
 		verify(mockActionable1).setParent(play1);
 		verifyNoMoreInteractions(mockCostActionable, mockActionable1);
 	}
@@ -216,6 +223,7 @@ public class TimelineTest {
 		timeline.executeNext();
 		verify(mockCostActionable).isSet();
 		verify(mockCostActionable, times(2)).getParent();
+		verify(mockCostActionable).getActionableId();
 		verify(mockCostActionable).setParent(play1);
 		verify(mockActionable1).getParent();
 		verify(mockActionable1).setParent(play1);
@@ -236,8 +244,10 @@ public class TimelineTest {
 		verify(mockActionable1).isSet();
 		verify(mockActionable1).setParent(play1);
 		verify(mockActionable1).execute();
+		verify(mockActionable1).getActionableId();
 		verify(mockActionable1).getMessage();
 		verify(mockActionable2).isSet();
+		verify(mockActionable2).getActionableId();
 		verify(mockActionable2).setParent(play1);
 		verifyNoMoreInteractions(mockActionable1, mockActionable2);
 	}

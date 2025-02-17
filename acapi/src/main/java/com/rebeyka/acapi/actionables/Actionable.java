@@ -11,8 +11,9 @@ public abstract class Actionable {
 
 	private Playable playable;
 
-	public Actionable(String actionableId) {
+	public Actionable(String actionableId, Playable playable) {
 		this.actionableId = actionableId;
+		this.playable = playable;
 	}
 
 	public abstract void execute();

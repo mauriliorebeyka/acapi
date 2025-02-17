@@ -9,29 +9,17 @@ import java.util.stream.Stream;
 
 public class DieBuilder<T> {
 
-	private Random seed;
+	private Seed seed;
 
 	private List<DieFace<T>> faces;
 	
-	private static Random globalSeed = new Random(System.nanoTime());
-
-	public DieBuilder<T> withSeed(Random seed) {
+	public DieBuilder<T> withSeed(Seed seed) {
 		this.seed = seed;
-		return this;
-	}
-
-	public DieBuilder<T> withSeed(String seedString) {
-		long salt = seedString.hashCode();
-		this.seed = new Random(salt);
 		return this;
 	}
 	
 	public DieBuilder<T> withRandomSeed() {
-		long salt = 0;
-		synchronized (globalSeed) {
-			salt = globalSeed.nextLong();
-		}
-		this.seed = new Random(System.nanoTime() + salt);
+		this.seed = new Seed();
 		return this;
 	}
 

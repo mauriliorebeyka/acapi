@@ -4,13 +4,19 @@ import java.util.List;
 
 import com.rebeyka.acapi.entities.Player;
 
-public class FirstPlayerPolicy {
+public abstract class FirstPlayerPolicy {
 
-	private int currentFirstPlayer;
+	protected int currentFirstPlayer;
 
 	private List<Player> players;
+	
+	public abstract int getNewFirstPlayer();
 
-	public FirstPlayerPolicy(List<Player> players) {
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
 }

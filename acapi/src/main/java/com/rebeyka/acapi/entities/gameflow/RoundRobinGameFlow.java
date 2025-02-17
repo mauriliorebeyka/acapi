@@ -3,6 +3,7 @@ package com.rebeyka.acapi.entities.gameflow;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Player;
 
 public class RoundRobinGameFlow extends GameFlow {
@@ -54,9 +55,7 @@ public class RoundRobinGameFlow extends GameFlow {
 	@Override
 	public void nextRound() {
 		super.nextRound();
-		if (staggerNewRound) {
-			currentPlayer = firstPlayer;
-		}
+		currentPlayer = firstPlayer;
 	}
 
 }

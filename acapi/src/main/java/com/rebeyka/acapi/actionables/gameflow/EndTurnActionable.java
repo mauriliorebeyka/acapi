@@ -6,8 +6,7 @@ import com.rebeyka.acapi.entities.Playable;
 public class EndTurnActionable extends Actionable {
 
 	public EndTurnActionable(Playable playable) {
-		super("EndTurn");
-		setPlayable(playable);
+		super("EndTurn", playable);
 	}
 
 	@Override

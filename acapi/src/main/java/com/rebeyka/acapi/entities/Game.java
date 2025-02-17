@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.actionables.WinningCondition;
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
-import com.rebeyka.acapi.entities.gameflow.GameFlowBuilder;
 import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
 
@@ -27,7 +28,7 @@ public class Game {
 	
 	private int currentGameFlow;
 	
-	private Actionable gameEndActionable;
+	private WinningCondition gameEndActionable;
 
 	public Game(List<Player> players) {
 		this.players = players;
@@ -36,7 +37,7 @@ public class Game {
 		afterTriggers = new ArrayList<>();
 		beforeTriggers = new ArrayList<>();
 		List<GameFlow> gameFlow = new ArrayList<>();
-		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder().withGame(this).withPlayers(players)));
+		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder(this)));
 		setCurrentGameFlow(0);
 		this.gameFlow = gameFlow;
 		this.players.stream().forEach(p -> p.setGame(this));
@@ -113,7 +114,7 @@ public class Game {
 	}
 	
 	public void end() {
-		timeline.clear();
+		timeline.clearNonExecutedActionables();
 		afterTriggers.clear();
 		beforeTriggers.clear();
 		if (gameEndActionable != null) {
@@ -145,11 +146,11 @@ public class Game {
 		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger()).toList();
 	}
 
-	public Actionable getGameEndActionable() {
+	public WinningCondition getGameEndActionable() {
 		return gameEndActionable;
 	}
 
-	public void setGameEndActionable(Actionable gameEndActionable) {
+	public void setGameEndActionable(WinningCondition gameEndActionable) {
 		this.gameEndActionable = gameEndActionable;
 	}
 }

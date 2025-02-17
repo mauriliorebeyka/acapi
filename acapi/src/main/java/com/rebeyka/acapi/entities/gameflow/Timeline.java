@@ -94,7 +94,7 @@ public class Timeline {
 		}
 	}
 	
-	public void clear() {
+	public void clearNonExecutedActionables() {
 		while (currentPosition < actionables.size() - 1) {
 			actionables.remove(actionables.size() - 1);
 		}

@@ -1,11 +1,12 @@
-package com.rebeyka.acapi.entities.gameflow;
+package com.rebeyka.acapi.builders;
 
 import java.util.Arrays;
 import java.util.List;
 
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.gameflow.GameFlow.FirstPlayerPolicy;
+import com.rebeyka.acapi.entities.gameflow.FirstPlayerPolicy;
+import com.rebeyka.acapi.entities.gameflow.SamePlayerFirstPlayerPolicy;
 
 public class GameFlowBuilder {
 
@@ -19,22 +20,12 @@ public class GameFlowBuilder {
 
 	private boolean staggerNewRound;
 
-	public GameFlowBuilder() {
-		this.game = null;
-		this.players = null;
-		this.gamePhases = Arrays.asList("MAIN");
-		this.firstPlayerPolicy = FirstPlayerPolicy.SAME;
-		this.staggerNewRound = false;
-	}
-
-	public GameFlowBuilder withGame(Game game) {
+	public GameFlowBuilder(Game game) {
 		this.game = game;
-		return this;
-	}
-
-	public GameFlowBuilder withPlayers(List<Player> players) {
-		this.players = players;
-		return this;
+		this.players = game.getPlayers();
+		this.gamePhases = Arrays.asList("MAIN");
+		this.firstPlayerPolicy = new SamePlayerFirstPlayerPolicy();
+		this.staggerNewRound = false;
 	}
 
 	public GameFlowBuilder withGamePhases(List<String> gamePhases) {

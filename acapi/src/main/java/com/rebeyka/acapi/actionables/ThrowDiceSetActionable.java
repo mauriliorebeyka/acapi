@@ -9,9 +9,8 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 	private DiceSet<T> dice;
 	
 	public ThrowDiceSetActionable(String actionableId, DiceSet<T> dice, Playable playable) {
-		super(actionableId);
+		super(actionableId, playable);
 		this.dice = dice;
-		this.setPlayable(playable);
 	}
 
 	@Override
@@ -27,7 +26,7 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 
 	@Override
 	public String getMessage() {
-		return "Rolling %s dice".formatted(getDice().getCount());
+		return "Rolling %s dice. Values %s".formatted(getDice().getCount(),getDice());
 	}
 
 	public DiceSet<T> getDice() {

@@ -8,7 +8,7 @@ import com.rebeyka.acapi.exceptions.DieNotRolledException;
 
 public class Die<T> {
 
-	private Random seed;
+	private Seed seed;
 
 	private DieFace<T> rolledValue;
 
@@ -16,7 +16,7 @@ public class Die<T> {
 
 	private List<DieFace<T>> dieFaces;
 
-	public Die(List<DieFace<T>> dieFaces, Random seed) {
+	public Die(List<DieFace<T>> dieFaces, Seed seed) {
 		this.dieFaces = dieFaces;
 		this.seed = seed;
 		this.rolledValue = null;

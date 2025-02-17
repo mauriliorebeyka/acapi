@@ -2,6 +2,7 @@ package com.rebeyka.acapi.entities.gameflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
@@ -44,8 +46,9 @@ public class CustomOrderedGameFlowTest {
 		doReturn(new SimpleIntegerAttribute(20)).when(game).getModifiedPlayerAttribute(player2, "VP");
 		doReturn(new SimpleIntegerAttribute(5)).when(game).getModifiedPlayerAttribute(player3, "VP");
 		players = Arrays.asList(player1, player2, player3);
+		when(game.getPlayers()).thenReturn(players);
 
-		builder = new GameFlowBuilder().withGame(game).withPlayers(players).withStaggerNewRound(true);
+		builder = new GameFlowBuilder(game).withStaggerNewRound(true);
 	}
 
 	@Test

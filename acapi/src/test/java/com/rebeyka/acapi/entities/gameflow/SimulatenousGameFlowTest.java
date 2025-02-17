@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.entities.gameflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Arrays;
@@ -10,9 +11,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.gameflow.GameFlow.FirstPlayerPolicy;
 
 public class SimulatenousGameFlowTest {
 
@@ -39,9 +40,10 @@ public class SimulatenousGameFlowTest {
 		openMocks(this);
 
 		players = Arrays.asList(player1, player2, player3);
+		when(game.getPlayers()).thenReturn(players);
 
-		builder = new GameFlowBuilder().withGame(game).withPlayers(players)
-				.withFirstPlayerPolicy(FirstPlayerPolicy.NEXT);
+		builder = new GameFlowBuilder(game)
+				.withFirstPlayerPolicy(new NextPlayerFirstPlayerPolicy());
 	}
 
 	@Test
