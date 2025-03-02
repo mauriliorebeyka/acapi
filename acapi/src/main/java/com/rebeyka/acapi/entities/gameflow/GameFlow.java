@@ -42,7 +42,7 @@ public abstract class GameFlow {
 		this.firstPlayerPolicy.setPlayers(players);
 		this.staggerNewRound = builder.isStaggerNewRound();
 
-		this.round = 1;
+		this.round = builder.getInitialRound();
 	}
 
 	public int getRound() {

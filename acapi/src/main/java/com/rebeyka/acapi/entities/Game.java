@@ -25,9 +25,9 @@ public class Game {
 	private List<Trigger> beforeTriggers;
 
 	private List<GameFlow> gameFlow;
-	
+
 	private int currentGameFlow;
-	
+
 	private WinningCondition gameEndActionable;
 
 	public Game(List<Player> players) {
@@ -63,6 +63,14 @@ public class Game {
 		return null;
 	}
 
+	public Play findPlay(Player owner, String playId) {
+		return owner.getPlays().stream().filter(p -> p.getId().equals(playId)).findFirst().orElse(null);
+	}
+
+	public Player findPlayer(String playerName) {
+		return players.stream().filter(p -> p.getId().equals(playerName)).findFirst().orElse(null);
+	}
+
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -87,16 +95,16 @@ public class Game {
 	public void setGameFlow(List<GameFlow> gameFlow) {
 		this.gameFlow = gameFlow;
 	}
-	
+
 	public void setGameFlow(GameFlow gameFlow) {
 		this.gameFlow = new ArrayList<>();
 		this.gameFlow.add(gameFlow);
 	}
-	
+
 	private int getCurrentGameFlow() {
 		return currentGameFlow;
 	}
-	
+
 	private void setCurrentGameFlow(int currentGameFlow) {
 		this.currentGameFlow = currentGameFlow;
 	}
@@ -106,11 +114,15 @@ public class Game {
 	}
 
 	public boolean executeAll() {
-		boolean oneExecution = false; 
+		boolean oneExecution = false;
 		while (executeNext()) {
 			oneExecution = true;
 		}
 		return oneExecution;
+	}
+
+	public List<String> getLog() {
+		return timeline.getLogMessages();
 	}
 	
 	public void end() {
@@ -121,7 +133,7 @@ public class Game {
 			timeline.queue(gameEndActionable);
 		}
 	}
-	
+
 	public void registerAfterTrigger(Trigger t) {
 		afterTriggers.add(t);
 	}
@@ -131,7 +143,8 @@ public class Game {
 	}
 
 	public List<Actionable> getAfterTriggerActionables(Actionable triggeringActionable) {
-		return afterTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger()).toList();
+		return afterTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger())
+				.toList();
 	}
 
 	public void registerBeforeTrigger(Trigger trigger) {
@@ -143,7 +156,8 @@ public class Game {
 	}
 
 	public List<Actionable> getBeforeTriggerActionables(Actionable triggeringActionable) {
-		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger()).toList();
+		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger())
+				.toList();
 	}
 
 	public WinningCondition getGameEndActionable() {

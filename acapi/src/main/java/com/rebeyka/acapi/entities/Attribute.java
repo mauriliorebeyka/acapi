@@ -11,11 +11,15 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	public T getValue() {
 		return value;
 	}
-
+	
 	public void setValue(T value) {
 		this.value = value;
 	}
 
+	public String get() {
+		return value.toString();
+	}
+	
 	@Override
 	public int compareTo(Attribute<T> o) {
 		return getValue().compareTo(o.getValue());

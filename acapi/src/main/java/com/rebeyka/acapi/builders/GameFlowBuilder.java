@@ -19,6 +19,8 @@ public class GameFlowBuilder {
 	private FirstPlayerPolicy firstPlayerPolicy;
 
 	private boolean staggerNewRound;
+	
+	private int initialRound;
 
 	public GameFlowBuilder(Game game) {
 		this.game = game;
@@ -26,6 +28,7 @@ public class GameFlowBuilder {
 		this.gamePhases = Arrays.asList("MAIN");
 		this.firstPlayerPolicy = new SamePlayerFirstPlayerPolicy();
 		this.staggerNewRound = false;
+		this.initialRound = 1;
 	}
 
 	public GameFlowBuilder withGamePhases(List<String> gamePhases) {
@@ -43,6 +46,11 @@ public class GameFlowBuilder {
 		return this;
 	}
 
+	public GameFlowBuilder withInitialRound(int initialRound) {
+		this.initialRound = initialRound;
+		return this;
+	}
+	
 	public Game getGame() {
 		return game;
 	}
@@ -61,5 +69,9 @@ public class GameFlowBuilder {
 
 	public boolean isStaggerNewRound() {
 		return staggerNewRound;
+	}
+	
+	public int getInitialRound() {
+		return initialRound;
 	}
 }

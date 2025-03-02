@@ -7,17 +7,24 @@ import java.util.Map;
 
 public abstract class Playable {
 
-	private List<Play> plays;
+	private String id;
 
+	private List<Play> plays;
+	
 	private Map<String, Attribute<?>> attributes;
 
 	private Game game;
 
-	public Playable() {
+	public Playable(String id) {
+		this.id = id;
 		plays = new ArrayList<>();
 		attributes = new HashMap<>();
 	}
 
+	public String getId() {
+		return id;
+	}
+	
 	public List<Play> getPlays() {
 		return plays;
 	}

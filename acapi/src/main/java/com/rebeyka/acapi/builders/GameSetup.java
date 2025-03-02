@@ -24,16 +24,18 @@ public abstract class GameSetup {
 
 		players.stream().forEach(p -> p.setPlays(createPlays(game,p)));
 		createCommonTriggers(game);
+		defineWinningCondition(game);
 
 		return game;
 	}
 	
 	public void addPlayer(String playerName) {
-		Player player = new Player();
-		player.setAttribute("name", new Attribute<String>(playerName));
+		Player player = new Player(playerName);
 		createDefaultAttributes(player);
 		players.add(player);
 	}
+	
+	public abstract void defineWinningCondition(Game game);
 	
 	public abstract void createDefaultAttributes(Player player);
 	

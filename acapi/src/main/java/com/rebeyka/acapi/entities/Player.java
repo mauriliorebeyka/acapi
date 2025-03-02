@@ -9,7 +9,8 @@ public class Player extends Playable {
 
 	private boolean automatic;
 
-	public Player() {
+	public Player(String id) {
+		super(id);
 		this.decks = new HashMap<>();
 	}
 
@@ -34,6 +35,6 @@ public class Player extends Playable {
 		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
 			return value;
 		}
-		return "unamed player";
+		return getId();
 	}
 }
