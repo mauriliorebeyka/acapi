@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.entities.gameflow;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -82,7 +83,9 @@ public class Timeline {
 		Actionable actionable = actionables.get(currentPosition);
 		actionable.execute();
 		LOG.info(actionable.getMessage());
-		logMessages.add(actionable.getMessage());
+		//TODO Some actionables don't have a parent play, need to figure out what to add here
+		String message = new Date(System.currentTimeMillis()).toString() + actionable.getParent() + actionable.getMessage();
+		logMessages.add(message);
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
 			actionables.addAll(currentPosition, game.getBeforeTriggerActionables(actionables.get(currentPosition)));

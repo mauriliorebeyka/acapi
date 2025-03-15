@@ -14,6 +14,8 @@ import com.rebeyka.acapi.entities.gameflow.Timeline;
 
 public class Game {
 
+	private String id;
+	
 	private List<Player> players;
 
 	private Map<String, Deck> decks;
@@ -30,7 +32,8 @@ public class Game {
 
 	private WinningCondition gameEndActionable;
 
-	public Game(List<Player> players) {
+	public Game(String id, List<Player> players) {
+		this.id = id;
 		this.players = players;
 		this.decks = new HashMap<>();
 		timeline = new Timeline(this);
@@ -43,6 +46,10 @@ public class Game {
 		this.players.stream().forEach(p -> p.setGame(this));
 	}
 
+	public String getId() {
+		return id;
+	}
+	
 	public void declarePlay(Player player, Play play) {
 		if (play.getCondition().test(this)) {
 			timeline.queue(play);

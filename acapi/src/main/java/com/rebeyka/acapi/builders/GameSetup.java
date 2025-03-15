@@ -3,24 +3,39 @@ package com.rebeyka.acapi.builders;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.gameflow.RoundRobinGameFlow;
+import com.rebeyka.acapi.exceptions.WrongPlayerCountException;
 
 public abstract class GameSetup {
 
+	private String gameId;
+	
 	protected List<Player> players;
+
+	private int minimumPlayers;
+	
+	private int maximumPlayers;
 	
 	public GameSetup() {
-		players = new ArrayList<>();
+		this(1, Integer.MAX_VALUE);
 	}
 	
-	public Game newGame() {
-		Game game = new Game(players);
+	public GameSetup(int minimumPlayers, int maximumPlayers) {
+		players = new ArrayList<>();
+		this.minimumPlayers = minimumPlayers;
+		this.maximumPlayers = maximumPlayers;
+		this.gameId = "empty id";
+	}
+	
+	public Game newGame() throws WrongPlayerCountException {
+		if (players.size() < minimumPlayers || players.size() > maximumPlayers) {
+			throw new WrongPlayerCountException("Wrong number of players");
+		}
+		Game game = new Game(gameId, players);
 		game.setGameFlow(new RoundRobinGameFlow(new GameFlowBuilder(game)));
-//		game.setGameEndActionable(new DeclareWinnerActionable("END_GAME", game));
 
 		players.stream().forEach(p -> p.setPlays(createPlays(game,p)));
 		createCommonTriggers(game);
@@ -34,6 +49,16 @@ public abstract class GameSetup {
 		createDefaultAttributes(player);
 		players.add(player);
 	}
+	
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+	
+	public String getGameId() {
+		return gameId;
+	}
+	
+	public abstract String getDescription();
 	
 	public abstract void defineWinningCondition(Game game);
 	
