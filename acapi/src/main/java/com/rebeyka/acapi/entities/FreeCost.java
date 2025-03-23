@@ -5,15 +5,8 @@ import com.rebeyka.acapi.actionables.FreeCostActionable;
 
 public class FreeCost extends Cost {
 
-	private CostActionable actionable;
-
 	public FreeCost() {
-		actionable = new FreeCostActionable(this);
-	}
-
-	@Override
-	public CostActionable generateActionable() {
-		return actionable;
+		setCostActionable(new FreeCostActionable(this));
 	}
 
 	@Override

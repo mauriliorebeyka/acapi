@@ -13,6 +13,7 @@ import com.rebeyka.acapi.actionables.ChoiceActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
+import com.rebeyka.acapi.entities.Playable;
 
 public class Timeline {
 
@@ -42,7 +43,7 @@ public class Timeline {
 
 	public void queue(Play play) {
 		LOG.info("Declaring play {} from {}", play.getId(), play.getOrigin());
-		actionables.add(play.getCost().generateActionable());
+		actionables.add(play.getCost().getCostActionable());
 		actionables.addAll(actionables.size(), play.getActionables());
 	}
 
@@ -82,10 +83,11 @@ public class Timeline {
 	private void execute() {
 		Actionable actionable = actionables.get(currentPosition);
 		actionable.execute();
-		LOG.info(actionable.getMessage());
+		String message = actionable.getMessage();
+		LOG.info(message);
 		//TODO Some actionables don't have a parent play, need to figure out what to add here
-		String message = new Date(System.currentTimeMillis()).toString() + actionable.getParent() + actionable.getMessage();
-		logMessages.add(message);
+		String logMessage = new Date(System.currentTimeMillis()).toString() + actionable.getParent() + message;
+		logMessages.add(logMessage);
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
 			actionables.addAll(currentPosition, game.getBeforeTriggerActionables(actionables.get(currentPosition)));

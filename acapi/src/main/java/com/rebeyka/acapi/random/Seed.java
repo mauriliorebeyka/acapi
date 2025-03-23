@@ -8,9 +8,6 @@ public class Seed {
 	
 	private Random instanceSeed;
 	
-	//TODO Add a way to get either the long or String for the seed
-	private String seedString;
-	
 	public Seed() {
 		instanceSeed = new Random(GLOBAL_SEED.nextLong() + System.nanoTime());
 	}
@@ -26,6 +23,10 @@ public class Seed {
 	
 	public int nextInt() {
 		return instanceSeed.nextInt();
+	}
+	
+	public int nextInt(int bound) {
+		return instanceSeed.nextInt(bound);
 	}
 	
 	public double nextDouble() {

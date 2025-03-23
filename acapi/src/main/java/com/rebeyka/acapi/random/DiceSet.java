@@ -27,7 +27,7 @@ public class DiceSet<T> implements Comparable<DiceSet<T>> {
 	}
 
 	public int getSum() {
-		return getSum(f -> true);
+		return getSum(_ -> true);
 	}
 
 	public List<T> getValues() {

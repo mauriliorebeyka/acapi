@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.random;
 
 import java.util.List;
-import java.util.Random;
 
 public class Coin extends Die<CoinSides> {
 

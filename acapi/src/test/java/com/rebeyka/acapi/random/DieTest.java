@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,12 +37,12 @@ public class DieTest {
 			die.reroll();
 			rolledValues.put(die.getValue(), rolledValues.get(die.getValue()) + 1);
 		}
-		assertThat(rolledValues).allSatisfy((key, value) -> assertThat(value).isBetween(200, 300));
+		assertThat(rolledValues).allSatisfy((_, value) -> assertThat(value).isBetween(200, 300));
 	}
 
 	@Test
 	public void testWeightedRoll() {
-		Die<Integer> die = new DieBuilder<Integer>().withSeed(new Seed(0)).withFaces(4).withWeightedValue(1, 3)
+		Die<Integer> die = new DieBuilder<Integer>().withSeed(new Seed(0)).withFaces(1,2,3,4).withWeightedValue(1, 3)
 				.build();
 		int ones = 0;
 		for (int i = 0; i < 1000; i++) {
@@ -76,5 +75,11 @@ public class DieTest {
 		builder.withFaces(new ArrayList<>());
 		assertThatThrownBy(() -> builder.build()).isInstanceOf(IllegalArgumentException.class)
 				.hasMessage("Die has no defined faces");
+	}
+	
+	@Test
+	public void testHeapPollution() {
+		Die<Integer> die = new DieBuilder<Integer>().withRandomSeed().withFaces(new Integer[] {1,2,3}).addFaces(new Integer[] {4,5,6}).build();
+		assertThat(die.roll().getValue().getClass()).isEqualTo(Integer.class);
 	}
 }

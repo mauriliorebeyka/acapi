@@ -26,7 +26,7 @@ public class Trigger {
 	}
 
 	public Trigger(Actionable trigger) {
-		this(i -> true, trigger, "ALL");
+		this(_ -> true, trigger, "ALL");
 	}
 
 	public String getTriggerOnActionableId() {

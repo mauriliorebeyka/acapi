@@ -1,6 +1,5 @@
 package com.rebeyka.acapi.entities;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -27,7 +26,7 @@ public class Play {
 		this.actionables = builder.getActionables();
 
 		this.actionables.stream().forEach(a -> a.setParent(this));
-		this.cost.generateActionable().setParent(this);
+		this.cost.getCostActionable().setParent(this);
 	}
 
 	public String getId() {

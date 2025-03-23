@@ -11,11 +11,12 @@ import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
 import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
+import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
 public class Game {
 
 	private String id;
-	
+
 	private List<Player> players;
 
 	private Map<String, Deck> decks;
@@ -49,11 +50,14 @@ public class Game {
 	public String getId() {
 		return id;
 	}
-	
-	public void declarePlay(Player player, Play play) {
-		if (play.getCondition().test(this)) {
-			timeline.queue(play);
+
+	public boolean declarePlay(Player player, Play play) {
+		if (!play.getCondition().test(this)) {
+			return false;
 		}
+
+		timeline.queue(play);
+		return true;
 	}
 
 	public Deck findDeck(Playable c) {
@@ -71,11 +75,14 @@ public class Game {
 	}
 
 	public Play findPlay(Player owner, String playId) {
-		return owner.getPlays().stream().filter(p -> p.getId().equals(playId)).findFirst().orElse(null);
+		return owner.getPlays().stream().filter(p -> p.getId().equals(playId)).findFirst()
+				.orElseThrow(() -> new GameElementNotFoundException(
+						"Could not find playId %s for Player %s".formatted(playId, owner.getId())));
 	}
 
 	public Player findPlayer(String playerName) {
-		return players.stream().filter(p -> p.getId().equals(playerName)).findFirst().orElse(null);
+		return players.stream().filter(p -> p.getId().equals(playerName)).findFirst()
+				.orElseThrow(() -> new GameElementNotFoundException("Could not find player %s".formatted(playerName)));
 	}
 
 	public List<Player> getPlayers() {
@@ -131,7 +138,7 @@ public class Game {
 	public List<String> getLog() {
 		return timeline.getLogMessages();
 	}
-	
+
 	public void end() {
 		timeline.clearNonExecutedActionables();
 		afterTriggers.clear();

@@ -20,11 +20,11 @@ public abstract class CardCountCost extends Cost {
 	}
 
 	public CardCountCost(int count) {
-		this(count, i -> true);
+		this(count, _ -> true);
 	}
 
 	public CardCountCost() {
-		this(1, i -> true);
+		this(1, _ -> true);
 	}
 
 	public void setCards(List<Card> cards) {

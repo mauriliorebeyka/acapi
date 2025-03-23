@@ -2,7 +2,6 @@ package com.rebeyka.acapi.random;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -32,12 +31,9 @@ public class DieBuilder<T> {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	public DieBuilder<T> withFaces(T... values) {
 		return withFaces(Stream.of(values).collect(Collectors.toList()));
-	}
-
-	public DieBuilder<T> withFaces(int numberOfFaces) {
-		return withFaces(IntStream.range(1, numberOfFaces + 1).boxed().map(i -> (T) i).collect(Collectors.toList()));
 	}
 
 	public DieBuilder<T> addFace(T face, double weight, int intValue) {
@@ -56,6 +52,12 @@ public class DieBuilder<T> {
 		return addFace(face, 1, 0);
 	}
 
+	@SuppressWarnings("unchecked")
+	public DieBuilder<T> addFaces(T... faces) {
+		Stream.of(faces).forEach(this::addFace);
+		return this;
+	}
+	
 	public DieBuilder<T> withWeightedValue(T value, double weight) {
 		for (int i = 0; i < faces.size(); i++) {
 			DieFace<T> face = faces.get(i);
@@ -67,7 +69,7 @@ public class DieBuilder<T> {
 	}
 
 	public static Die<Integer> buildBasicDie(int numberOfFaces) {
-		return new DieBuilder<Integer>().withRandomSeed().withFaces(numberOfFaces).build();
+		return new DieBuilder<Integer>().withRandomSeed().withFaces(IntStream.range(1, numberOfFaces+1).boxed().toList()).build();
 	}
 
 	public static DiceSet<Integer> buildBasicDiceSet(int numberOfDie, int numberOfFaces) {

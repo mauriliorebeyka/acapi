@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.random;
 
 import java.util.List;
-import java.util.Random;
 
 import com.rebeyka.acapi.exceptions.DieAlreadyRolledException;
 import com.rebeyka.acapi.exceptions.DieNotRolledException;
