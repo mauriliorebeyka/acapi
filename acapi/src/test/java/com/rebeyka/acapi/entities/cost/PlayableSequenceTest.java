@@ -13,7 +13,7 @@ import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
 import com.rebeyka.entitities.cost.PlayableSequenceCost;
 
-public class CardGroupCostTest {
+public class PlayableSequenceTest {
 
 	@Test
 	public void testCostActionable() {
