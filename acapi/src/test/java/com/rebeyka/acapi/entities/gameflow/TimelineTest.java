@@ -21,6 +21,7 @@ import com.rebeyka.acapi.actionables.ChoiceActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.builders.PlayBuilder;
 import com.rebeyka.acapi.entities.Cost;
+import com.rebeyka.acapi.entities.FreeCost;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
 
@@ -266,7 +267,7 @@ public class TimelineTest {
 		timeline.queue(play1);
 		timeline.executeNext();
 		timeline.executeNext();
-		verify(game).getAfterTriggerActionables(Cost.FREE.getCostActionable());
+		verify(game).getAfterTriggerActionables(new FreeCost(null).getCostActionable());
 		verify(game).getBeforeTriggerActionables(mockActionable1);
 		verify(game).getAfterTriggerActionables(mockActionable1);
 		verify(game).getBeforeTriggerActionables(mockActionable2);

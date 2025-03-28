@@ -3,18 +3,16 @@ package com.rebeyka.entitities.cost;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.rebeyka.acapi.entities.Card;
 import com.rebeyka.acapi.entities.Cost;
+import com.rebeyka.acapi.entities.Playable;
 
 public abstract class CardCountCost extends Cost {
 
-	private List<Card> cards;
-
-	private Predicate<Card> predicate;
+	private Predicate<Playable> predicate;
 
 	private int count;
 
-	public CardCountCost(int count, Predicate<Card> predicate) {
+	public CardCountCost(int count, Predicate<Playable> predicate) {
 		this.count = count;
 		this.predicate = predicate;
 	}
@@ -27,16 +25,8 @@ public abstract class CardCountCost extends Cost {
 		this(1, _ -> true);
 	}
 
-	public void setCards(List<Card> cards) {
-		this.cards = cards;
-	}
-
-	public List<Card> getCards() {
-		return cards;
-	}
-
 	@Override
-	public boolean isPaid() {
+	public boolean isPaid(List<Playable> cards) {
 		return cards.stream().allMatch(predicate) && cards.size() >= count;
 	}
 

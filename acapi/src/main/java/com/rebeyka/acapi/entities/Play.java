@@ -22,6 +22,9 @@ public class Play {
 		this.id = builder.getId();
 		this.origin = builder.getOrigin();
 		this.cost = builder.getCost();
+		if (this.cost == null) {
+			this.cost = new FreeCost(origin);
+		}
 		this.condition = builder.getCondition();
 		this.actionables = builder.getActionables();
 

@@ -22,7 +22,6 @@ public class PlayBuilder {
 	private List<Actionable> actionables;
 	
 	public PlayBuilder() {
-		this.cost = Cost.FREE;
 		this.condition = _ -> true;
 		this.actionables = new ArrayList<>();
 	}

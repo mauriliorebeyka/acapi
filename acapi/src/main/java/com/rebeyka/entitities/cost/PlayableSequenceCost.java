@@ -10,15 +10,12 @@ public class PlayableSequenceCost extends Cost {
 
 	String attributeName;
 
-	private List<Playable> playables;
-
-	public PlayableSequenceCost(String attributeName, List<Playable> playables) {
+	public PlayableSequenceCost(String attributeName) {
 		this.attributeName = attributeName;
-		this.playables = playables;
 	}
-
+	
 	@Override
-	public boolean isPaid() {
+	public boolean isPaid(List<Playable> playables) {
 		if (!playables.stream().map(p -> p.getAttribute(attributeName))
 				.allMatch(a -> a instanceof SimpleIntegerAttribute)) {
 			return false;

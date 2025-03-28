@@ -5,6 +5,7 @@ import java.util.function.BiFunction;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 
+//TODO this can probably be changed to something that takes only one attribute and a function that calculates on top of it
 public class ChangeAttributeActionable<T extends Comparable<? super T>, U extends Comparable<? super U>> extends Actionable {
 
 	private String sourceAttributeName;
@@ -22,8 +23,8 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>, U extend
 
 	@Override
 	public void execute() {
-		Attribute<T> sourceAttribute = (Attribute<T>) getPlayable().getAttribute(sourceAttributeName);
-		Attribute<U> targetAttribute = (Attribute<U>) getPlayable().getAttribute(targetAttributeName);
+		Attribute<T> sourceAttribute = (Attribute<T>) getOrigin().getAttribute(sourceAttributeName);
+		Attribute<U> targetAttribute = (Attribute<U>) getOrigin().getAttribute(targetAttributeName);
 		targetAttribute.setValue(newValue.apply(sourceAttribute, targetAttribute));
 	}
 
@@ -35,7 +36,7 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>, U extend
 
 	@Override
 	public String getMessage() {
-		return "Changing attribute %s on %s to %s".formatted(targetAttributeName,getPlayable(),getPlayable().getAttribute(targetAttributeName).getValue());
+		return "Changing attribute %s on %s to %s".formatted(targetAttributeName,getOrigin(),getOrigin().getAttribute(targetAttributeName).getValue());
 	}
 
 	

@@ -11,7 +11,7 @@ public class Card extends Playable {
 		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
 			return value;
 		}
-		return "unamed card";
+		return "Card ID %s".formatted(getId());
 	}
 
 }

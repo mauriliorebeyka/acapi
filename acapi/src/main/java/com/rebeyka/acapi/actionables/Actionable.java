@@ -9,11 +9,11 @@ public abstract class Actionable {
 
 	private Play parent;
 
-	private Playable playable;
+	private Playable origin;
 
-	public Actionable(String actionableId, Playable playable) {
+	public Actionable(String actionableId, Playable origin) {
 		this.actionableId = actionableId;
-		this.playable = playable;
+		this.origin = origin;
 	}
 
 	public abstract void execute();
@@ -34,11 +34,11 @@ public abstract class Actionable {
 		this.parent = parent;
 	}
 
-	public Playable getPlayable() {
-		return playable;
+	public Playable getOrigin() {
+		return origin;
 	}
 
-	public void setPlayable(Playable target) {
-		this.playable = target;
+	public void setOrigin(Playable origin) {
+		this.origin = origin;
 	}
 }

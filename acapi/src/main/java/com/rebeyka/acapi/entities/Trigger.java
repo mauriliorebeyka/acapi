@@ -46,7 +46,7 @@ public class Trigger {
 	}
 
 	public boolean test(Actionable triggeringActionable) {
-		Playable test = triggeringActionable.getPlayable();
+		Playable test = triggeringActionable.getOrigin();
 		if (test == null) {
 			return false;
 		}

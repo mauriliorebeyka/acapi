@@ -1,16 +1,17 @@
 package com.rebeyka.acapi.entities;
 
-import com.rebeyka.acapi.actionables.CostActionable;
+import java.util.List;
+
 import com.rebeyka.acapi.actionables.FreeCostActionable;
 
 public class FreeCost extends Cost {
 
-	public FreeCost() {
-		setCostActionable(new FreeCostActionable(this));
+	public FreeCost(Playable origin) {
+		setCostActionable(new FreeCostActionable(origin, this));
 	}
 
 	@Override
-	public boolean isPaid() {
+	public boolean isPaid(List<Playable> playables) {
 		return true;
 	}
 }

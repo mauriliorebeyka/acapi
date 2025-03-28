@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.entities;
 
+import java.util.List;
+
 import com.rebeyka.acapi.actionables.CostActionable;
 
 public abstract class Cost {
@@ -13,8 +15,7 @@ public abstract class Cost {
 	public CostActionable getCostActionable() {
 		return costActionable;
 	}
+	
+	public abstract boolean isPaid(List<Playable> playables);
 
-	public abstract boolean isPaid();
-
-	public static Cost FREE = new FreeCost();
 }

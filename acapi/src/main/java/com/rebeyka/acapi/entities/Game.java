@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.WinningCondition;
@@ -32,6 +33,8 @@ public class Game {
 	private int currentGameFlow;
 
 	private WinningCondition gameEndActionable;
+
+	private List<Playable> selectedChoices;
 
 	public Game(String id, List<Player> players) {
 		this.id = id;
@@ -74,8 +77,14 @@ public class Game {
 		return null;
 	}
 
+	public Deck findDeck(String deckName) {
+		return players.stream().flatMap(p -> p.getDecks().values().stream()).filter(d -> d.getId().equals(deckName)).findFirst().get();
+	}
+	
 	public Play findPlay(Player owner, String playId) {
-		return owner.getPlays().stream().filter(p -> p.getId().equals(playId)).findFirst()
+		Stream<Play> playStream = owner.getDecks().values().stream().flatMap(d -> d.getCards().stream())
+				.flatMap(c -> c.getPlays().stream());
+		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getId().equals(playId)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException(
 						"Could not find playId %s for Player %s".formatted(playId, owner.getId())));
 	}
@@ -103,7 +112,7 @@ public class Game {
 	}
 
 	public GameFlow getGameFlow() {
-		return gameFlow.get(getCurrentGameFlow());
+		return gameFlow.get(currentGameFlow);
 	}
 
 	public void setGameFlow(List<GameFlow> gameFlow) {
@@ -115,12 +124,28 @@ public class Game {
 		this.gameFlow.add(gameFlow);
 	}
 
-	private int getCurrentGameFlow() {
-		return currentGameFlow;
-	}
-
 	private void setCurrentGameFlow(int currentGameFlow) {
 		this.currentGameFlow = currentGameFlow;
+	}
+
+	public WinningCondition getGameEndActionable() {
+		return gameEndActionable;
+	}
+
+	public void setGameEndActionable(WinningCondition gameEndActionable) {
+		this.gameEndActionable = gameEndActionable;
+	}
+
+	public List<Playable> getSelectedChoices() {
+		return this.selectedChoices;
+	}
+
+	public void setSelectedChoices(List<Playable> choices) {
+		this.selectedChoices = choices;
+	}
+
+	public void setSelectedChoices(Playable singleChoice) {
+		this.selectedChoices = List.of(singleChoice);
 	}
 
 	public boolean executeNext() {
@@ -172,13 +197,5 @@ public class Game {
 	public List<Actionable> getBeforeTriggerActionables(Actionable triggeringActionable) {
 		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable)).map(t -> t.getActionableToTrigger())
 				.toList();
-	}
-
-	public WinningCondition getGameEndActionable() {
-		return gameEndActionable;
-	}
-
-	public void setGameEndActionable(WinningCondition gameEndActionable) {
-		this.gameEndActionable = gameEndActionable;
 	}
 }

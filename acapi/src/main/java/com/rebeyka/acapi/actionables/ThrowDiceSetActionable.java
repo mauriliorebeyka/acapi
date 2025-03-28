@@ -16,7 +16,7 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 	@Override
 	public void execute() {
 		this.getDice().rollAll();
-		getPlayable().setAttribute("DICE_ROLL", new Attribute<DiceSet<T>>(dice));
+		getOrigin().setAttribute("DICE_ROLL", new Attribute<DiceSet<T>>(dice));
 	}
 
 	@Override

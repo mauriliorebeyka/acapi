@@ -16,13 +16,13 @@ import com.rebeyka.entitities.cost.PlayableSequenceCost;
 public class PlayableSequenceTest {
 
 	@Test
-	public void testCostActionable() {
+	public void testPaid() {
 		Playable mockPlayable1 = mock(Playable.class);
 		doReturn(new SimpleIntegerAttribute(7)).when(mockPlayable1).getAttribute("number");
 		Playable mockPlayable2 = mock(Playable.class);
 		doReturn(new SimpleIntegerAttribute(8)).when(mockPlayable2).getAttribute("number");
-		PlayableSequenceCost cost = new PlayableSequenceCost("number",List.of(mockPlayable1,mockPlayable2));
-		assertThat(cost.isPaid());
+		PlayableSequenceCost cost = new PlayableSequenceCost("number");
+		assertThat(cost.isPaid(List.of(mockPlayable1,mockPlayable2)));
 	}
 	
 	@Test
@@ -31,8 +31,8 @@ public class PlayableSequenceTest {
 		doReturn(new SimpleIntegerAttribute(1)).when(mockPlayable1).getAttribute("number");
 		Playable mockPlayable2 = mock(Playable.class);
 		doReturn(new SimpleIntegerAttribute(3)).when(mockPlayable2).getAttribute("number");
-		PlayableSequenceCost cost = new PlayableSequenceCost("number",List.of(mockPlayable1,mockPlayable2));
-		assertThat(!cost.isPaid());
+		PlayableSequenceCost cost = new PlayableSequenceCost("number");
+		assertThat(!cost.isPaid(List.of(mockPlayable1,mockPlayable2)));
 	}
 	
 	@Test
@@ -43,7 +43,7 @@ public class PlayableSequenceTest {
 		doReturn(new Attribute<String>("2")).when(mockPlayable2).getAttribute("number");
 		Playable mockPlayable2right = mock(Playable.class);
 		doReturn(new SimpleIntegerAttribute(2)).when(mockPlayable2right).getAttribute("number");
-		PlayableSequenceCost cost = new PlayableSequenceCost("number",List.of(mockPlayable1,mockPlayable2,mockPlayable2right));
-		assertThat(!cost.isPaid());
+		PlayableSequenceCost cost = new PlayableSequenceCost("number");
+		assertThat(!cost.isPaid(List.of(mockPlayable1,mockPlayable2,mockPlayable2right)));
 	}
 }

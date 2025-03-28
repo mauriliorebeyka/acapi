@@ -6,12 +6,12 @@ import java.util.List;
 
 public class Deck {
 
-	private String name;
+	private String id;
 
 	private List<Card> cards;
 
-	public Deck(String name) {
-		this.name = name;
+	public Deck(String id) {
+		this.id = id;
 		cards = new ArrayList<>();
 	}
 
@@ -35,8 +35,12 @@ public class Deck {
 		this.cards = cards;
 	}
 
+	public String getId() {
+		return id;
+	}
+	
 	@Override
 	public String toString() {
-		return "Deck %s".formatted(name);
+		return "Deck %s, containing %s cards".formatted(id, cards.size());
 	}
 }

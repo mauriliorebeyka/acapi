@@ -9,11 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.actionables.ChoiceActionable;
+import com.rebeyka.acapi.actionables.ConditionalActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
-import com.rebeyka.acapi.entities.Playable;
 
 public class Timeline {
 
@@ -55,12 +54,21 @@ public class Timeline {
 		return logMessages;
 	}
 	
+	public boolean hasNext() {
+		return currentPosition < actionables.size();
+	}
+	
+	public boolean isNextConditional() {
+		return hasNext() && actionables.get(currentPosition) instanceof ConditionalActionable;
+	}
+	
 	public boolean executeNext() {
-		if (currentPosition < actionables.size()) {
+		if (hasNext()) {
 			LOG.debug("Executing {}. Still {} actionables in the list ",actionables.get(currentPosition).getActionableId(), actionables.size() - currentPosition);
 			Actionable actionable = actionables.get(currentPosition);
-			if (actionable instanceof ChoiceActionable choiceActionable && !choiceActionable.isSet()) {
-				if (choiceActionable instanceof CostActionable) {
+			if (actionable instanceof ConditionalActionable conditionalActionable && !conditionalActionable.isSet()) {
+				if (conditionalActionable instanceof CostActionable) {
+					LOG.debug("Cost {} not paid",conditionalActionable);
 					cancelCurrentPlay();
 				}
 				return false;
@@ -100,6 +108,7 @@ public class Timeline {
 			return;
 		}
 		Play play = actionables.get(currentPosition).getParent();
+		LOG.debug("Cancelling play {}",play);
 		while (currentPosition > 0 && actionables.get(currentPosition - 1).getParent().equals(play)) {
 			rollbackLast();
 		}
