@@ -19,6 +19,10 @@ public class Play {
 	private List<Actionable> actionables;
 
 	public Play(PlayBuilder builder) {
+		if (builder.getOrigin() == null) {
+			throw new IllegalArgumentException("Cannot have null origin");
+		}
+		
 		this.id = builder.getId();
 		this.origin = builder.getOrigin();
 		this.cost = builder.getCost();

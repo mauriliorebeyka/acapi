@@ -19,9 +19,9 @@ public class MoveCardActionable extends Actionable {
 	@Override
 	public void execute() {
 		Game game = getOrigin().getGame();
-		game.findDeck(originDeck).getCards().remove(getOrigin());
-		game.findDeck(targetDeck).add((Card)getOrigin());
-		System.out.println("moving %s from %s to %s".formatted(getOrigin(),originDeck,targetDeck));
+		game.findDeck(originDeck).getCards().remove(getTargets().getFirst());
+		game.findDeck(targetDeck).add((Card)getTargets().getFirst());
+		System.out.println("moving %s from %s to %s".formatted(getTargets(),originDeck,targetDeck));
 	}
 
 	@Override

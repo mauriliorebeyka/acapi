@@ -13,6 +13,7 @@ import com.rebeyka.acapi.actionables.ConditionalActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
+import com.rebeyka.acapi.entities.Playable;
 
 public class Timeline {
 
@@ -40,9 +41,10 @@ public class Timeline {
 		return actionables.get(currentPosition);
 	}
 
-	public void queue(Play play) {
-		LOG.info("Declaring play {} from {}", play.getId(), play.getOrigin());
+	public void queue(Play play, List<Playable> targets) {
+		LOG.info("Declaring play {} from {} against {}", play.getId(), play.getOrigin(), targets);
 		actionables.add(play.getCost().getCostActionable());
+		play.getActionables().stream().forEach(a -> a.setTargets(targets));
 		actionables.addAll(actionables.size(), play.getActionables());
 	}
 

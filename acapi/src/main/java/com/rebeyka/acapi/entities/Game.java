@@ -54,12 +54,16 @@ public class Game {
 		return id;
 	}
 
-	public boolean declarePlay(Player player, Play play) {
+	public boolean declarePlay(Player player, Play play, Playable target) {
+		return declarePlay(player, play, List.of(target));
+	}
+	
+	public boolean declarePlay(Player player, Play play, List<Playable> targets) {
 		if (!play.getCondition().test(this)) {
 			return false;
 		}
 
-		timeline.queue(play);
+		timeline.queue(play, targets);
 		return true;
 	}
 
