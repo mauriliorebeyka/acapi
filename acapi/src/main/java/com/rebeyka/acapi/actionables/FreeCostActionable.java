@@ -5,8 +5,8 @@ import com.rebeyka.acapi.entities.Playable;
 
 public class FreeCostActionable extends CostActionable {
 
-	public FreeCostActionable(Playable origin, FreeCost cost) {
-		super("Free Cost", origin, cost);
+	public FreeCostActionable(FreeCost cost) {
+		super("Free Cost", cost);
 	}
 
 	@Override

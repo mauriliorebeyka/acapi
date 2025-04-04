@@ -7,7 +7,7 @@ public abstract class WinningCondition extends Actionable {
 	protected Game game;
 	
 	public WinningCondition(Game game) {
-		super("WINNING CONDITION", null);
+		super("WINNING CONDITION");
 		this.game = game;
 	}
 

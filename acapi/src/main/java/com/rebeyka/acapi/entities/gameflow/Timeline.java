@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.ConditionalActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
+import com.rebeyka.acapi.entities.Cost;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Playable;
@@ -20,7 +21,7 @@ public class Timeline {
 	private static final Logger LOG = LogManager.getLogger();
 
 	private List<Actionable> actionables;
-	
+
 	private List<String> logMessages;
 
 	private int currentPosition;
@@ -42,35 +43,47 @@ public class Timeline {
 	}
 
 	public void queue(Play play, List<Playable> targets) {
-		LOG.info("Declaring play {} from {} against {}", play.getId(), play.getOrigin(), targets);
-		actionables.add(play.getCost().getCostActionable());
-		play.getActionables().stream().forEach(a -> a.setTargets(targets));
-		actionables.addAll(actionables.size(), play.getActionables());
+		Play newPlay = new Play(play);
+		LOG.info("Declaring play {} from {} against {}", newPlay.getId(), newPlay.getOrigin(), targets);
+		newPlay.setOrigin(play.getOrigin());
+		newPlay.setTargets(targets);
+		newPlay.setGame(game);
+		if (!newPlay.getCost().equals(Cost.FREE)) {
+			CostActionable costActionable = newPlay.getCost().getCostActionable();
+			costActionable.setParent(newPlay);
+			actionables.add(costActionable);
+		}
+		List<Actionable> extra = play.getActionables();
+		for (Actionable a : extra) {
+			a.setParent(newPlay);
+		}
+		actionables.addAll(extra);
 	}
 
 	public void queue(Actionable actionable) {
 		actionables.add(actionable);
 	}
-	
+
 	public List<String> getLogMessages() {
 		return logMessages;
 	}
-	
+
 	public boolean hasNext() {
 		return currentPosition < actionables.size();
 	}
-	
+
 	public boolean isNextConditional() {
 		return hasNext() && actionables.get(currentPosition) instanceof ConditionalActionable;
 	}
-	
+
 	public boolean executeNext() {
 		if (hasNext()) {
-			LOG.debug("Executing {}. Still {} actionables in the list ",actionables.get(currentPosition).getActionableId(), actionables.size() - currentPosition);
 			Actionable actionable = actionables.get(currentPosition);
+			LOG.debug("Executing {}. Still {} actionables in the list ", actionable.getActionableId(),
+					actionables.size() - currentPosition);
 			if (actionable instanceof ConditionalActionable conditionalActionable && !conditionalActionable.isSet()) {
 				if (conditionalActionable instanceof CostActionable) {
-					LOG.debug("Cost {} not paid",conditionalActionable);
+					LOG.debug("Cost {} not paid", conditionalActionable);
 					cancelCurrentPlay();
 				}
 				return false;
@@ -95,7 +108,8 @@ public class Timeline {
 		actionable.execute();
 		String message = actionable.getMessage();
 		LOG.info(message);
-		//TODO Some actionables don't have a parent play, need to figure out what to add here
+		// TODO Some actionables don't have a parent play, need to figure out what to
+		// add here
 		String logMessage = new Date(System.currentTimeMillis()).toString() + actionable.getParent() + message;
 		logMessages.add(logMessage);
 		currentPosition++;
@@ -110,7 +124,7 @@ public class Timeline {
 			return;
 		}
 		Play play = actionables.get(currentPosition).getParent();
-		LOG.debug("Cancelling play {}",play);
+		LOG.debug("Cancelling play {}", play);
 		while (currentPosition > 0 && actionables.get(currentPosition - 1).getParent().equals(play)) {
 			rollbackLast();
 		}
@@ -118,7 +132,7 @@ public class Timeline {
 			actionables.remove(currentPosition);
 		}
 	}
-	
+
 	public void clearNonExecutedActionables() {
 		while (currentPosition < actionables.size() - 1) {
 			actionables.remove(actionables.size() - 1);

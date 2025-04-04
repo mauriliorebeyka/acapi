@@ -1,9 +1,6 @@
 package com.rebeyka.acapi.actionables;
 
-import java.util.List;
-
 import com.rebeyka.acapi.entities.Play;
-import com.rebeyka.acapi.entities.Playable;
 
 public abstract class Actionable {
 
@@ -11,13 +8,8 @@ public abstract class Actionable {
 
 	private Play parent;
 
-	private Playable origin;
-
-	private List<Playable> targets;
-	
-	public Actionable(String actionableId, Playable origin) {
+	public Actionable(String actionableId) {
 		this.actionableId = actionableId;
-		this.origin = origin;
 	}
 
 	public abstract void execute();
@@ -38,19 +30,4 @@ public abstract class Actionable {
 		this.parent = parent;
 	}
 
-	public Playable getOrigin() {
-		return origin;
-	}
-
-	public void setOrigin(Playable origin) {
-		this.origin = origin;
-	}
-
-	public List<Playable> getTargets() {
-		return targets;
-	}
-
-	public void setTargets(List<Playable> targets) {
-		this.targets = targets;
-	}
 }

@@ -22,6 +22,9 @@ public class PlayableSequenceCost extends Cost {
 		}
 		List<Integer> sorted = playables.stream().map(p -> (SimpleIntegerAttribute) p.getAttribute(attributeName))
 				.map(SimpleIntegerAttribute::getValue).sorted().toList();
+		if (sorted.isEmpty()) {
+			return false;
+		}
 		return sorted.stream().skip(1).allMatch(i -> i - sorted.get(sorted.indexOf(i) - 1) == 1);
 	}
 

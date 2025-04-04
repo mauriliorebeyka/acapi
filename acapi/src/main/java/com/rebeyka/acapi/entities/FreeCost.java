@@ -7,7 +7,7 @@ import com.rebeyka.acapi.actionables.FreeCostActionable;
 public class FreeCost extends Cost {
 
 	public FreeCost(Playable origin) {
-		setCostActionable(new FreeCostActionable(origin, this));
+		setCostActionable(() -> new FreeCostActionable(this));
 	}
 
 	@Override

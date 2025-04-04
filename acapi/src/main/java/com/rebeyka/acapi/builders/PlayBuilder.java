@@ -3,6 +3,7 @@ package com.rebeyka.acapi.builders;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Cost;
@@ -19,7 +20,7 @@ public class PlayBuilder {
 
 	private Predicate<Game> condition;
 
-	private List<Actionable> actionables;
+	private List<Supplier<Actionable>> actionables;
 	
 	public PlayBuilder() {
 		this.condition = _ -> true;
@@ -46,12 +47,12 @@ public class PlayBuilder {
 		return this;
 	}
 	
-	public PlayBuilder withActionables(List<Actionable> actionables) {
-		this.actionables = new ArrayList<Actionable>(actionables);
+	public PlayBuilder withActionables(List<Supplier<Actionable>> actionables) {
+		this.actionables = new ArrayList<Supplier<Actionable>>(actionables);
 		return this;
 	}
 	
-	public PlayBuilder addActionable(Actionable actionable) {
+	public PlayBuilder addActionable(Supplier<Actionable> actionable) {
 		this.actionables.add(actionable);
 		return this;
 	}
@@ -77,7 +78,7 @@ public class PlayBuilder {
 		return condition;
 	}
 
-	public List<Actionable> getActionables() {
+	public List<Supplier<Actionable>> getActionables() {
 		return actionables;
 	}
 }

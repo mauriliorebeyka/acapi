@@ -8,15 +8,15 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 
 	private DiceSet<T> dice;
 	
-	public ThrowDiceSetActionable(String actionableId, DiceSet<T> dice, Playable playable) {
-		super(actionableId, playable);
+	public ThrowDiceSetActionable(String actionableId, DiceSet<T> dice) {
+		super(actionableId);
 		this.dice = dice;
 	}
 
 	@Override
 	public void execute() {
 		this.getDice().rollAll();
-		getOrigin().setAttribute("DICE_ROLL", new Attribute<DiceSet<T>>(dice));
+		getParent().getOrigin().setAttribute("DICE_ROLL", new Attribute<DiceSet<T>>(dice));
 	}
 
 	@Override

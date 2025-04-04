@@ -48,6 +48,7 @@ public class Game {
 		setCurrentGameFlow(0);
 		this.gameFlow = gameFlow;
 		this.players.stream().forEach(p -> p.setGame(this));
+		this.selectedChoices = new ArrayList<>();
 	}
 
 	public String getId() {

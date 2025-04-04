@@ -5,13 +5,13 @@ import com.rebeyka.acapi.entities.Playable;
 
 public class EndTurnActionable extends Actionable {
 
-	public EndTurnActionable(Playable playable) {
-		super("EndTurn", playable);
+	public EndTurnActionable() {
+		super("EndTurn");
 	}
 
 	@Override
 	public void execute() {
-		getOrigin().getGame().getGameFlow().nextTurn();
+		getParent().getOrigin().getGame().getGameFlow().nextTurn();
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public class EndTurnActionable extends Actionable {
 
 	@Override
 	public String getMessage() {
-		return "%s ended their turn. Currently on round %s".formatted(getOrigin(),getOrigin().getGame().getGameFlow().getRound());
+		return "%s ended their turn. Currently on round %s".formatted(getParent().getOrigin(),getParent().getOrigin().getGame().getGameFlow().getRound());
 	}
 
 }

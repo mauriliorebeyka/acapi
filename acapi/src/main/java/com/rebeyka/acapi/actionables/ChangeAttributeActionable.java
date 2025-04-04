@@ -14,8 +14,8 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>, U extend
 	
 	private BiFunction<Attribute<T>, Attribute<U>, U> newValue;
 	
-	public ChangeAttributeActionable(String actionableId, Playable playable, String sourceAttributeName, String targetAttributeName, BiFunction<Attribute<T>, Attribute<U>, U> newValue) {
-		super(actionableId, playable);
+	public ChangeAttributeActionable(String actionableId, String sourceAttributeName, String targetAttributeName, BiFunction<Attribute<T>, Attribute<U>, U> newValue) {
+		super(actionableId);
 		this.sourceAttributeName = sourceAttributeName;
 		this.targetAttributeName = targetAttributeName;
 		this.newValue = newValue;
@@ -23,8 +23,8 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>, U extend
 
 	@Override
 	public void execute() {
-		Attribute<T> sourceAttribute = (Attribute<T>) getOrigin().getAttribute(sourceAttributeName);
-		Attribute<U> targetAttribute = (Attribute<U>) getOrigin().getAttribute(targetAttributeName);
+		Attribute<T> sourceAttribute = (Attribute<T>) getParent().getOrigin().getAttribute(sourceAttributeName);
+		Attribute<U> targetAttribute = (Attribute<U>) getParent().getOrigin().getAttribute(targetAttributeName);
 		targetAttribute.setValue(newValue.apply(sourceAttribute, targetAttribute));
 	}
 
@@ -36,7 +36,7 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>, U extend
 
 	@Override
 	public String getMessage() {
-		return "Changing attribute %s on %s to %s".formatted(targetAttributeName,getOrigin(),getOrigin().getAttribute(targetAttributeName).getValue());
+		return "Changing attribute %s on %s to %s".formatted(targetAttributeName,getParent().getOrigin(),getParent().getOrigin().getAttribute(targetAttributeName).getValue());
 	}
 
 	

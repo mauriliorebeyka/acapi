@@ -10,8 +10,8 @@ public abstract class ChoiceActionable extends ConditionalActionable {
 
 	private List<Actionable> chosen;
 
-	public ChoiceActionable(String actionableId, Playable origin) {
-		super(actionableId, origin);
+	public ChoiceActionable(String actionableId) {
+		super(actionableId);
 	}
 
 	public List<Actionable> getChoices() {

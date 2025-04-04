@@ -12,8 +12,8 @@ public class DrawCard extends Actionable {
 
 	private Card target;
 	
-	public DrawCard(String actionableId, Playable origin, Deck originDeck, Deck targetDeck) {
-		super(actionableId, origin);
+	public DrawCard(String actionableId, Deck originDeck, Deck targetDeck) {
+		super(actionableId);
 		this.originDeck = originDeck;
 		this.targetDeck = targetDeck;
 	}

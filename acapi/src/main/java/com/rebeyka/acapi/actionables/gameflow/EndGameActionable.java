@@ -10,7 +10,7 @@ public class EndGameActionable extends Actionable {
 	private Game game;
 
 	public EndGameActionable(Game game) {
-		super("END_GAME", null);
+		super("END_GAME");
 		this.game = game;
 	}
 

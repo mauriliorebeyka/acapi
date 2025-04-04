@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.actionables.Actionable;
 
+//TODO redo triggers - definitely need to use a supplier of Actionable, probably from a Play
 public class Trigger {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -46,7 +47,7 @@ public class Trigger {
 	}
 
 	public boolean test(Actionable triggeringActionable) {
-		Playable test = triggeringActionable.getOrigin();
+		Playable test = triggeringActionable.getParent().getOrigin();
 		if (test == null) {
 			return false;
 		}
