@@ -16,9 +16,9 @@ public class Play {
 	private Playable origin;
 
 	private List<Playable> targets;
-	
+
 	private Game game;
-	
+
 	private Cost cost;
 
 	private Predicate<Game> condition;
@@ -26,37 +26,35 @@ public class Play {
 	private List<Supplier<Actionable>> actionables;
 
 	public Play(PlayBuilder builder) {
-		if (builder.getOrigin() == null) {
-			throw new IllegalArgumentException("Cannot have null origin");
+		if (builder.getOrigin() == null && builder.getGame() == null) {
+			throw new IllegalArgumentException("Either origin or game must be valid");
 		}
-		
+
 		this.id = builder.getId();
 		this.origin = builder.getOrigin();
 		this.cost = builder.getCost();
-		if (this.cost == null) {
-			this.cost = new FreeCost(origin);
-		}
 		this.condition = builder.getCondition();
 		this.actionables = builder.getActionables();
 
-		this.cost.getCostActionable().setParent(this);
+		if (this.cost != null) {
+			this.cost.getCostActionable().setParent(this);
+		}
 	}
 
 	public Play(Play copy) {
 		this.id = copy.getId() + " " + UUID.randomUUID().toString();
 		this.origin = copy.getOrigin();
 		this.cost = copy.getCost();
-		if (this.cost == null) {
-			this.cost = new FreeCost(origin);
-		}
 		this.condition = copy.getCondition();
 		this.actionables = copy.getActionableSuppliers();
 
-		this.cost.getCostActionable().setParent(this);
-		
+		if (this.cost != null) {
+			this.cost.getCostActionable().setParent(this);
+		}
+
 		this.game = copy.getGame();
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -76,15 +74,15 @@ public class Play {
 	public void setTargets(List<Playable> targets) {
 		this.targets = targets;
 	}
-	
+
 	public Game getGame() {
 		return game;
 	}
-	
+
 	public void setGame(Game game) {
 		this.game = game;
 	}
-	
+
 	public Cost getCost() {
 		return cost;
 	}
@@ -102,11 +100,17 @@ public class Play {
 	}
 
 	public List<Actionable> getActionables() {
-		return actionables.stream().map(Supplier::get).collect(Collectors.toList());
+		return actionables.stream().map(this::enrich).collect(Collectors.toList());
 	}
 
+	private Actionable enrich(Supplier<Actionable> supplier) {
+		Actionable actionable = supplier.get();
+		actionable.setParent(this);
+		return actionable;
+	}
+	
 	public List<Supplier<Actionable>> getActionableSuppliers() {
 		return actionables;
 	}
-	
+
 }

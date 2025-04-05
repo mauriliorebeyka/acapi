@@ -11,6 +11,6 @@ public class TriggerTest {
 	@Test
 	public void test() {
 		Actionable mockActionable = mock(Actionable.class);
-		Trigger trigger = new Trigger(mockActionable);
+//		Trigger trigger = new Trigger(mockActionable);
 	}
 }

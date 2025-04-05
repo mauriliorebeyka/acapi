@@ -11,7 +11,7 @@ public class EndTurnActionable extends Actionable {
 
 	@Override
 	public void execute() {
-		getParent().getOrigin().getGame().getGameFlow().nextTurn();
+		getParent().getGame().getGameFlow().nextTurn();
 	}
 
 	@Override

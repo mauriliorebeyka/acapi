@@ -16,6 +16,8 @@ public class PlayBuilder {
 
 	private Playable origin;
 
+	private Game game;
+	
 	private Cost cost;
 
 	private Predicate<Game> condition;
@@ -34,6 +36,11 @@ public class PlayBuilder {
 	
 	public PlayBuilder withOrigin(Playable origin) {
 		this.origin = origin;
+		return this;
+	}
+	
+	public PlayBuilder withGame(Game game) {
+		this.game = game;
 		return this;
 	}
 	
@@ -70,6 +77,10 @@ public class PlayBuilder {
 		return origin;
 	}
 
+	public Game getGame() {
+		return game;
+	}
+	
 	public Cost getCost() {
 		return cost;
 	}

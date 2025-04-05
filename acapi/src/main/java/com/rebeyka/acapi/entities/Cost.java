@@ -19,6 +19,4 @@ public abstract class Cost {
 	
 	public abstract boolean isPaid(List<Playable> playables);
 
-	public static Cost FREE = null;
-	
 }

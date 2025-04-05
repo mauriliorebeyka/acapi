@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.rebeyka.acapi.builders.PlayBuilder;
+
 public abstract class Playable {
 
 	private String id;
 
-	private List<Play> plays;
+	private List<PlayBuilder> plays;
 	
 	private Map<String, Attribute<?>> attributes;
 
@@ -25,11 +27,11 @@ public abstract class Playable {
 		return id;
 	}
 	
-	public List<Play> getPlays() {
+	public List<PlayBuilder> getPlays() {
 		return plays;
 	}
 
-	public void setPlays(List<Play> plays) {
+	public void setPlays(List<PlayBuilder> plays) {
 		this.plays = plays;
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rebeyka.acapi.entities.Game;
-import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.gameflow.RoundRobinGameFlow;
 import com.rebeyka.acapi.exceptions.WrongPlayerCountException;
@@ -64,7 +63,7 @@ public abstract class GameSetup {
 	
 	public abstract void createDefaultAttributes(Player player);
 	
-	public abstract List<Play> createPlays(Game game, Player player);
+	public abstract List<PlayBuilder> createPlays(Game game, Player player);
 	
 	public abstract void createCommonTriggers(Game game);
 }

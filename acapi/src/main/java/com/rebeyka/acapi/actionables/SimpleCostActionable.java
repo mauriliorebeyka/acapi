@@ -20,7 +20,6 @@ public class SimpleCostActionable extends CostActionable {
 	public void executeSingle(Playable playable) {
 		Actionable actionable = actionableSupplier.get();
 		Play temp = new Play(getParent());
-		temp.setCost(Cost.FREE);
 		temp.setTargets(List.of(playable));
 		actionable.setParent(temp);
 		//TODO Find a way to put this into the timeline for execution, so we could maintain the

@@ -42,28 +42,22 @@ public class Timeline {
 		return actionables.get(currentPosition);
 	}
 
-	public void queue(Play play, List<Playable> targets) {
-		Play newPlay = new Play(play);
-		LOG.info("Declaring play {} from {} against {}", newPlay.getId(), newPlay.getOrigin(), targets);
-		newPlay.setOrigin(play.getOrigin());
-		newPlay.setTargets(targets);
+	public void queue(Play newPlay) {
+		queue(newPlay, false);
+	}
+
+	public void queue(Play newPlay, boolean skipCurrentQueue) {
+		LOG.info("Declaring play {} from {} against {}", newPlay.getId(), newPlay.getOrigin(), newPlay.getTargets());
 		newPlay.setGame(game);
-		if (!newPlay.getCost().equals(Cost.FREE)) {
+		int position = skipCurrentQueue ? currentPosition : actionables.size();
+		if (newPlay.getCost() != null) {
 			CostActionable costActionable = newPlay.getCost().getCostActionable();
 			costActionable.setParent(newPlay);
-			actionables.add(costActionable);
+			actionables.add(position++,costActionable);
 		}
-		List<Actionable> extra = play.getActionables();
-		for (Actionable a : extra) {
-			a.setParent(newPlay);
-		}
-		actionables.addAll(extra);
+		actionables.addAll(position,newPlay.getActionables());
 	}
-
-	public void queue(Actionable actionable) {
-		actionables.add(actionable);
-	}
-
+	
 	public List<String> getLogMessages() {
 		return logMessages;
 	}
@@ -114,9 +108,9 @@ public class Timeline {
 		logMessages.add(logMessage);
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
-			actionables.addAll(currentPosition, game.getBeforeTriggerActionables(actionables.get(currentPosition)));
+			game.getBeforeTriggerActionables(actionables.get(currentPosition)).forEach(p -> queue(p,true));
 		}
-		actionables.addAll(currentPosition, game.getAfterTriggerActionables(actionable));
+		game.getAfterTriggerActionables(actionable).forEach(p -> queue(p,true));
 	}
 
 	public void cancelCurrentPlay() {
