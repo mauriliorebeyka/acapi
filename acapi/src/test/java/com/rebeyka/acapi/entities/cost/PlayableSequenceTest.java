@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
-import com.rebeyka.entitities.cost.PlayableSequenceCost;
+import com.rebeyka.acapi.entitities.cost.PlayableSequenceCost;
 
 public class PlayableSequenceTest {
 

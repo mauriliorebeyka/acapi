@@ -1,4 +1,4 @@
-package com.rebeyka.entitities.cost;
+package com.rebeyka.acapi.entitities.cost;
 
 import java.util.List;
 import java.util.function.Predicate;
