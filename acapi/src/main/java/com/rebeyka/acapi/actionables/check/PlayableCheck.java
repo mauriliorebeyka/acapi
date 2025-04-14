@@ -4,41 +4,44 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
 
-public class PlayableCheck extends TypedActionableCheck<Playable> {
+public class PlayableCheck<BASE> extends AbstractCheck<BASE, Playable> {
 
-	protected PlayableCheck(Map<String, Predicate<Actionable>> tests, Function<Actionable, Playable> function) {
+	protected PlayableCheck(Map<String, Predicate<BASE>> tests, Function<BASE, Playable> function) {
 		super(tests, function);
 	}
 
-	private PlayableCheck me() {
-		return new PlayableCheck(tests, function);
+	private PlayableCheck<BASE> me() {
+		return new PlayableCheck<BASE>(tests, function);
 	}
 	
-	public PlayableCheck isPlayer() {
+	public StringCheck<BASE, Playable, PlayableCheck<BASE>> id() {
+		return new StringCheck<>(tests, Playable::getId, "Playable ID", this);
+	}
+	
+	public PlayableCheck<BASE> isPlayer() {
 		tests.put("IS PLAYER", p -> function.apply(p) instanceof Player);
 		return me();
 	}
 	
-	public PlayableCheck isCurrentPlayer() {
-		tests.put("CURRENT PLAYER", p -> p.getParent().getGame().getGameFlow().getCurrentPlayer().equals(function.apply(p)));
+	public PlayableCheck<BASE> isCurrentPlayer() {
+		addTest("CURRENT PLAYER", p -> p.getGame().getGameFlow().getCurrentPlayer().equals(p));
 		return me();
 	}
 	
-	public PlayableCheck isActivePlayer() {
-		tests.put("ACTIVE PLAYER", p -> p.getParent().getGame().getGameFlow().isPlayerActive((Player)function.apply(p)));
+	public PlayableCheck<BASE> isActivePlayer() {
+		addTest("ACTIVE PLAYER", p -> p instanceof Player player && p.getGame().getGameFlow().isPlayerActive(player));
 		return me();
 	}
 	
-	public StringCheck<Playable, PlayableCheck> attribute(String attribute) {
-		return new StringCheck<>(tests,p -> p.getParent().getOrigin().getAttribute(attribute).get(), "Origin attribute %s".formatted(attribute), this);
+	public StringCheck<BASE, Playable, PlayableCheck<BASE>> attribute(String attribute) {
+		return new StringCheck<>(tests,p -> p.getAttribute(attribute).get(), "Origin attribute %s".formatted(attribute), this);
 	}
 	
-	public IntegerCheck<Playable, PlayableCheck> attributeAsInt(String attribute) {
-		return new IntegerCheck<Playable, PlayableCheck>(tests, p -> ((SimpleIntegerAttribute)p.getParent().getOrigin().getAttribute(attribute)).getValue(), this);
+	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {
+		return new IntegerCheck<>(tests, p -> ((SimpleIntegerAttribute)p.getAttribute(attribute)).getValue(), attribute, this);
 	}
 }

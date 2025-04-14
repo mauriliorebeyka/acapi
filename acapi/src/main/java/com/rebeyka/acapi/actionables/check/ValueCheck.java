@@ -2,18 +2,23 @@ package com.rebeyka.acapi.actionables.check;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.rebeyka.acapi.actionables.Actionable;
-
-public abstract class ValueCheck<T, A, ROOT extends TypedActionableCheck<A>> extends TypedActionableCheck<T>{
+public abstract class ValueCheck<BASE, T, S, ROOT extends AbstractCheck<BASE,T>> extends AbstractCheck<BASE,T>{
 
 	private ROOT root;
 	
-	public ValueCheck(Map<String, Predicate<Actionable>> tests, Function<Actionable, T> function, ROOT root) {
-		super(tests, function);
+	protected String testedField;
+	
+	protected Function<T, S> subFunction;
+	
+	public ValueCheck(Map<String, Predicate<BASE>> tests, Function<T, S> subFunction, String testedField, ROOT root) {
+		super(tests, root.function);
 		this.root = root;
+		this.testedField = testedField;
+		this.subFunction = subFunction;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -26,13 +31,17 @@ public abstract class ValueCheck<T, A, ROOT extends TypedActionableCheck<A>> ext
 		}
 	}
 	
-	public ROOT equalsTo(T value) {
-		tests.put("equals", p -> function.apply(p).equals(value));
+	protected void addValueTest(String name, Predicate<S> predicate) {
+		addTest("%s %s".formatted(testedField,name), u -> predicate.test(subFunction.apply(u)));
+	}
+	
+	public ROOT equalsTo(S value) {
+		addValueTest("equals", s -> s.equals(value));
 		return myself();
 	}
 	
 	ROOT notNull() {
-		tests.put("NOT NULL", p -> function.apply(p) != null);
+		addValueTest("NOT NULL", Objects::nonNull);
 		return myself();
 	}
 }

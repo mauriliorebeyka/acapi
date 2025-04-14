@@ -1,5 +1,6 @@
 package com.rebeyka.acapi.actionables;
 
+import com.rebeyka.acapi.actionables.check.ActionableCheck;
 import com.rebeyka.acapi.entities.Play;
 
 public abstract class Actionable {
@@ -30,4 +31,7 @@ public abstract class Actionable {
 		this.parent = parent;
 	}
 
+	public boolean check(ActionableCheck<Actionable> condition) {
+		return condition.check(this);
+	}
 }

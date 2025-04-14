@@ -4,16 +4,14 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-import com.rebeyka.acapi.actionables.Actionable;
+public class IntegerCheck<BASE, T, ROOT extends AbstractCheck<BASE,T>> extends ValueCheck<BASE, T, Integer, ROOT> {
 
-public class IntegerCheck<A, ROOT extends TypedActionableCheck<A>> extends ValueCheck<Integer, A, ROOT> {
-
-	public IntegerCheck(Map<String, Predicate<Actionable>> tests, Function<Actionable, Integer> function, ROOT root) {
-		super(tests, function, root);
+	public IntegerCheck(Map<String, Predicate<BASE>> tests, Function<T, Integer> function, String testedField, ROOT root) {
+		super(tests, function, testedField, root);
 	}
 
 	public ROOT biggerThan(int value) {
-		tests.put("bigger than", p -> function.apply(p) > value);
+		addValueTest("bigger than", s -> s > value);
 		return myself();
 	}
 }
