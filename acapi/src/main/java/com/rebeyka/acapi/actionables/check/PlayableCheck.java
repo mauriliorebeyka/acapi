@@ -1,5 +1,8 @@
 package com.rebeyka.acapi.actionables.check;
 
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -10,38 +13,38 @@ import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
 
 public class PlayableCheck<BASE> extends AbstractCheck<BASE, Playable> {
 
-	protected PlayableCheck(Map<String, Predicate<BASE>> tests, Function<BASE, Playable> function) {
-		super(tests, function);
+	protected PlayableCheck(List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
+		super(testResults, function);
 	}
 
 	private PlayableCheck<BASE> me() {
-		return new PlayableCheck<BASE>(tests, function);
+		return new PlayableCheck<BASE>(testResults, function);
 	}
 	
 	public StringCheck<BASE, Playable, PlayableCheck<BASE>> id() {
-		return new StringCheck<>(tests, Playable::getId, "Playable ID", this);
+		return new StringCheck<>(this, Playable::getId, "Playable ID");
 	}
 	
 	public PlayableCheck<BASE> isPlayer() {
-		tests.put("IS PLAYER", p -> function.apply(p) instanceof Player);
+		addTest(p -> p instanceof Player, f -> f.getClass(), "Playable type", "is Player");
 		return me();
 	}
 	
 	public PlayableCheck<BASE> isCurrentPlayer() {
-		addTest("CURRENT PLAYER", p -> p.getGame().getGameFlow().getCurrentPlayer().equals(p));
+		addTest(p -> p.getGame().getGameFlow().getCurrentPlayer().equals(p), f -> f.getGame().getGameFlow().getCurrentPlayer(), "Current Player", "is");
 		return me();
 	}
 	
 	public PlayableCheck<BASE> isActivePlayer() {
-		addTest("ACTIVE PLAYER", p -> p instanceof Player player && p.getGame().getGameFlow().isPlayerActive(player));
+		addTest(p -> p instanceof Player player && p.getGame().getGameFlow().isPlayerActive(player), f -> f, "Active Player", "is");
 		return me();
 	}
 	
 	public StringCheck<BASE, Playable, PlayableCheck<BASE>> attribute(String attribute) {
-		return new StringCheck<>(tests,p -> p.getAttribute(attribute).get(), "Origin attribute %s".formatted(attribute), this);
+		return new StringCheck<>(this, p -> p.getAttribute(attribute).get(), "string attribute '%s'".formatted(attribute));
 	}
 	
 	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {
-		return new IntegerCheck<>(tests, p -> ((SimpleIntegerAttribute)p.getAttribute(attribute)).getValue(), attribute, this);
+		return new IntegerCheck<>(this, p -> ((SimpleIntegerAttribute)p.getAttribute(attribute)).getValue(), "integer attribute '%s'".formatted(attribute));
 	}
 }

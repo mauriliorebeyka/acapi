@@ -1,34 +1,43 @@
 package com.rebeyka.acapi.actionables.check;
 
-import java.util.Map;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public abstract class AbstractCheck<BASE, T> {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-	protected final Map<String, Predicate<BASE>> tests;
-	
+abstract class AbstractCheck<BASE, T> {
+
+	private static final Logger LOG = LogManager.getLogger();
+
 	protected Function<BASE, T> function;
-	
-	protected AbstractCheck(Map<String, Predicate<BASE>> tests, Function<BASE,T> function) {
-		this.tests = tests;
+
+	protected final List<TestResult<BASE>> testResults;
+
+	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
+		this.testResults = testResults;
 		this.function = function;
 	}
-	
-	public void addTest(String title, Predicate<T> predicate) {
-		tests.put(title,t -> predicate.test(function.apply(t)));
+
+	protected void addTest(Predicate<T> predicate, Function<T, Object> valueExtractor, String field,
+			String description) {
+		Predicate<BASE> finalPredicate = t -> predicate.test(function.apply(t));
+		Function<BASE, Object> finalValue = t -> valueExtractor.apply(function.apply(t));
+		testResults.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
 	}
-	
-	public final boolean check(BASE actionable) {
-		tests.forEach((k, v) -> {
-			
-		System.out.print(k+": ");
-		System.out.println(v.test(actionable));
-		});
-		if (tests.isEmpty()) {
+
+	public final boolean check(BASE testedValue) {
+		LOG.debug("Beginning checks for {}, total of {} checks", testedValue, testResults.size());
+		if (testResults.isEmpty()) {
 			return false;
 		}
-		return tests.values().stream().map(p -> p.test(actionable)).allMatch(b -> b == true);
+		if (LOG.isTraceEnabled()) {
+			testResults.stream().forEach(t -> LOG.trace(t.getMessage(testedValue)));
+		}
+		long passedTests = testResults.stream().map(p -> p.test(testedValue)).filter(b -> b == true).count();
+		LOG.debug("{} checks passed",passedTests);
+		return passedTests == testResults.size();
 	}
-	
+
 }

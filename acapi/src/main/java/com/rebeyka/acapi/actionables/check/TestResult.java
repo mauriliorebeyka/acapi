@@ -5,23 +5,30 @@ import java.util.function.Predicate;
 
 import com.rebeyka.acapi.actionables.Actionable;
 
-public class TestResult<T> {
+public class TestResult<BASE> {
 
-	private Predicate<Actionable> predicate;
-	
-	private Function<T, Actionable> function;
-	
+	private Predicate<BASE> predicate;
+
+	private Function<BASE, Object> function;
+
 	private String testedField;
-	
-	private T testedValue;
-	
+
 	private String description;
-	
-	public boolean test() {
-		return predicate.test(function.apply(testedValue));
+
+	public TestResult(Predicate<BASE> predicate, Function<BASE, Object> function, String testedField, 
+			String description) {
+		this.predicate = predicate;
+		this.function = function;
+		this.testedField = testedField;
+		this.description = description;
 	}
-	
-	public String getMessage() {
-		return "Expecting %s to be %s %s".formatted(testedField,description,testedValue);
+
+	public boolean test(BASE testedValue) {
+		return predicate.test(testedValue);
+	}
+
+	public String getMessage(BASE testedValue) {
+		return "Checking that %s(%s) %s - %s".formatted(testedField,
+				function.apply(testedValue), description, test(testedValue));
 	}
 }

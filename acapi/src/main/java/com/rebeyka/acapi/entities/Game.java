@@ -210,4 +210,16 @@ public class Game {
 		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable))
 				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent().getTargets())).toList();
 	}
+	
+	public int countActionables(String actionableId, String actionableIdBound) {
+		List<Actionable> actionables = timeline.getExecutedActionables();
+		int count = 0;
+		for (int i = actionables.size() - 1; i >= 0
+				&& !actionables.get(i).getActionableId().equals(actionableIdBound); i--) {
+			if (actionables.get(i).getActionableId().equals(actionableId)) {
+				count++;
+			}
+		}
+		return count;
+	}
 }

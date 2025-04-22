@@ -102,8 +102,6 @@ public class Timeline {
 		actionable.execute();
 		String message = actionable.getMessage();
 		LOG.info(message);
-		// TODO Some actionables don't have a parent play, need to figure out what to
-		// add here
 		String logMessage = new Date(System.currentTimeMillis()).toString() + actionable.getParent() + message;
 		logMessages.add(logMessage);
 		currentPosition++;
@@ -131,5 +129,9 @@ public class Timeline {
 		while (currentPosition < actionables.size() - 1) {
 			actionables.remove(actionables.size() - 1);
 		}
+	}
+
+	public List<Actionable> getExecutedActionables() {
+		return new ArrayList<>(actionables.subList(0, currentPosition));
 	}
 }

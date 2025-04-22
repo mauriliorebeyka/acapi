@@ -1,22 +1,29 @@
 package com.rebeyka.acapi.actionables.check;
 
-import java.util.Map;
+import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.entities.Game;
 public class ActionableCheck<BASE> extends AbstractCheck<BASE, Actionable> {
 
-	ActionableCheck(Map<String, Predicate<BASE>> tests, Function<BASE, Actionable> function) {
-		super(tests, function);
+	protected ActionableCheck(List<TestResult<BASE>> testResults, Function<BASE, Actionable> function) {
+		super(testResults, function);
 	}
 	
 	public StringCheck<BASE, Actionable, ActionableCheck<BASE>> id() {
-		return new StringCheck<>(tests, Actionable::getActionableId, "Actionable ID", this);
+		return new StringCheck<>(this, Actionable::getActionableId, "Actionable ID");
 	}
 	
 	public PlayableCheck<BASE> origin() {
-		return new PlayableCheck<BASE>(tests, t -> function.apply(t).getParent().getOrigin());
+		return new PlayableCheck<BASE>(testResults, t -> function.apply(t).getParent().getOrigin());
 	}
 
+	public TimelineCheck<BASE, Actionable, Actionable, ActionableCheck<BASE>> happened() {
+		return happened("");
+	}
+	
+	public TimelineCheck<BASE, Actionable, Actionable, ActionableCheck<BASE>> happened(String actionableId) {
+		return new TimelineCheck<>(this, f -> f, actionableId, g -> g.getParent().getGame());
+	}
 }
