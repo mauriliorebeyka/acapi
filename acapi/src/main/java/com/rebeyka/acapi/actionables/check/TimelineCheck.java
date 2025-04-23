@@ -6,31 +6,43 @@ import java.util.function.Predicate;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Game;
 
-//TODO This can probably be changed to extend ValueCheck<BASE, T, Integer, ROOT> - keeping in line with the other subclasses of ValueCheck
-public class TimelineCheck<BASE, T, S, ROOT extends AbstractCheck<BASE, T>> extends ValueCheck<BASE, T, S, ROOT> {
+public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<BASE, T>> extends ValueCheck<BASE, T, Integer, ROOT> {
 
 	private int times;
 
-	private Function<T, Game> gameAcessor;
+	private String bound;
 
-	protected TimelineCheck(ROOT root, Function<T, S> subFunction, String testedField, Function<T, Game> gameAcessor) {
-		super(root, subFunction, testedField);
+	private Predicate<Integer> timesPredicate;
+
+	private String timesPredicateDescription;
+
+	protected TimelineCheck(ROOT root, Function<T, Game> gameAcessor, String testedField) {
+		super(root, null, testedField);
+		this.subFunction = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
 		times = 1;
-		this.gameAcessor = gameAcessor;
+		timesPredicate = i -> i == times;
+		timesPredicateDescription = "happened %s times since %s";
+	}
+
+	public TimelineCheck<BASE, T, ROOT> atLeast(int number) {
+		times = number;
+		timesPredicate = i -> i >= number;
+		timesPredicateDescription = "happened at least %s times since %s";
+		return this;
 	}
 
 	public ROOT since(String bound) {
-		Predicate<Integer> intPred = i -> i == times;
-		Predicate<T> pred = f -> intPred.test(gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound));
-		addTest(pred, f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), ""),
-				testedField == "" ? "this actionable" : testedField,
-				"happened %s times since %s".formatted(times, bound));
+		this.bound = bound;
+		addValueTest(timesPredicateDescription.formatted(times, bound.equals("") ? "start" : bound), timesPredicate);
 		return myself();
 	}
 
 	private String getSearchedActionableId(Object value) {
-		return testedField == "" ? value instanceof Actionable actionable ? actionable.getActionableId() : ""
-				: testedField;
+		if (testedField.equals("this actionable") && value instanceof Actionable actionable) {
+			return actionable.getActionableId();
+		} else {
+			return testedField;
+		}
 	}
 
 	public ROOT sinceStart() {

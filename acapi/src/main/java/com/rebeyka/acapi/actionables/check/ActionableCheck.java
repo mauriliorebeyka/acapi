@@ -19,11 +19,11 @@ public class ActionableCheck<BASE> extends AbstractCheck<BASE, Actionable> {
 		return new PlayableCheck<BASE>(testResults, t -> function.apply(t).getParent().getOrigin());
 	}
 
-	public TimelineCheck<BASE, Actionable, Actionable, ActionableCheck<BASE>> happened() {
-		return happened("");
+	public TimelineCheck<BASE, Actionable, ActionableCheck<BASE>> happened() {
+		return happened("this actionable");
 	}
 	
-	public TimelineCheck<BASE, Actionable, Actionable, ActionableCheck<BASE>> happened(String actionableId) {
-		return new TimelineCheck<>(this, f -> f, actionableId, g -> g.getParent().getGame());
+	public TimelineCheck<BASE, Actionable, ActionableCheck<BASE>> happened(String actionableId) {
+		return new TimelineCheck<>(this, g -> g.getParent().getGame(), actionableId);
 	}
 }

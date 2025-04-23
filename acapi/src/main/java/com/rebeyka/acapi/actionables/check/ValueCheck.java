@@ -41,10 +41,6 @@ abstract class ValueCheck<BASE, T, S, ROOT extends AbstractCheck<BASE,T>> extend
 		addTest(t -> predicate.test(subFunction.apply(t)), (Function<T, Object>) subFunction, testedField, name);
 	}
 	
-	protected void addValueTest(String name, Predicate<S> predicate, Function<T, Object> subF) {
-		addTest(t -> predicate.test(subFunction.apply(t)), subF, testedField, name);
-	}
-	
 	public ROOT is(S value) {
 		addValueTest("is %s".formatted(value), s -> s.equals(value));
 		return myself();
