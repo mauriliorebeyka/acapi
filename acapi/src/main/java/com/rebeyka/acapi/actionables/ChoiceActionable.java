@@ -2,8 +2,6 @@ package com.rebeyka.acapi.actionables;
 
 import java.util.List;
 
-import com.rebeyka.acapi.entities.Playable;
-
 public abstract class ChoiceActionable extends ConditionalActionable {
 
 	private List<Actionable> choices;

@@ -5,14 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
-import com.rebeyka.acapi.entities.gameflow.Timeline;
 
 public class TimelineCheckTest {
 

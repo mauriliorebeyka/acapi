@@ -3,7 +3,6 @@ package com.rebeyka.acapi.entities.gameflow;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -13,7 +12,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +22,6 @@ import com.rebeyka.acapi.actionables.ChoiceActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.builders.PlayBuilder;
 import com.rebeyka.acapi.entities.Cost;
-import com.rebeyka.acapi.entities.FreeCost;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Playable;

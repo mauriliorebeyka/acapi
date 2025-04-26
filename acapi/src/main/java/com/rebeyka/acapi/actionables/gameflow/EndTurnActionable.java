@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.actionables.gameflow;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.entities.Playable;
 
 public class EndTurnActionable extends Actionable {
 

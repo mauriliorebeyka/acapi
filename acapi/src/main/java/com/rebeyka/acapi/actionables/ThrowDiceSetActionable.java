@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.actionables;
 
 import com.rebeyka.acapi.entities.Attribute;
-import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.random.DiceSet;
 
 public class ThrowDiceSetActionable<T> extends Actionable {

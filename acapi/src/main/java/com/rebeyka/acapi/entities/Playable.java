@@ -52,11 +52,6 @@ public abstract class Playable {
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T extends Comparable<? super T>> Attribute<T> getAttribute(Attribute<T> base) {
-		return getAttribute(base.name, base.getValue().getClass());
-	}
-	
 	public void setAttributes(Map<String, Attribute<?>> attributes) {
 		this.attributes = attributes;
 	}

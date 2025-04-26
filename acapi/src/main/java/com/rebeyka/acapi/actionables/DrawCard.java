@@ -2,7 +2,6 @@ package com.rebeyka.acapi.actionables;
 
 import com.rebeyka.acapi.entities.Card;
 import com.rebeyka.acapi.entities.Deck;
-import com.rebeyka.acapi.entities.Playable;
 
 public class DrawCard extends Actionable {
 

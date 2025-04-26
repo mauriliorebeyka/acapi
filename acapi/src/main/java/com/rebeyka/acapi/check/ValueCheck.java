@@ -2,7 +2,6 @@ package com.rebeyka.acapi.check;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -17,8 +16,6 @@ abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T,
 	private ROOT root;
 
 	protected String testedField;
-
-	private Function<T, Object> sub;
 
 	protected ValueCheck(ROOT root, Function<BASE, T> function, String testedField) {
 		super(root.testResults, function);

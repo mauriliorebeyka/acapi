@@ -3,7 +3,6 @@ package com.rebeyka.acapi.actionables;
 import java.util.function.BiFunction;
 
 import com.rebeyka.acapi.entities.Attribute;
-import com.rebeyka.acapi.entities.Playable;
 
 //TODO this can probably be changed to something that takes only one attribute and a function that calculates on top of it
 public class ChangeAttributeActionable<T extends Comparable<? super T>, U extends Comparable<? super U>> extends Actionable {
