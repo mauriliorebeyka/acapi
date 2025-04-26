@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.actionables.check;
+package com.rebeyka.acapi.check;
 
 public class Checker{
 	

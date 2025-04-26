@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.actionables.check;
+package com.rebeyka.acapi.check;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

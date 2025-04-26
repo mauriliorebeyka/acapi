@@ -1,9 +1,7 @@
-package com.rebeyka.acapi.actionables.check;
+package com.rebeyka.acapi.check;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
-
-import com.rebeyka.acapi.actionables.Actionable;
 
 public class TestResult<BASE> {
 

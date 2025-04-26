@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.actionables.check;
+package com.rebeyka.acapi.check;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;

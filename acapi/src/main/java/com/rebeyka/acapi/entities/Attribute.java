@@ -17,7 +17,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	}
 
 	public String get() {
-		return value.toString();
+		return value == null ? "null" : value.toString();
 	}
 	
 	@Override

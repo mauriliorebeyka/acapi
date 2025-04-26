@@ -1,6 +1,6 @@
 package com.rebeyka.acapi.actionables;
 
-import com.rebeyka.acapi.actionables.check.AbstractCheck;
+import com.rebeyka.acapi.check.AbstractCheck;
 import com.rebeyka.acapi.entities.Play;
 
 public abstract class Actionable {

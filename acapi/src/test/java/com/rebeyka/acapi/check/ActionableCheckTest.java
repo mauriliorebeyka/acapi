@@ -1,7 +1,7 @@
-package com.rebeyka.acapi.actionables.check;
+package com.rebeyka.acapi.check;
 
-import static com.rebeyka.acapi.actionables.check.Checker.whenActionable;
-import static com.rebeyka.acapi.actionables.check.Checker.whenPlayable;
+import static com.rebeyka.acapi.check.Checker.whenActionable;
+import static com.rebeyka.acapi.check.Checker.whenPlayable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

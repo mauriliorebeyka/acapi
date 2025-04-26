@@ -43,6 +43,7 @@ public abstract class Playable {
 		return attributes.get(name);
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Comparable<? super T>> Attribute<T> getAttribute(String name, Class<T> clazz) {
 		Attribute<?> attribute = attributes.get(name);
 		if (attribute.getValue().getClass().equals(clazz)) {
@@ -50,7 +51,12 @@ public abstract class Playable {
 		}
 		return null;
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Comparable<? super T>> Attribute<T> getAttribute(Attribute<T> base) {
+		return getAttribute(base.name, base.getValue().getClass());
+	}
+	
 	public void setAttributes(Map<String, Attribute<?>> attributes) {
 		this.attributes = attributes;
 	}

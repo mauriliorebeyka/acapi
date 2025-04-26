@@ -1,6 +1,6 @@
-package com.rebeyka.acapi.actionables.check;
+package com.rebeyka.acapi.check;
 
-import static com.rebeyka.acapi.actionables.check.Checker.whenActionable;
+import static com.rebeyka.acapi.check.Checker.whenActionable;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
