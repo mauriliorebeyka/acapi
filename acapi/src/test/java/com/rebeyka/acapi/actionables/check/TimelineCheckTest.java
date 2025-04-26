@@ -27,6 +27,6 @@ public class TimelineCheckTest {
 		when(actionable.getActionableId()).thenReturn("actionable");
 		Actionable actionable2 = mock(Actionable.class);
 		when(actionable2.getActionableId()).thenReturn("test");
-		assertThat(whenActionable().id().is("actionable").happened().atLeast(0).sinceStart().check(actionable)).isTrue();
+		assertThat(whenActionable().id().sameValue("actionable").happened().sinceStart().check(actionable)).isTrue();
 	}
 }

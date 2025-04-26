@@ -6,7 +6,8 @@ import java.util.function.Predicate;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Game;
 
-public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<BASE, T>> extends ValueCheck<BASE, T, Integer, ROOT> {
+public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?,BASE,T>>
+extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 
 	private int times;
 
@@ -14,27 +15,27 @@ public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<BASE, T>> extends
 
 	private Predicate<Integer> timesPredicate;
 
-	private String timesPredicateDescription;
+	private String predicateDescription;
 
-	protected TimelineCheck(ROOT root, Function<T, Game> gameAcessor, String testedField) {
+	protected TimelineCheck(ROOT root, Function<BASE, Game> gameAcessor, String testedField) {
 		super(root, null, testedField);
-		this.subFunction = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
+		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
 		times = 1;
 		timesPredicate = i -> i == times;
-		timesPredicateDescription = "happened %s times since %s";
+		predicateDescription = "happened %s times since %s";
 	}
 
 	public TimelineCheck<BASE, T, ROOT> atLeast(int number) {
 		times = number;
 		timesPredicate = i -> i >= number;
-		timesPredicateDescription = "happened at least %s times since %s";
+		predicateDescription = "happened at least %s times since %s";
 		return this;
 	}
 
 	public ROOT since(String bound) {
 		this.bound = bound;
-		addValueTest(timesPredicateDescription.formatted(times, bound.equals("") ? "start" : bound), timesPredicate);
-		return myself();
+		addValueTest(predicateDescription.formatted(times, bound.equals("") ? "start" : bound), timesPredicate);
+		return root();
 	}
 
 	private String getSearchedActionableId(Object value) {

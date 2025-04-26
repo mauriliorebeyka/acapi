@@ -9,13 +9,13 @@ public class TestResult<BASE> {
 
 	private Predicate<BASE> predicate;
 
-	private Function<BASE, Object> function;
+	private Function<BASE, ?> function;
 
 	private String testedField;
 
 	private String description;
 
-	public TestResult(Predicate<BASE> predicate, Function<BASE, Object> function, String testedField, 
+	public TestResult(Predicate<BASE> predicate, Function<BASE, ?> function, String testedField, 
 			String description) {
 		this.predicate = predicate;
 		this.function = function;
@@ -28,7 +28,7 @@ public class TestResult<BASE> {
 	}
 
 	public String getMessage(BASE testedValue) {
-		return "Checking that %s(%s) %s - %s".formatted(testedField,
-				function.apply(testedValue), description, test(testedValue));
+		return "Checking that '%s' %s - currently '%s' (%s)".formatted(testedField,
+				description, function.apply(testedValue), test(testedValue));
 	}
 }

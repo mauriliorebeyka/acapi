@@ -9,45 +9,56 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-abstract class ValueCheck<BASE, T, S, ROOT extends AbstractCheck<BASE,T>> extends AbstractCheck<BASE,T>{
+abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T, ROOT extends AbstractCheck<?, BASE, ?>>
+		extends AbstractCheck<SELF, BASE, T> {
 
 	private static final Logger LOG = LogManager.getLogger();
-	
+
 	private ROOT root;
-	
+
 	protected String testedField;
-	
-	protected Function<T, S> subFunction;
-	
-	protected ValueCheck(ROOT root, Function<T, S> subFunction, String testedField) {
-		super(root.testResults, root.function);
+
+	private Function<T, Object> sub;
+
+	protected ValueCheck(ROOT root, Function<BASE, T> function, String testedField) {
+		super(root.testResults, function);
 		this.root = root;
 		this.testedField = testedField;
-		this.subFunction = subFunction;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	protected ROOT myself() {
+	protected ROOT root() {
 		try {
-			return (ROOT) root.getClass().getDeclaredConstructor(List.class, Function.class).newInstance(testResults, root.function);
+			return (ROOT) root.getClass().getDeclaredConstructor(List.class, Function.class).newInstance(testResults,
+					root.function);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e) {
-			LOG.warn("Class {} failed to create a new instance: {}",root.getClass(), e.getMessage());
+			LOG.warn("Class {} failed to create a new instance: {}", root.getClass(), e.getMessage());
 			return root;
 		}
 	}
-	
-	protected void addValueTest(String name, Predicate<S> predicate) {
-		addTest(t -> predicate.test(subFunction.apply(t)), (Function<T, Object>) subFunction, testedField, name);
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected SELF me(boolean newInstance) {
+		if (newInstance) {
+			try {
+				return (SELF) this.getClass().getDeclaredConstructor(AbstractCheck.class, Function.class, String.class)
+						.newInstance(this.root, this.function, this.testedField);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				LOG.warn("Failed to create new instance of %s".formatted(this.getClass()), e);
+			}
+		}
+		return (SELF) this;
 	}
-	
-	public ROOT is(S value) {
+
+	protected void addValueTest(String name, Predicate<T> predicate) {
+		addTest(predicate, testedField, name);
+	}
+
+	public ROOT sameValue(T value) {
 		addValueTest("is %s".formatted(value), s -> s.equals(value));
-		return myself();
-	}
-	
-	ROOT notNull() {
-		addValueTest("NOT NULL", Objects::nonNull);
-		return myself();
+		return root();
 	}
 }

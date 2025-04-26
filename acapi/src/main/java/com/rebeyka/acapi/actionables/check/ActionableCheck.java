@@ -4,19 +4,18 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.entities.Game;
-public class ActionableCheck<BASE> extends AbstractCheck<BASE, Actionable> {
+public class ActionableCheck<BASE> extends AbstractCheck<ActionableCheck<BASE>, BASE, Actionable> {
 
 	protected ActionableCheck(List<TestResult<BASE>> testResults, Function<BASE, Actionable> function) {
 		super(testResults, function);
 	}
 	
 	public StringCheck<BASE, Actionable, ActionableCheck<BASE>> id() {
-		return new StringCheck<>(this, Actionable::getActionableId, "Actionable ID");
+		return new StringCheck<>(this, a -> function.apply(a).getActionableId(), "Actionable ID");
 	}
 	
 	public PlayableCheck<BASE> origin() {
-		return new PlayableCheck<BASE>(testResults, t -> function.apply(t).getParent().getOrigin());
+		return new PlayableCheck<>(testResults, t -> function.apply(t).getParent().getOrigin());
 	}
 
 	public TimelineCheck<BASE, Actionable, ActionableCheck<BASE>> happened() {
@@ -24,6 +23,6 @@ public class ActionableCheck<BASE> extends AbstractCheck<BASE, Actionable> {
 	}
 	
 	public TimelineCheck<BASE, Actionable, ActionableCheck<BASE>> happened(String actionableId) {
-		return new TimelineCheck<>(this, g -> g.getParent().getGame(), actionableId);
+		return new TimelineCheck<>(this, g -> function.apply(g).getParent().getGame(), actionableId);
 	}
 }
