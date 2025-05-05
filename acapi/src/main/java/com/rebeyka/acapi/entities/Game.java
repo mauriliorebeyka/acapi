@@ -77,7 +77,7 @@ public class Game {
 				return d;
 			}
 		}
-		for (Deck d : players.stream().flatMap(p -> p.getDecks().values().stream()).toList()) {
+		for (Deck d : players.stream().flatMap(p -> p.getDeckNames().stream().map(n -> p.getDeck(n))).toList()) {
 			if (d.getCards().contains(c)) {
 				return d;
 			}
@@ -86,12 +86,12 @@ public class Game {
 	}
 
 	public Deck findDeck(String deckName) {
-		return players.stream().flatMap(p -> p.getDecks().values().stream()).filter(d -> d.getId().equals(deckName))
+		return players.stream().flatMap(p -> p.getDeckNames().stream().map(n -> p.getDeck(n))).filter(d -> d.getId().equals(deckName))
 				.findFirst().get();
 	}
 
 	public PlayBuilder findPlay(Player owner, String playId) {
-		Stream<PlayBuilder> playStream = owner.getDecks().values().stream().flatMap(d -> d.getCards().stream())
+		Stream<PlayBuilder> playStream = owner.getDeckNames().stream().flatMap(d -> owner.getDeck(d).getCards().stream())
 				.flatMap(c -> c.getPlays().stream());
 		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getId().equals(playId)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException(

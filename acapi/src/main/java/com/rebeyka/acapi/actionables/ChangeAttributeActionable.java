@@ -1,41 +1,37 @@
 package com.rebeyka.acapi.actionables;
 
-import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Attribute;
 
-//TODO this can probably be changed to something that takes only one attribute and a function that calculates on top of it
-public class ChangeAttributeActionable<T extends Comparable<? super T>, U extends Comparable<? super U>> extends Actionable {
+public class ChangeAttributeActionable<T extends Comparable<? super T>> extends Actionable {
 
-	private String sourceAttributeName;
+	private Attribute<T> attribute;
 	
-	private String targetAttributeName;
+	private Function<T, T> function;
 	
-	private BiFunction<Attribute<T>, Attribute<U>, U> newValue;
+	private T originalValue;
 	
-	public ChangeAttributeActionable(String actionableId, String sourceAttributeName, String targetAttributeName, BiFunction<Attribute<T>, Attribute<U>, U> newValue) {
+	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, Function<T, T> function) {
 		super(actionableId);
-		this.sourceAttributeName = sourceAttributeName;
-		this.targetAttributeName = targetAttributeName;
-		this.newValue = newValue;
+		this.attribute = attribute;
+		this.function = function;
 	}
 
 	@Override
 	public void execute() {
-		Attribute<T> sourceAttribute = (Attribute<T>) getParent().getOrigin().getAttribute(sourceAttributeName);
-		Attribute<U> targetAttribute = (Attribute<U>) getParent().getOrigin().getAttribute(targetAttributeName);
-		targetAttribute.setValue(newValue.apply(sourceAttribute, targetAttribute));
+		originalValue = attribute.getValue();
+		attribute.setValue(function.apply(attribute.getValue()));
 	}
 
 	@Override
 	public void rollback() {
-		// TODO Auto-generated method stub
-		
+		attribute.setValue(originalValue);
 	}
 
 	@Override
 	public String getMessage() {
-		return "Changing attribute %s on %s to %s".formatted(targetAttributeName,getParent().getOrigin(),getParent().getOrigin().getAttribute(targetAttributeName).getValue());
+		return "Changing attribute %s on %s to %s".formatted(attribute.getName(),getParent().getOrigin(),attribute.getValue());
 	}
 
 	

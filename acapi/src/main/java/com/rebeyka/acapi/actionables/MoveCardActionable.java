@@ -1,15 +1,15 @@
 package com.rebeyka.acapi.actionables;
 
 import com.rebeyka.acapi.entities.Card;
-import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.Deck;
 
 public class MoveCardActionable extends Actionable {
 
-	private String originDeck;
+	private Deck originDeck;
 	
-	private String targetDeck;
+	private Deck targetDeck;
 	
-	public MoveCardActionable(String actionableId, String originDeck, String targetDeck) {
+	public MoveCardActionable(String actionableId, Deck originDeck, Deck targetDeck) {
 		super(actionableId);
 		this.originDeck = originDeck;
 		this.targetDeck = targetDeck;
@@ -17,9 +17,8 @@ public class MoveCardActionable extends Actionable {
 
 	@Override
 	public void execute() {
-		Game game = getParent().getOrigin().getGame();
-		game.findDeck(originDeck).getCards().removeAll(getParent().getTargets());
-		game.findDeck(targetDeck).getCards().addAll(getParent().getTargets().stream().map(c -> (Card)c).toList());
+		originDeck.getCards().removeAll(getParent().getTargets());
+		targetDeck.getCards().addAll(getParent().getTargets().stream().map(c -> (Card)c).toList());
 	}
 
 	@Override

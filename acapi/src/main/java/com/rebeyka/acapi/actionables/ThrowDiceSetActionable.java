@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.actionables;
 
 import com.rebeyka.acapi.entities.Attribute;
+import com.rebeyka.acapi.entities.Types;
 import com.rebeyka.acapi.random.DiceSet;
 
 public class ThrowDiceSetActionable<T> extends Actionable {
@@ -15,7 +16,8 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 	@Override
 	public void execute() {
 		this.getDice().rollAll();
-		getParent().getOrigin().setAttribute("DICE_ROLL", new Attribute<DiceSet<T>>(dice));
+		Attribute<DiceSet<T>> attr = getParent().getOrigin().getAttribute("DICE_ROLL", Types.diceSetOf(dice));
+		attr.setValue(dice);
 	}
 
 	@Override

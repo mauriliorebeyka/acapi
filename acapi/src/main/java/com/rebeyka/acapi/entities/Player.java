@@ -2,6 +2,7 @@ package com.rebeyka.acapi.entities;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Player extends Playable {
 
@@ -14,11 +15,14 @@ public class Player extends Playable {
 		this.decks = new HashMap<>();
 	}
 
-	public Map<String, Deck> getDecks() {
-		return decks;
+	public Set<String> getDeckNames() {
+		return decks.keySet();
 	}
-
+	
 	public Deck getDeck(String name) {
+		if (!decks.containsKey(name)) {
+			decks.put(name, new Deck(name));
+		}
 		return decks.get(name);
 	}
 

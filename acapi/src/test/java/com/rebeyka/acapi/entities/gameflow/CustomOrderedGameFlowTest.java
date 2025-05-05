@@ -13,9 +13,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import com.rebeyka.acapi.builders.GameFlowBuilder;
+import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
+import com.rebeyka.acapi.entities.Types;
 
 public class CustomOrderedGameFlowTest {
 
@@ -42,9 +43,9 @@ public class CustomOrderedGameFlowTest {
 	public void setup() {
 		openMocks(this);
 
-		doReturn(new SimpleIntegerAttribute(10)).when(game).getModifiedPlayerAttribute(player1, "VP");
-		doReturn(new SimpleIntegerAttribute(20)).when(game).getModifiedPlayerAttribute(player2, "VP");
-		doReturn(new SimpleIntegerAttribute(5)).when(game).getModifiedPlayerAttribute(player3, "VP");
+		doReturn(new Attribute<Integer>("",10,Types.integer())).when(game).getModifiedPlayerAttribute(player1, "VP");
+		doReturn(new Attribute<Integer>("",20,Types.integer())).when(game).getModifiedPlayerAttribute(player2, "VP");
+		doReturn(new Attribute<Integer>("",5,Types.integer())).when(game).getModifiedPlayerAttribute(player3, "VP");
 		players = Arrays.asList(player1, player2, player3);
 		when(game.getPlayers()).thenReturn(players);
 

@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.SimpleIntegerAttribute;
+import com.rebeyka.acapi.entities.Types;
 
 public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE, Playable> {
 
@@ -33,10 +33,10 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 	}
 	
 	public StringCheck<BASE, Playable, PlayableCheck<BASE>> attribute(String attribute) {
-		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, String.class).getValue(), "string attribute %s".formatted(attribute));
+		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, Types.string()).getValue(), "string attribute %s".formatted(attribute));
 	}
 	
 	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {
-		return new IntegerCheck<>(this, p -> ((SimpleIntegerAttribute)function.apply(p).getAttribute(attribute, Integer.class)).getValue(),"integer attribute %s".formatted(attribute));
+		return new IntegerCheck<>(this, p -> (function.apply(p).getAttribute(attribute, Types.integer())).getValue(),"integer attribute %s".formatted(attribute));
 	}
 }

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.google.common.reflect.TypeToken;
 import com.rebeyka.acapi.builders.PlayBuilder;
+import com.rebeyka.acapi.exceptions.InvalidAttributeTypeException;
 
 public abstract class Playable {
 
@@ -35,8 +38,8 @@ public abstract class Playable {
 		this.plays = plays;
 	}
 
-	public Map<String, Attribute<?>> getAttributes() {
-		return attributes;
+	public Set<String> getAttributeNames() {
+		return attributes.keySet();
 	}
 
 	public Attribute<?> getAttribute(String name) {
@@ -44,20 +47,16 @@ public abstract class Playable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Comparable<? super T>> Attribute<T> getAttribute(String name, Class<T> clazz) {
+	public <T extends Comparable<? super T>> Attribute<T> getAttribute(String name, TypeToken<T> type) {
+		if (!attributes.containsKey(name)) {
+			attributes.put(name, new Attribute<T>(name, type));
+		}
 		Attribute<?> attribute = attributes.get(name);
-		if (attribute.getValue().getClass().equals(clazz)) {
+		if (attribute.getValue() == null || attribute.getType().equals(type)) {
 			return (Attribute<T>) attribute;
 		}
-		return null;
-	}
-	
-	public void setAttributes(Map<String, Attribute<?>> attributes) {
-		this.attributes = attributes;
-	}
-
-	public void setAttribute(String name, Attribute<?> attribute) {
-		attributes.put(name, attribute);
+		throw new InvalidAttributeTypeException("Expected attribute type to be %s, but was %s instead"
+				.formatted(type.getType(), attribute.getType()));
 	}
 
 	public Game getGame() {
