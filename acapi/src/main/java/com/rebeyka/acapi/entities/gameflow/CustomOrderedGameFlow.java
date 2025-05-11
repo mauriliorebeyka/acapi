@@ -21,7 +21,7 @@ public class CustomOrderedGameFlow extends RoundRobinGameFlow {
 	}
 
 	public void setOrder(String attribute, boolean reverse) {
-		Comparator<Player> comparator = Comparator.comparing(p -> game.getModifiedPlayerAttribute(p, attribute));
+		Comparator<Player> comparator = Comparator.comparing(p -> p.getAttribute(attribute));
 		if (reverse) {
 			comparator = comparator.reversed();
 		}

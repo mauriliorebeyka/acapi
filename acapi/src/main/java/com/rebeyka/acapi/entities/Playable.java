@@ -56,7 +56,7 @@ public abstract class Playable {
 			return (Attribute<T>) attribute;
 		}
 		throw new InvalidAttributeTypeException("Expected attribute type to be %s, but was %s instead"
-				.formatted(type.getType(), attribute.getType()));
+				.formatted(type.getType(), attribute.getType().getType()));
 	}
 
 	public Game getGame() {

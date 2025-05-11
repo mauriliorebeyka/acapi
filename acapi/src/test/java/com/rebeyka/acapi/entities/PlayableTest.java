@@ -34,20 +34,20 @@ public class PlayableTest {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-//	@Test
-	//TODO Should we dynamically change the type of the attribute or throw an exception?
-	//Allowing the below behaviour will fail to fetch the attribute later.
+	@Test
 	public void testChangeAttributeType() {
 		Player player = new Player("");
 		Attribute attr = player.getAttribute("test", Types.string());
 		player.getAttribute("test", Types.string()).setValue("test");
 		assertThatThrownBy(() -> player.getAttribute("test", Types.integer()))
 				.isExactlyInstanceOf(InvalidAttributeTypeException.class)
-				.hasMessage("Expected attribute type to be java.lang.Integer, but was class java.lang.String instead");
+				.hasMessage("Expected attribute type to be class java.lang.Integer, but was class java.lang.String instead");
 		assertThat(attr.getValue()).isEqualTo("test");
-		((Attribute) player.getAttribute("test")).setValue(5);
-		assertThat(attr.getValue()).isEqualTo(5);
-		assertThat(attr).isSameAs(player.getAttribute("test", Types.integer()));
+		//TODO Should we dynamically change the type of the attribute or throw an exception?
+		//Allowing the below behaviour will fail to fetch the attribute later.
+//		((Attribute) player.getAttribute("test")).setValue(5);
+//		assertThat(attr.getValue()).isEqualTo(5);
+//		assertThat(attr).isSameAs(player.getAttribute("test", Types.integer()));
 	}
 
 	@Test

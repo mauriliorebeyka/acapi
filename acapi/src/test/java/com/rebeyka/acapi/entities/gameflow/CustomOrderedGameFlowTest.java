@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.entities.gameflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
@@ -43,9 +42,9 @@ public class CustomOrderedGameFlowTest {
 	public void setup() {
 		openMocks(this);
 
-		doReturn(new Attribute<Integer>("",10,Types.integer())).when(game).getModifiedPlayerAttribute(player1, "VP");
-		doReturn(new Attribute<Integer>("",20,Types.integer())).when(game).getModifiedPlayerAttribute(player2, "VP");
-		doReturn(new Attribute<Integer>("",5,Types.integer())).when(game).getModifiedPlayerAttribute(player3, "VP");
+		when(player1.getAttribute("VP")).then(_ -> new Attribute<Integer>("",10,Types.integer()));
+		when(player2.getAttribute("VP")).then(_ -> new Attribute<Integer>("",20,Types.integer()));
+		when(player3.getAttribute("VP")).then(_ -> new Attribute<Integer>("",5,Types.integer()));
 		players = Arrays.asList(player1, player2, player3);
 		when(game.getPlayers()).thenReturn(players);
 

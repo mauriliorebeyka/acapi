@@ -1,5 +1,6 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Attribute;
@@ -18,6 +19,14 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 		this.function = function;
 	}
 
+	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, T value) {
+		this(actionableId, attribute, _ -> value);
+	}
+	
+	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, T value, BiFunction<T, T, T> function) {
+		this(actionableId, attribute, v -> function.apply(attribute.getValue(), value));
+	}
+	
 	@Override
 	public void execute() {
 		originalValue = attribute.getValue();

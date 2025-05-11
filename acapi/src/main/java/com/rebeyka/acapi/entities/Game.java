@@ -107,10 +107,10 @@ public class Game {
 		return players;
 	}
 
-	public Attribute<?> getModifiedPlayerAttribute(Player player, String attributeName) {
-		// TODO Implement modifiers
-		return player.getAttribute(attributeName);
-	}
+//	public Attribute<?> getModifiedPlayerAttribute(Player player, String attributeName) {
+//		// TODO Implement modifiers
+//		return player.getAttribute(attributeName);
+//	}
 
 	public Deck getDeck(String name) {
 		return decks.get(name);
