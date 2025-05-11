@@ -24,7 +24,7 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 	}
 	
 	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, T value, BiFunction<T, T, T> function) {
-		this(actionableId, attribute, v -> function.apply(attribute.getValue(), value));
+		this(actionableId, attribute, _ -> function.apply(attribute.getValue(), value));
 	}
 	
 	@Override

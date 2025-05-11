@@ -46,8 +46,7 @@ public class Timeline {
 
 	public void queue(Play newPlay, boolean skipCurrentQueue) {
 		LOG.info("Declaring play {} from {} against {}", newPlay.getId(), newPlay.getOrigin(), newPlay.getTargets());
-		newPlay.setGame(game);
-		int position = skipCurrentQueue ? currentPosition : actionables.size();
+		int position = skipCurrentQueue ? currentPosition + 1: actionables.size();
 		if (newPlay.getCost() != null) {
 			CostActionable costActionable = newPlay.getCost().getCostActionable();
 			costActionable.setParent(newPlay);

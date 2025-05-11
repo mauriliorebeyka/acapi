@@ -40,10 +40,8 @@ public class PlayableSequenceTest {
 	public void testWrong() {
 		Playable mockPlayable1 = mock(Playable.class);
 		when(mockPlayable1.getAttribute("number",Types.integer())).thenReturn(new Attribute<Integer>("",1,Types.integer()));
-//		Player mockPlayable2 = new Player("");
-//		mockPlayable2.getAttribute("number",Types.integer());
-//		((Attribute<String>)mockPlayable2.getAttribute("number")).setValue("3");
 		Playable mockPlayable2 = mock(Playable.class);
+		@SuppressWarnings("unchecked")
 		Attribute<Integer> mockAttribute = mock(Attribute.class);
 		when(mockAttribute.getType()).thenReturn(Types.integer());
 		when(mockAttribute.getValue()).then(_ -> "3");

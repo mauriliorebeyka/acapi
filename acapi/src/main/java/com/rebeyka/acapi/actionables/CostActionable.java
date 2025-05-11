@@ -43,13 +43,13 @@ public abstract class CostActionable extends ConditionalActionable {
 	@Override
 	public void execute() {
 		selectedChoices = getParent().getGame().getSelectedChoices();
-		selectedChoices.forEach(this::executeSingle);
+		selectedChoices.reversed().forEach(this::executeSingle);
 		getParent().getGame().setSelectedChoices(Collections.emptyList());
 	}
 	
 	@Override
 	public void rollback() {
-		selectedChoices.forEach(this::rollbackSingle);
+		selectedChoices.reversed().forEach(this::rollbackSingle);
 	}
 	
 	public abstract void executeSingle(Playable playable);

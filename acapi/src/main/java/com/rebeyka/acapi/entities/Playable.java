@@ -7,14 +7,13 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.reflect.TypeToken;
-import com.rebeyka.acapi.builders.PlayBuilder;
 import com.rebeyka.acapi.exceptions.InvalidAttributeTypeException;
 
 public abstract class Playable {
 
 	private String id;
 
-	private List<PlayBuilder> plays;
+	private List<Play> plays;
 
 	private Map<String, Attribute<?>> attributes;
 
@@ -30,11 +29,11 @@ public abstract class Playable {
 		return id;
 	}
 
-	public List<PlayBuilder> getPlays() {
+	public List<Play> getPlays() {
 		return plays;
 	}
 
-	public void setPlays(List<PlayBuilder> plays) {
+	public void setPlays(List<Play> plays) {
 		this.plays = plays;
 	}
 

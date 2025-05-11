@@ -18,21 +18,15 @@ public class SimpleCostActionable extends CostActionable {
 
 	@Override
 	public void executeSingle(Playable playable) {
-		Actionable actionable = actionableSupplier.get();
-		Play temp = new Play(getParent());
-		temp.setTargets(List.of(playable));
-		actionable.setParent(temp);
-		//TODO Find a way to put this into the timeline for execution, so we could maintain the
-		//standard logging messages
-//		temp.getGame().declarePlay(null, temp, List.of(playable));
-		actionable.execute();
+		Play temp = new Play.Builder(getParent()).withCost(null).withActionable(actionableSupplier).build();
+		temp.getGame().declarePlay(temp, List.of(playable), true);
 	}
 
+	
 	@Override
 	public void rollbackSingle(Playable playable) {
 		Actionable actionable = actionableSupplier.get();
-		Play temp = new Play(getParent());
-		temp.setTargets(List.of(playable));
+		Play temp = new Play.Builder(getParent()).withTarget(playable).build();
 		actionable.setParent(temp);
 		actionable.rollback();
 	}

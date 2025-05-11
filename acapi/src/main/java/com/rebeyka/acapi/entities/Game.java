@@ -9,7 +9,6 @@ import java.util.stream.Stream;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.WinningCondition;
 import com.rebeyka.acapi.builders.GameFlowBuilder;
-import com.rebeyka.acapi.builders.PlayBuilder;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
 import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
@@ -56,18 +55,17 @@ public class Game {
 		return id;
 	}
 
-	public boolean declarePlay(PlayBuilder play, Playable target) {
-		return declarePlay(play, List.of(target));
+	public boolean declarePlay(Play play, Playable target) {
+		return declarePlay(play, List.of(target), false);
 	}
 
-	public boolean declarePlay(PlayBuilder play, List<Playable> targets) {
+	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
 		if (!play.getCondition().test(this)) {
 			return false;
 		}
 
-		Play newPlay = new Play(play);
-		newPlay.setTargets(targets);
-		timeline.queue(newPlay);
+		Play newPlay = new Play.Builder(play).withTargets(targets).withGame(this).build();
+		timeline.queue(newPlay, skipQueue);
 		return true;
 	}
 
@@ -90,8 +88,8 @@ public class Game {
 				.findFirst().get();
 	}
 
-	public PlayBuilder findPlay(Player owner, String playId) {
-		Stream<PlayBuilder> playStream = owner.getDeckNames().stream().flatMap(d -> owner.getDeck(d).getCards().stream())
+	public Play findPlay(Player owner, String playId) {
+		Stream<Play> playStream = owner.getDeckNames().stream().flatMap(d -> owner.getDeck(d).getCards().stream())
 				.flatMap(c -> c.getPlays().stream());
 		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getId().equals(playId)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException(
@@ -178,10 +176,10 @@ public class Game {
 		afterTriggers.clear();
 		beforeTriggers.clear();
 		if (gameEndActionable != null) {
-			PlayBuilder gameEnd = new PlayBuilder();
+			Play.Builder gameEnd = new Play.Builder();
 			gameEnd.withGame(this).withCondition(_ -> true).withCost(null).withId("GAME END")
-					.addActionable(() -> gameEndActionable);
-			timeline.queue(new Play(gameEnd));
+					.withActionable(() -> gameEndActionable);
+			timeline.queue(gameEnd.build());
 		}
 	}
 
@@ -195,7 +193,7 @@ public class Game {
 
 	public List<Play> getAfterTriggerActionables(Actionable triggeringActionable) {
 		return afterTriggers.stream().filter(t -> t.test(triggeringActionable))
-				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent().getTargets())).toList();
+				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent())).toList();
 	}
 
 	public void registerBeforeTrigger(Trigger trigger) {
@@ -208,7 +206,7 @@ public class Game {
 
 	public List<Play> getBeforeTriggerActionables(Actionable triggeringActionable) {
 		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable))
-				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent().getTargets())).toList();
+				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent())).toList();
 	}
 	
 	public int countActionables(String actionableId, String actionableIdBound) {
