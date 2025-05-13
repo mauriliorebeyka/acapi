@@ -54,7 +54,7 @@ public class Trigger {
 		boolean matchingId = triggerOnActionableId.equals("ALL")
 				|| triggerOnActionableId.equals(triggeringActionable.getActionableId());
 		if (matchingId && condition.test(test.getGame())) {
-			LOG.debug("Test passed, triggering play {}", playToTrigger.getId());
+			LOG.debug("Test passed, triggering play {}", playToTrigger.getName());
 			return true;
 		} else {
 			return false;
@@ -62,9 +62,9 @@ public class Trigger {
 	}
 
 	public Play getTriggeredPlay(Play base) {
-		Play play = new Play.Builder(playToTrigger).withTargets(base.getTargets())
-				.withGame(base.getGame())
-				.withOrigin(base.getOrigin()).build();
+		Play play = new Play.Builder(playToTrigger).targets(base.getTargets())
+				.game(base.getGame())
+				.origin(base.getOrigin()).build();
 		return play;
 	}
 

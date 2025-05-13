@@ -64,7 +64,7 @@ public class Game {
 			return false;
 		}
 
-		Play newPlay = new Play.Builder(play).withTargets(targets).withGame(this).build();
+		Play newPlay = new Play.Builder(play).targets(targets).game(this).build();
 		timeline.queue(newPlay, skipQueue);
 		return true;
 	}
@@ -88,12 +88,12 @@ public class Game {
 				.findFirst().get();
 	}
 
-	public Play findPlay(Player owner, String playId) {
+	public Play findPlay(Player owner, String playName) {
 		Stream<Play> playStream = owner.getDeckNames().stream().flatMap(d -> owner.getDeck(d).getCards().stream())
 				.flatMap(c -> c.getPlays().stream());
-		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getId().equals(playId)).findFirst()
+		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException(
-						"Could not find playId %s for Player %s".formatted(playId, owner.getId())));
+						"Could not find playId %s for Player %s".formatted(playName, owner.getId())));
 	}
 
 	public Player findPlayer(String playerName) {
@@ -177,8 +177,8 @@ public class Game {
 		beforeTriggers.clear();
 		if (gameEndActionable != null) {
 			Play.Builder gameEnd = new Play.Builder();
-			gameEnd.withGame(this).withCondition(_ -> true).withCost(null).withId("GAME END")
-					.withActionable(() -> gameEndActionable);
+			gameEnd.game(this).condition(_ -> true).cost(null).name("GAME END")
+					.actionable(() -> gameEndActionable);
 			timeline.queue(gameEnd.build());
 		}
 	}

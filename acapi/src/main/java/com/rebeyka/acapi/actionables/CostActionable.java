@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.entities.Cost;
+import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Playable;
 
 public abstract class CostActionable extends ConditionalActionable {

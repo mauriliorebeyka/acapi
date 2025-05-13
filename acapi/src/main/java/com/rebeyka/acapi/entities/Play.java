@@ -1,8 +1,9 @@
 package com.rebeyka.acapi.entities;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -11,7 +12,7 @@ import com.rebeyka.acapi.actionables.Actionable;
 
 public class Play {
 
-	private String id;
+	private String name;
 
 	private Playable origin;
 
@@ -26,7 +27,7 @@ public class Play {
 	private List<Supplier<Actionable>> actionables;
 
 	private Play(Builder builder) {
-		this.id = builder.id;
+		this.name = builder.name;
 		this.origin = builder.origin;
 		this.targets = builder.targets;
 		this.game = builder.game;
@@ -39,8 +40,8 @@ public class Play {
 		}
 	}
 
-	public String getId() {
-		return id;
+	public String getName() {
+		return name;
 	}
 
 	public Playable getOrigin() {
@@ -76,9 +77,13 @@ public class Play {
 		return actionables;
 	}
 
+	public Builder copy() {
+		return new Builder(this);
+	}
+	
 	public static final class Builder {
 		
-		private String id;
+		private String name;
 
 		private Playable origin;
 
@@ -99,7 +104,7 @@ public class Play {
 		}
 
 		public Builder(Play copy) {
-			this.id = copy.getId() + " " + UUID.randomUUID().toString();
+			this.name = copy.getName();
 			this.origin = copy.getOrigin();
 			this.targets = copy.getTargets();
 			this.cost = copy.getCost();
@@ -109,50 +114,53 @@ public class Play {
 			this.game = copy.getGame();
 		}
 		
-		public Builder withId(String id) {
-			this.id = id;
+		public Builder name(String id) {
+			this.name = id;
 			return this;
 		}
 		
-		public Builder withOrigin(Playable origin) {
+		public Builder origin(Playable origin) {
 			this.origin = origin;
 			return this;
 		}
 
-		public Builder withTargets(List<Playable> targets) {
+		public Builder targets(List<Playable> targets) {
 			this.targets = targets;
 			return this;
 		}
 		
-		public Builder withTarget(Playable target) {
-			return withTargets(List.of(target));
+		public Builder target(Playable target) {
+			return targets(List.of(target));
 		}
 		
-		public Builder withGame(Game game) {
+		public Builder game(Game game) {
 			this.game = game;
 			return this;
 		}
 		
-		public Builder withCost(Cost cost) {
+		public Builder cost(Cost cost) {
 			this.cost = cost;
 			return this;
 		}
 		
-		public Builder withCondition(Predicate<Game> condition) {
+		public Builder condition(Predicate<Game> condition) {
 			this.condition = condition;
 			return this;
 		}
 		
-		public Builder withActionables(List<Supplier<Actionable>> actionables) {
+		public Builder actionables(List<Supplier<Actionable>> actionables) {
 			this.actionables = new ArrayList<Supplier<Actionable>>(actionables);
 			return this;
 		}
 		
-		public Builder withActionable(Supplier<Actionable> actionable) {
-			return withActionables(List.of(actionable));
+		public Builder actionable(Supplier<Actionable> actionable) {
+			return actionables(List.of(actionable));
 		}
 
 		public Play build() {
+			if (name == null) {
+				throw new InvalidParameterException("id cannot be null");
+			}
 			return new Play(this);
 		}
 	}

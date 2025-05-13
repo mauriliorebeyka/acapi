@@ -32,6 +32,4 @@ public class MoveCardActionable extends Actionable {
 		return "moving %s from %s to %s".formatted(getParent().getTargets(),originDeck,targetDeck);
 	}
 
-	
-	
 }
