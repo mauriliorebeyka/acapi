@@ -42,6 +42,11 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return me(true);
 	}
 
+	public SELF always() {
+		addTest(_ -> true, "always", "always");
+		return me();
+	}
+	
 	public SELF is(T other) {
 		addTest(p -> p == other, "value %s".formatted(other.toString()), "is the same object");
 		return me();

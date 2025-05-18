@@ -19,7 +19,7 @@ public class ActionableCheckTest {
 	
 	@Test
 	public void test() {
-		ActionableChecker a = Checker.whenActionable();
+		ActionableCheck<Actionable> a = Checker.whenActionable();
 		a.id().sameValue("ID").origin().id().sameValue("PLAYER ID");
 		Actionable actionable = mock(Actionable.class);
 		Play play = mock(Play.class);

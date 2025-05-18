@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.WinningCondition;
 import com.rebeyka.acapi.builders.GameFlowBuilder;
+import com.rebeyka.acapi.check.Checker;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
 import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
@@ -60,7 +61,7 @@ public class Game {
 	}
 
 	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
-		if (!play.getCondition().test(this)) {
+		if (!play.getCondition().check(play.getOrigin())) {
 			return false;
 		}
 
@@ -177,7 +178,7 @@ public class Game {
 		beforeTriggers.clear();
 		if (gameEndActionable != null) {
 			Play.Builder gameEnd = new Play.Builder();
-			gameEnd.game(this).condition(_ -> true).cost(null).name("GAME END")
+			gameEnd.game(this).condition(Checker.whenPlayable().always()).cost(null).name("GAME END")
 					.actionable(() -> gameEndActionable);
 			timeline.queue(gameEnd.build());
 		}

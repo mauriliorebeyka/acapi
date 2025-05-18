@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.Types;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
@@ -24,7 +25,7 @@ public class PlayableCheckTest {
 		when(gameflow.isPlayerActive(player)).thenReturn(true);
 		player.setGame(game);
 		player.getAttribute("title", Types.string()).setValue("A TITLE");
-		PlayableChecker checker = Checker.whenPlayable();
+		PlayableCheck<Playable> checker = Checker.whenPlayable();
 		checker.not().is(another).attribute("title").is("A TITLE").not().sameValue("TITLE").isActivePlayer();
 		assertThat(checker.check(player)).isTrue();
 	}

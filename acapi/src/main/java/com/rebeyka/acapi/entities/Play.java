@@ -3,12 +3,13 @@ package com.rebeyka.acapi.entities;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.check.AbstractCheck;
+import com.rebeyka.acapi.check.Checker;
 
 public class Play {
 
@@ -22,10 +23,12 @@ public class Play {
 
 	private Cost cost;
 
-	private Predicate<Game> condition;
+	private AbstractCheck<?,Playable,Playable> condition;
 
 	private List<Supplier<Actionable>> actionables;
 
+	private Trigger triggeredBy;
+	
 	private Play(Builder builder) {
 		this.name = builder.name;
 		this.origin = builder.origin;
@@ -34,6 +37,7 @@ public class Play {
 		this.cost = builder.cost;
 		this.condition = builder.condition;
 		this.actionables = builder.actionables;
+		this.triggeredBy = builder.triggeredBy;
 
 		if (this.cost != null) {
 			this.cost.getCostActionable().setParent(this);
@@ -59,7 +63,7 @@ public class Play {
 	public Cost getCost() {
 		return cost;
 	}
-	public Predicate<Game> getCondition() {
+	public AbstractCheck<?,Playable,Playable> getCondition() {
 		return condition;
 	}
 
@@ -77,6 +81,10 @@ public class Play {
 		return actionables;
 	}
 
+	public Trigger getTriggeredBy() {
+		return triggeredBy;
+	}
+	
 	public Builder copy() {
 		return new Builder(this);
 	}
@@ -93,13 +101,15 @@ public class Play {
 
 		private Cost cost;
 
-		private Predicate<Game> condition;
+		private AbstractCheck<?,Playable,Playable> condition;
 
 		private List<Supplier<Actionable>> actionables;
+		
+		private Trigger triggeredBy;
 
 		
 		public Builder() {
-			this.condition = _ -> true;
+			this.condition = Checker.whenPlayable().always();
 			this.actionables = new ArrayList<>();
 		}
 
@@ -143,7 +153,7 @@ public class Play {
 			return this;
 		}
 		
-		public Builder condition(Predicate<Game> condition) {
+		public Builder condition(AbstractCheck<?,Playable,Playable> condition) {
 			this.condition = condition;
 			return this;
 		}
@@ -153,13 +163,24 @@ public class Play {
 			return this;
 		}
 		
+		@SuppressWarnings("unchecked")
+		public Builder actionables(Supplier<Actionable>... actionables) {
+			this.actionables = Stream.of(actionables).toList();
+			return this;
+		}
+		
 		public Builder actionable(Supplier<Actionable> actionable) {
 			return actionables(List.of(actionable));
 		}
 
+		public Builder triggeredBy(Trigger trigger) {
+			this.triggeredBy = trigger;
+			return this;
+		}
+		
 		public Play build() {
 			if (name == null) {
-				throw new InvalidParameterException("id cannot be null");
+				throw new InvalidParameterException("name cannot be null");
 			}
 			return new Play(this);
 		}

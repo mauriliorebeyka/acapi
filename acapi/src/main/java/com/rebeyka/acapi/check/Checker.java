@@ -1,13 +1,19 @@
 package com.rebeyka.acapi.check;
 
+import java.util.ArrayList;
+import java.util.function.Function;
+
+import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.entities.Playable;
+
 public class Checker{
 	
-	public static ActionableChecker whenActionable() {
-		return new ActionableChecker();
+	public static ActionableCheck<Actionable> whenActionable() {
+		return new ActionableCheck<>(new ArrayList<TestResult<Actionable>>(), Function.identity());
 	}
 	
-	public static PlayableChecker whenPlayable() {
-		return new PlayableChecker();
+	public static PlayableCheck<Playable> whenPlayable() {
+		return new PlayableCheck<>(new ArrayList<TestResult<Playable>>(), Function.identity());
 	}
 }
 
