@@ -2,7 +2,6 @@ package com.rebeyka.acapi.entities.gameflow;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -11,7 +10,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +32,7 @@ public class TimelineTest {
 	private Timeline timeline;
 
 	private Play.Builder builder;
-	
+
 	@Mock
 	private Game game;
 
@@ -42,7 +44,7 @@ public class TimelineTest {
 		when(mockCost.getCostActionable()).thenReturn(mockCostActionable);
 		when(mockCostActionable.getParent()).thenReturn(mock(Play.class));
 		when(mockCostActionable.isSet()).thenReturn(true);
-		
+
 		timeline = new Timeline(game);
 		builder = new Play.Builder().name("id").origin(mock(Playable.class)).cost(mockCost);
 	}
@@ -53,7 +55,8 @@ public class TimelineTest {
 		when(mockPlayable.getGame()).thenReturn(mock(Game.class));
 		Actionable mockActionable1 = mock(Actionable.class);
 		Actionable mockActionable2 = mock(Actionable.class);
-		Play script1 = builder.origin(mockPlayable).actionables(Arrays.asList(() -> mockActionable1, () -> mockActionable2)).build();
+		Play script1 = builder.origin(mockPlayable)
+				.actionables(Arrays.asList(() -> mockActionable1, () -> mockActionable2)).build();
 		when(mockActionable1.getParent()).thenReturn(script1);
 		when(mockActionable2.getParent()).thenReturn(script1);
 
@@ -103,7 +106,9 @@ public class TimelineTest {
 
 		Play play1 = builder.actionables(Arrays.asList(() -> mockActionable1)).build();
 		when(mockActionable1.getParent()).thenReturn(play1);
-		Play play2 = builder.actionables(Arrays.asList(() -> mockActionable2, () -> mockActionable3, () -> mockActionable4)).build();
+		Play play2 = builder
+				.actionables(Arrays.asList(() -> mockActionable2, () -> mockActionable3, () -> mockActionable4))
+				.build();
 		when(mockActionable2.getParent()).thenReturn(play2);
 		when(mockActionable3.getParent()).thenReturn(play2);
 		when(mockActionable4.getParent()).thenReturn(play2);
@@ -200,12 +205,16 @@ public class TimelineTest {
 	public void testPlayWithCost() {
 		Actionable mockActionable1 = mock(Actionable.class);
 		CostActionable mockCostActionable = mock(CostActionable.class);
+		Actionable mockPayingCostActionable = mock(Actionable.class);
 		Cost mockCost = mock(Cost.class);
 		when(mockCost.getCostActionable()).thenReturn(mockCostActionable);
 		when(mockCostActionable.isSet()).thenReturn(true);
 		Play play1 = builder.cost(mockCost).actionables(Arrays.asList(() -> mockActionable1)).build();
+		Play costPlay = builder.cost(null).actionable(() -> mockPayingCostActionable).build();
+		when(mockCostActionable.getCostPlays()).thenReturn(List.of(costPlay));
 
 		timeline.queue(play1);
+		timeline.executeNext();
 		timeline.executeNext();
 		timeline.executeNext();
 		verify(mockCostActionable).execute();
@@ -213,12 +222,14 @@ public class TimelineTest {
 		verify(mockCostActionable).getParent();
 		verify(mockCostActionable).getActionableId();
 		verify(mockCostActionable).isSet();
+		verify(mockCostActionable).getCostPlays();
 		verify(mockCostActionable, times(2)).setParent(play1);
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
 		verify(mockActionable1).getParent();
 		verify(mockActionable1).getActionableId();
 		verify(mockActionable1).setParent(play1);
+		verify(mockPayingCostActionable).execute();
 		verifyNoMoreInteractions(mockCostActionable, mockActionable1);
 	}
 
@@ -269,19 +280,35 @@ public class TimelineTest {
 	@Test
 	public void testGameTriggersOrder() {
 		Actionable mockActionable1 = mock(Actionable.class);
+		when(mockActionable1.getActionableId()).thenReturn("mockActionable1");
 		Actionable mockActionable2 = mock(Actionable.class);
-		Play play1 = builder.actionables(Arrays.asList(() -> mockActionable1,() -> mockActionable2)).build();
+		when(mockActionable2.getActionableId()).thenReturn("mockActionable2");
+		Actionable beforeActionable2 = mock(Actionable.class);
+		when(beforeActionable2.getActionableId()).thenReturn("beforeActionable2");
+		Actionable afterActionable1 = mock(Actionable.class);
+		when(afterActionable1.getActionableId()).thenReturn("afterActionable1");
+		Play play1 = builder.cost(null).actionables(Arrays.asList(() -> mockActionable1, () -> mockActionable2))
+				.build();
+		Play play2 = builder.actionable(() -> beforeActionable2).build();
+		Play play3 = builder.actionable(() -> afterActionable1).build();
+		when(game.getBeforeTriggerActionables(mockActionable2)).thenReturn(List.of(play2)).thenReturn(Collections.emptyList());
+		when(game.getAfterTriggerActionables(mockActionable1)).thenReturn(List.of(play3));
 
 		timeline.queue(play1);
 		timeline.executeNext();
-		verify(game).getAfterTriggerActionables(any(CostActionable.class));
-		verify(game).getBeforeTriggerActionables(mockActionable1);
 		timeline.executeNext();
+		timeline.executeNext();
+		timeline.executeNext();
+		verify(game).getBeforeTriggerActionables(beforeActionable2);
+		verify(game,times(2)).getBeforeTriggerActionables(mockActionable2);
 		verify(game).getAfterTriggerActionables(mockActionable1);
-		verify(game).getBeforeTriggerActionables(mockActionable2);
-		timeline.executeNext();
+		verify(game).getAfterTriggerActionables(afterActionable1);
+		verify(game).getAfterTriggerActionables(beforeActionable2);
 		verify(game).getAfterTriggerActionables(mockActionable2);
-		timeline.executeNext();
+
+		assertThat(timeline.executeNext()).isFalse();
+		assertThat(timeline.getExecutedActionables()).containsExactly(mockActionable1, afterActionable1,
+				beforeActionable2, mockActionable2);
 		verifyNoMoreInteractions(game);
 	}
 }

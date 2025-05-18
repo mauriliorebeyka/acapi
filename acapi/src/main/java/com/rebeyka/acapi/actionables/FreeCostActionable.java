@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.function.Supplier;
+
 import com.rebeyka.acapi.entities.FreeCost;
 import com.rebeyka.acapi.entities.Playable;
 
@@ -15,12 +17,8 @@ public class FreeCostActionable extends CostActionable {
 	}
 
 	@Override
-	public void executeSingle(Playable playable) {
-		//NOTHING
+	public Supplier<Actionable> generatePlay(Playable playable) {
+		return () -> new EmptyActionable();
 	}
 	
-	@Override
-	public void rollbackSingle(Playable playable) {
-		//NOTHING
-	}
 }
