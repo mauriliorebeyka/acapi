@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.google.common.reflect.TypeToken;
+import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.exceptions.InvalidAttributeTypeException;
 
 public abstract class Playable {

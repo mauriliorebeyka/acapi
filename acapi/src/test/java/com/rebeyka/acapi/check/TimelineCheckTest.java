@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Game;
-import com.rebeyka.acapi.entities.Play;
+import com.rebeyka.acapi.entities.gameflow.Play;
 
 public class TimelineCheckTest {
 

@@ -23,7 +23,6 @@ import com.rebeyka.acapi.actionables.ChoiceActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.entities.Cost;
 import com.rebeyka.acapi.entities.Game;
-import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Playable;
 
 public class TimelineTest {

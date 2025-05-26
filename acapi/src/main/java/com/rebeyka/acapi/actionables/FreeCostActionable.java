@@ -17,7 +17,7 @@ public class FreeCostActionable extends CostActionable {
 	}
 
 	@Override
-	public Supplier<Actionable> generatePlay(Playable playable) {
+	public Supplier<Actionable> getActionable(Playable playable) {
 		return () -> new EmptyActionable();
 	}
 	

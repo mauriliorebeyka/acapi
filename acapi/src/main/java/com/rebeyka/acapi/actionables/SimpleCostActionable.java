@@ -15,7 +15,7 @@ public class SimpleCostActionable extends CostActionable {
 	}
 
 	@Override
-	public Supplier<Actionable> generatePlay(Playable playable) {
+	public Supplier<Actionable> getActionable(Playable playable) {
 		return actionableSupplier;
 	}
 	

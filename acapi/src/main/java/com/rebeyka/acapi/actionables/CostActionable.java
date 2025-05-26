@@ -9,8 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.entities.Cost;
-import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Playable;
+import com.rebeyka.acapi.entities.gameflow.Play;
 
 public abstract class CostActionable extends ConditionalActionable {
 
@@ -33,14 +33,6 @@ public abstract class CostActionable extends ConditionalActionable {
 		return cost.isPaid(getParent().getGame().getSelectedChoices());
 	}
 
-	public Cost getCost() {
-		return cost;
-	}
-
-	public void setCost(Cost cost) {
-		this.cost = cost;
-	}
-
 	@Override
 	public String getMessage() {
 		return "Paying cost %s with playables %s".formatted(cost, selectedChoices);
@@ -56,7 +48,7 @@ public abstract class CostActionable extends ConditionalActionable {
 		Play.Builder template = new Play.Builder().name("cost of " + getParent().getName()).cost(null)
 				.origin(getParent().getOrigin()).game(getParent().getGame());
 		costPlays = selectedChoices.reversed().stream()//.filter(p -> generatePlay(p) != null)
-				.map(p -> template.actionable(generatePlay(p)).target(p).build()).toList();
+				.map(p -> template.actionable(getActionable(p)).target(p).build()).toList();
 		getParent().getGame().setSelectedChoices(Collections.emptyList());
 	}
 
@@ -65,6 +57,6 @@ public abstract class CostActionable extends ConditionalActionable {
 //		costPlays.reversed().forEach(p -> p);
 	}
 
-	public abstract Supplier<Actionable> generatePlay(Playable playable);
+	public abstract Supplier<Actionable> getActionable(Playable playable);
 
 }

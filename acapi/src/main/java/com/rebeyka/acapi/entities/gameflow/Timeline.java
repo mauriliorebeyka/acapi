@@ -12,7 +12,6 @@ import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.ConditionalActionable;
 import com.rebeyka.acapi.actionables.CostActionable;
 import com.rebeyka.acapi.entities.Game;
-import com.rebeyka.acapi.entities.Play;
 
 public class Timeline {
 

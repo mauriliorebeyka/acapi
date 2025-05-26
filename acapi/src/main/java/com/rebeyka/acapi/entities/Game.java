@@ -12,7 +12,9 @@ import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.check.Checker;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
 import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
+import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
+import com.rebeyka.acapi.entities.gameflow.Trigger;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
 public class Game {

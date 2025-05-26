@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rebeyka.acapi.entities.Game;
-import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Player;
+import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.entities.gameflow.RoundRobinGameFlow;
 import com.rebeyka.acapi.exceptions.WrongPlayerCountException;
 

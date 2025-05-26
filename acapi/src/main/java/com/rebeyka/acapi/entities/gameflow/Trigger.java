@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.entities.gameflow;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

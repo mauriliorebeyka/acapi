@@ -11,9 +11,9 @@ import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Attribute;
-import com.rebeyka.acapi.entities.Play;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.Types;
+import com.rebeyka.acapi.entities.gameflow.Play;
 
 public class ActionableCheckTest {
 	

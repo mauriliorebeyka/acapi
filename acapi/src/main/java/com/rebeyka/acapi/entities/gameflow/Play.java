@@ -1,4 +1,4 @@
-package com.rebeyka.acapi.entities;
+package com.rebeyka.acapi.entities.gameflow;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -10,6 +10,9 @@ import java.util.stream.Stream;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.check.AbstractCheck;
 import com.rebeyka.acapi.check.Checker;
+import com.rebeyka.acapi.entities.Cost;
+import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.Playable;
 
 public class Play {
 
