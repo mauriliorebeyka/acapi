@@ -1,5 +1,6 @@
 package com.rebeyka.acapi.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameView {
@@ -8,8 +9,14 @@ public class GameView {
 	
 	private List<PlayerView> playerView;
 	
-	private List<ValueView<?>> attributeView;
+	private List<AttributeView<?>> attributeView;
 
+	public GameView() {
+		deckView = new ArrayList<>();
+		playerView = new ArrayList<>();
+		attributeView = new ArrayList<>();
+	}
+	
 	public List<DeckView> getDeckView() {
 		return deckView;
 	}
@@ -26,11 +33,12 @@ public class GameView {
 		this.playerView = playerView;
 	}
 
-	public List<ValueView<?>> getAttributeView() {
+	public List<AttributeView<?>> getAttributeView() {
 		return attributeView;
 	}
 
-	public void setAttributeView(List<ValueView<?>> attributeView) {
+	public void setAttributeView(List<AttributeView<?>> attributeView) {
 		this.attributeView = attributeView;
 	}
+	
 }

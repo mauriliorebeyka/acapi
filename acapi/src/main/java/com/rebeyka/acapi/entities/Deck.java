@@ -4,15 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.rebeyka.acapi.view.VisibilityType;
+
 public class Deck {
 
 	private String id;
 
 	private List<Card> cards;
 
-	public Deck(String id) {
+	private VisibilityType visibilityType;
+	
+	private Player owner;
+	
+	public Deck(String id, Player owner) {
 		this.id = id;
 		cards = new ArrayList<>();
+		visibilityType = VisibilityType.PUBLIC;
+		this.owner = owner;
 	}
 
 	public void shuffle() {
@@ -37,6 +45,21 @@ public class Deck {
 
 	public String getId() {
 		return id;
+	}
+	
+	public VisibilityType getVisibilityType() {
+		return visibilityType;
+	}
+
+	public void setVisibilityType(VisibilityType visibilityType) {
+		if (visibilityType.equals(VisibilityType.INHERIT)) {
+			throw new IllegalArgumentException("Deck cannot inherit visibility");
+		}
+		this.visibilityType = visibilityType;
+	}
+
+	public Player getOwner() {
+		return owner;
 	}
 	
 	@Override

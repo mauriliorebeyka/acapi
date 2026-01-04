@@ -2,8 +2,8 @@ package com.rebeyka.acapi.entities;
 
 public class Card extends Playable {
 
-	public Card(String id) {
-		super(id);
+	public Card(String id, Player owner) {
+		super(id, owner);
 	}
 
 	@Override

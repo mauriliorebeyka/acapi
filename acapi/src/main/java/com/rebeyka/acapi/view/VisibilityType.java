@@ -1,5 +1,5 @@
 package com.rebeyka.acapi.view;
 
 public enum VisibilityType {
-	FULL, LIMITED, HIDDEN, INHERIT;
+	PUBLIC, PRIVATE, HIDDEN, INHERIT;
 }

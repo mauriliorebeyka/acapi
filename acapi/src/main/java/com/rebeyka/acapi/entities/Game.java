@@ -16,9 +16,6 @@ import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
 import com.rebeyka.acapi.entities.gameflow.Trigger;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
-import com.rebeyka.acapi.view.Viewable;
-import com.rebeyka.acapi.view.Visibility;
-import com.rebeyka.acapi.view.VisibilityType;
 
 public class Game {
 
@@ -42,8 +39,6 @@ public class Game {
 
 	private List<Playable> selectedChoices;
 	
-	private Map<Viewable, Visibility> visibility;
-
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
@@ -57,7 +52,6 @@ public class Game {
 		this.gameFlow = gameFlow;
 		this.players.stream().forEach(p -> p.setGame(this));
 		this.selectedChoices = new ArrayList<>();
-		this.visibility = new HashMap<>();
 	}
 
 	public String getId() {
@@ -162,18 +156,6 @@ public class Game {
 
 	public void setSelectedChoices(Playable singleChoice) {
 		this.selectedChoices = List.of(singleChoice);
-	}
-
-	public Visibility visibility(Viewable viewable) {
-		visibility.putIfAbsent(viewable, new Visibility());
-		return visibility.get(viewable);
-	}
-	
-	public VisibilityType visibleToPlayer(Viewable viewable, Player player) {
-		if (visibility.containsKey(viewable)) {
-			return visibility.get(viewable).getVisibilityType(player);
-		}
-		return VisibilityType.INHERIT;
 	}
 	
 	public boolean executeNext() {

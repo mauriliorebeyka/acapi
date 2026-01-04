@@ -11,7 +11,7 @@ public class Player extends Playable {
 	private boolean automatic;
 
 	public Player(String id) {
-		super(id);
+		super(id, null);
 		this.decks = new HashMap<>();
 	}
 
@@ -21,7 +21,7 @@ public class Player extends Playable {
 	
 	public Deck getDeck(String name) {
 		if (!decks.containsKey(name)) {
-			decks.put(name, new Deck(name));
+			decks.put(name, new Deck(name, getOwner()));
 		}
 		return decks.get(name);
 	}
@@ -34,4 +34,9 @@ public class Player extends Playable {
 		this.automatic = automatic;
 	}
 
+	@Override
+	public Player getOwner() {
+		return this;
+	}
+	
 }
