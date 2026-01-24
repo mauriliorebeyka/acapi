@@ -101,7 +101,7 @@ public class Timeline {
 		actionable.execute();
 		String message = actionable.getMessage();
 		LOG.info(message);
-		String logMessage = new Date(System.currentTimeMillis()).toString() + actionable.getParent() + message;
+		String logMessage = "%s: %s - %s".formatted(new Date(System.currentTimeMillis()).toString(), actionable.getParent().getName(), message);
 		logMessages.add(logMessage);
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
@@ -130,6 +130,10 @@ public class Timeline {
 		}
 	}
 
+	public List<Actionable> getQueuedActionables() {
+		return actionables.subList(currentPosition, actionables.size());
+	}
+	
 	public List<Actionable> getExecutedActionables() {
 		return new ArrayList<>(actionables.subList(0, currentPosition));
 	}

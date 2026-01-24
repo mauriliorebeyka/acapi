@@ -4,13 +4,13 @@ import java.util.List;
 
 public class PlayableView {
 
-	private List<AttributeView<Comparable<?>>> attributeView;
+	private List<AttributeView<?>> attributeView;
 
-	public List<AttributeView<Comparable<?>>> getAttributeView() {
+	public List<AttributeView<?>> getAttributeView() {
 		return attributeView;
 	}
 
-	public void setAttributeView(List<AttributeView<Comparable<?>>> attributeView) {
+	public void setAttributeView(List<AttributeView<?>> attributeView) {
 		this.attributeView = attributeView;
 	}
 }

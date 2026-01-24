@@ -38,7 +38,7 @@ public class Game {
 	private WinningCondition gameEndActionable;
 
 	private List<Playable> selectedChoices;
-	
+
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
@@ -63,7 +63,7 @@ public class Game {
 	}
 
 	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
-		if (!play.getCondition().check(play.getOrigin())) {
+		if (!play.isPossible()) {
 			return false;
 		}
 
@@ -87,16 +87,24 @@ public class Game {
 	}
 
 	public Deck findDeck(String deckName) {
-		return players.stream().flatMap(p -> p.getDeckNames().stream().map(n -> p.getDeck(n))).filter(d -> d.getId().equals(deckName))
-				.findFirst().get();
+		return players.stream().flatMap(p -> p.getDeckNames().stream().map(n -> p.getDeck(n)))
+				.filter(d -> d.getId().equals(deckName)).findFirst().get();
 	}
 
 	public Play findPlay(Player owner, String playName) {
 		Stream<Play> playStream = owner.getDeckNames().stream().flatMap(d -> owner.getDeck(d).getCards().stream())
 				.flatMap(c -> c.getPlays().stream());
-		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName)).findFirst()
-				.orElseThrow(() -> new GameElementNotFoundException(
+		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName))
+				.findFirst().orElseThrow(() -> new GameElementNotFoundException(
 						"Could not find playId %s for Player %s".formatted(playName, owner.getId())));
+	}
+
+	public Playable findPlayable(String playableName) {
+		Stream<Playable> playables = players.stream()
+				.flatMap(p -> p.getDeckNames().stream().flatMap(d -> p.getDeck(d).getCards().stream()));
+		return Stream.concat(playables, getDecks().values().stream().flatMap(d -> d.getCards().stream()))
+				.filter(p -> p.getId().equals(playableName)).findFirst().orElseThrow(
+						() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableName)));
 	}
 
 	public Player findPlayer(String playerName) {
@@ -157,7 +165,7 @@ public class Game {
 	public void setSelectedChoices(Playable singleChoice) {
 		this.selectedChoices = List.of(singleChoice);
 	}
-	
+
 	public boolean executeNext() {
 		return timeline.executeNext();
 	}
@@ -172,6 +180,10 @@ public class Game {
 
 	public List<String> getLog() {
 		return timeline.getLogMessages();
+	}
+
+	public List<String> getLog(int size) {
+		return timeline.getLogMessages().stream().skip((Math.max(timeline.getLogMessages().size() - size, 0))).toList();
 	}
 
 	public void end() {
@@ -211,7 +223,7 @@ public class Game {
 		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable))
 				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent())).toList();
 	}
-	
+
 	public int countActionables(String actionableId, String actionableIdBound) {
 		List<Actionable> actionables = timeline.getExecutedActionables();
 		int count = 0;
@@ -222,5 +234,9 @@ public class Game {
 			}
 		}
 		return count;
+	}
+	
+	public List<Actionable> getQueuedActionables() {
+		return timeline.getQueuedActionables();
 	}
 }

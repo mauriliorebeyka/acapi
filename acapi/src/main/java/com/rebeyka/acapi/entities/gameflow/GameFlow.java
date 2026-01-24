@@ -71,6 +71,10 @@ public abstract class GameFlow {
 		return players.stream().filter(this::isPlayerActive).toList();
 	}
 	
+	public boolean isCurrentPlayer(Player p) {
+		return p.equals(getCurrentPlayer());
+	}
+	
 	public boolean nextPhase() {
 		if (this.currentGamePhase == this.gamePhases.size() - 1) {
 			this.currentGamePhase = 0;

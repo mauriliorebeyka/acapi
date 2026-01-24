@@ -23,7 +23,7 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 	}
 	
 	public PlayableCheck<BASE> isCurrentPlayer() {
-		addTest(p -> p.getGame().getGameFlow().getCurrentPlayer().equals(p), f -> f.getGame().getGameFlow().getCurrentPlayer(), "Player", "is current player");
+		addTest(p -> p.equals(p.getGame().getGameFlow().getCurrentPlayer()), f -> f.getGame().getGameFlow().getCurrentPlayer(), "Player", "is current player");
 		return me();
 	}
 	

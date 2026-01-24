@@ -8,7 +8,7 @@ public class PlayerView {
 
 	private List<DeckView> deckView;
 	
-	private List<AttributeView<Comparable<?>>> attributeView;
+	private List<AttributeView<?>> attributeView;
 	
 	public List<DeckView> getDeckView() {
 		return deckView;
@@ -18,11 +18,11 @@ public class PlayerView {
 		this.deckView = deckView;
 	}
 
-	public List<AttributeView<Comparable<?>>> getAttributeView() {
+	public List<AttributeView<?>> getAttributeView() {
 		return attributeView;
 	}
 
-	public void setAttributeView(List<AttributeView<Comparable<?>>> attributeView) {
+	public void setAttributeView(List<AttributeView<?>> attributeView) {
 		this.attributeView = attributeView;
 	}
 }

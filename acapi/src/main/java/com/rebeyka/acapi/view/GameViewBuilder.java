@@ -3,19 +3,21 @@ package com.rebeyka.acapi.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Deck;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
+import com.rebeyka.acapi.entities.gameflow.Play;
 
 public class GameViewBuilder {
 
 	private Game game;
-	
+
 	public GameViewBuilder(Game game) {
 		this.game = game;
 	}
-	
+
 	public GameView buildView(Player pov) {
 		GameView gameView = new GameView();
 
@@ -23,9 +25,18 @@ public class GameViewBuilder {
 
 		gameAttributes.add(new AttributeView<String>("ID", game.getId()));
 		gameAttributes.add(new AttributeView<Integer>("Round", game.getGameFlow().getRound()));
-		gameAttributes.add(new AttributeView<Player>("Current Player", game.getGameFlow().getCurrentPlayer()));
-		gameAttributes.add(new AttributeView<Player>("First Player", game.getGameFlow().getFirstPlayer()));
-		gameAttributes.add(new AttributeView<List<Player>>("Active Players", game.getGameFlow().getActivePlayers()));
+		if (game.getGameFlow().getCurrentPlayer() != null) {
+			gameAttributes
+					.add(new AttributeView<String>("Current Player", game.getGameFlow().getCurrentPlayer().getId()));
+		}
+		if (game.getGameFlow().getFirstPlayer() != null) {
+			gameAttributes.add(new AttributeView<String>("First Player", game.getGameFlow().getFirstPlayer().getId()));
+		}
+		gameAttributes.add(new AttributeView<List<String>>("Active Players",
+				game.getGameFlow().getActivePlayers().stream().map(Player::getId).toList()));
+
+		gameAttributes.add(new AttributeView<List<String>>("Log", game.getLog(10)));
+		gameAttributes.add(new AttributeView<List<String>>("Queue", game.getQueuedActionables().stream().map(Actionable::getActionableId).toList()));
 
 		gameView.setAttributeView(gameAttributes);
 
@@ -40,24 +51,32 @@ public class GameViewBuilder {
 
 		playerView.setAttributeView(new ArrayList<>());
 		playerView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", player.getId()));
-		playerView.getAttributeView().addAll(player.getAttributes().stream().map(attribute -> player.getAttribute(attribute))
-				.map(attribute -> new AttributeView<Comparable<?>>(attribute.getName(), attribute.getValue())).toList());
+		playerView.getAttributeView()
+				.addAll(player.getAttributes().stream().map(attribute -> player.getAttribute(attribute))
+						.map(attribute -> new AttributeView<Comparable<?>>(attribute.getName(), attribute.getValue()))
+						.toList());
+		if (player.getPlays().stream().anyMatch(Play::isPossible)) {
+			playerView.getAttributeView().add(new AttributeView<List<String>>("Available Plays",
+					player.getPlays().stream().map(Play::getName).toList()));
+		}
+
 		playerView.setDeckView(player.getDeckNames().stream().map(deck -> player.getDeck(deck))
-				.filter(deck -> deck.getVisibilityType() != VisibilityType.HIDDEN)
-				.map(deck -> buildDeckView(pov, deck)).toList());
+				.filter(deck -> deck.getVisibilityType() != VisibilityType.HIDDEN).map(deck -> buildDeckView(pov, deck))
+				.toList());
 
 		return playerView;
 	}
 
 	public DeckView buildDeckView(Player pov, Deck deck) {
 		DeckView deckView = new DeckView();
-		
+
 		List<AttributeView<?>> deckAttributes = new ArrayList<>();
 		deckAttributes.add(new AttributeView<String>("ID", deck.getId()));
 		deckAttributes.add(new AttributeView<Integer>("Size", deck.getCards().size()));
 		deckView.setAttributesView(deckAttributes);
 
-		deckView.setCardView(deck.getCards().stream().filter(card -> isVisible(card, pov, deck)).map(this::buildPlayableView).toList());
+		deckView.setCardView(deck.getCards().stream().filter(card -> isVisible(card, pov, deck))
+				.map(this::buildPlayableView).toList());
 
 		return deckView;
 	}
@@ -71,12 +90,17 @@ public class GameViewBuilder {
 		default -> false;
 		};
 	}
-	
+
 	public PlayableView buildPlayableView(Playable card) {
 		PlayableView playableView = new PlayableView();
 		playableView.setAttributeView(new ArrayList<>());
-		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID",card.getId()));
-		playableView.getAttributeView().addAll(card.getAttributes().stream().map(attr -> new AttributeView<Comparable<?>>(attr, card.getAttribute(attr).getValue())).toList());
+		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", card.getId()));
+		playableView.getAttributeView().addAll(card.getAttributes().stream()
+				.map(attr -> new AttributeView<Comparable<?>>(attr, card.getAttribute(attr).getValue())).toList());
+		if (card.getPlays().stream().anyMatch(Play::isPossible)) {
+			playableView.getAttributeView().add(new AttributeView<List<String>>("Available Plays",
+					card.getPlays().stream().map(Play::getName).toList()));
+		}
 		return playableView;
 	}
 }

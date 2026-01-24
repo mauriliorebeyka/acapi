@@ -87,6 +87,10 @@ public class Play {
 	public Trigger getTriggeredBy() {
 		return triggeredBy;
 	}
+
+	public boolean isPossible() {
+		return getCondition().check(origin);
+	}
 	
 	public Builder copy() {
 		return new Builder(this);
