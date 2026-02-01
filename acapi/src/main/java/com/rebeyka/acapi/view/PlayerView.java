@@ -2,8 +2,6 @@ package com.rebeyka.acapi.view;
 
 import java.util.List;
 
-import com.rebeyka.acapi.entities.Player;
-
 public class PlayerView {
 
 	private List<DeckView> deckView;

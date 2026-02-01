@@ -46,7 +46,7 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 				attribute.getValue());
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Supplier<Actionable> supply() {
 		return () -> new ChangeAttributeActionable(getActionableId(), attribute, function);

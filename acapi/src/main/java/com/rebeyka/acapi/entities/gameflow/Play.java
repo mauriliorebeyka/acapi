@@ -170,7 +170,6 @@ public class Play {
 			return this;
 		}
 		
-		@SuppressWarnings("unchecked")
 		public Builder actionables(Actionable... actionables) {
 			this.actionables = Stream.of(actionables).toList();
 			return this;

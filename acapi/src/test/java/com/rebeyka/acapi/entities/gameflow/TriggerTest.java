@@ -8,8 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.check.Checker;
-import com.rebeyka.acapi.entities.gameflow.Play;
-import com.rebeyka.acapi.entities.gameflow.Trigger;
 
 public class TriggerTest {
 
