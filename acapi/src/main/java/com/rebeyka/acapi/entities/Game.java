@@ -10,11 +10,15 @@ import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.WinningCondition;
 import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.check.Checker;
+import com.rebeyka.acapi.entities.gameflow.DisabledRanking;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
+import com.rebeyka.acapi.entities.gameflow.LogEntry;
 import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 import com.rebeyka.acapi.entities.gameflow.Play;
+import com.rebeyka.acapi.entities.gameflow.Ranking;
 import com.rebeyka.acapi.entities.gameflow.Timeline;
 import com.rebeyka.acapi.entities.gameflow.Trigger;
+import com.rebeyka.acapi.exceptions.DuplicatedPlayableException;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
 public class Game {
@@ -39,6 +43,8 @@ public class Game {
 
 	private List<Playable> selectedChoices;
 
+	private Ranking ranking;
+	
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
@@ -52,6 +58,7 @@ public class Game {
 		this.gameFlow = gameFlow;
 		this.players.stream().forEach(p -> p.setGame(this));
 		this.selectedChoices = new ArrayList<>();
+		setRanking(new DisabledRanking());
 	}
 
 	public String getId() {
@@ -107,11 +114,27 @@ public class Game {
 						() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableName)));
 	}
 
+	public boolean hasPlayable(String playableName) {
+		Stream<Playable> playables = players.stream()
+				.flatMap(p -> p.getDeckNames().stream().flatMap(d -> p.getDeck(d).getCards().stream()));
+		return Stream.concat(playables, getDecks().values().stream().flatMap(d -> d.getCards().stream()))
+				.anyMatch(p -> p.getId().equals(playableName));
+	}
+	
 	public Player findPlayer(String playerName) {
 		return players.stream().filter(p -> p.getId().equals(playerName)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException("Could not find player %s".formatted(playerName)));
 	}
 
+	public Card createCard(String id, Player owner) {
+		if (hasPlayable(id)) {
+			throw new DuplicatedPlayableException("Card with id %s already exists".formatted(id));
+		}
+		Card card = new Card(id, owner);
+		card.setGame(this);
+		return card;
+	}
+	
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -154,6 +177,15 @@ public class Game {
 		this.gameEndActionable = gameEndActionable;
 	}
 
+	public Ranking getRanking() {
+		return ranking;
+	}
+
+	public void setRanking(Ranking ranking) {
+		this.ranking = ranking;
+		this.ranking.updateRanking(players);
+	}
+
 	public List<Playable> getSelectedChoices() {
 		return this.selectedChoices;
 	}
@@ -167,7 +199,11 @@ public class Game {
 	}
 
 	public boolean executeNext() {
-		return timeline.executeNext();
+		if (timeline.executeNext()) {
+			ranking.updateRanking(players);
+			return true;
+		}
+		return false;
 	}
 
 	public boolean executeAll() {
@@ -178,11 +214,11 @@ public class Game {
 		return oneExecution;
 	}
 
-	public List<String> getLog() {
+	public List<LogEntry> getLog() {
 		return timeline.getLogMessages();
 	}
 
-	public List<String> getLog(int size) {
+	public List<LogEntry> getLog(int size) {
 		return timeline.getLogMessages().stream().skip((Math.max(timeline.getLogMessages().size() - size, 0))).toList();
 	}
 

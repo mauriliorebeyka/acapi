@@ -78,6 +78,9 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 
 	@Override
 	public int compareTo(Attribute<T> o) {
+		if (o == null) {
+			return 1;
+		}
 		return getValue().compareTo(o.getValue());
 	}
 }

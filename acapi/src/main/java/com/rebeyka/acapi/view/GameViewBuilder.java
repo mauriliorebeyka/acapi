@@ -8,7 +8,9 @@ import com.rebeyka.acapi.entities.Deck;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
+import com.rebeyka.acapi.entities.gameflow.LogEntry;
 import com.rebeyka.acapi.entities.gameflow.Play;
+import com.rebeyka.acapi.entities.gameflow.RankingPosition;
 
 public class GameViewBuilder {
 
@@ -30,12 +32,13 @@ public class GameViewBuilder {
 					.add(new AttributeView<String>("Current Player", game.getGameFlow().getCurrentPlayer().getId()));
 		}
 		if (game.getGameFlow().getFirstPlayer() != null) {
-			gameAttributes.add(new AttributeView<String>("First Player", game.getGameFlow().getFirstPlayer().getId()));
+			gameAttributes.add(new AttributeView<Player>("First Player", game.getGameFlow().getFirstPlayer()));
 		}
-		gameAttributes.add(new AttributeView<List<String>>("Active Players",
-				game.getGameFlow().getActivePlayers().stream().map(Player::getId).toList()));
-
-		gameAttributes.add(new AttributeView<List<String>>("Log", game.getLog(10)));
+		gameAttributes.add(new AttributeView<List<Player>>("Active Players",
+				game.getGameFlow().getActivePlayers().stream().toList()));
+		gameAttributes.add(new AttributeView<List<RankingPosition>>("Ranking",game.getRanking().getRankingPosition()));
+		
+		gameAttributes.add(new AttributeView<List<LogEntry>>("Log", game.getLog(10)));
 		gameAttributes.add(new AttributeView<List<String>>("Queue", game.getQueuedActionables().stream().map(Actionable::getActionableId).toList()));
 
 		gameView.setAttributeView(gameAttributes);

@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.entities.gameflow;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class Timeline {
 
 	private List<Actionable> actionables;
 
-	private List<String> logMessages;
+	private List<LogEntry> logMessages;
 
 	private int currentPosition;
 
@@ -54,7 +53,7 @@ public class Timeline {
 		actionables.addAll(position,newPlay.getActionables());
 	}
 	
-	public List<String> getLogMessages() {
+	public List<LogEntry> getLogMessages() {
 		return logMessages;
 	}
 
@@ -101,8 +100,7 @@ public class Timeline {
 		actionable.execute();
 		String message = actionable.getMessage();
 		LOG.info(message);
-		String logMessage = "%s: %s - %s".formatted(new Date(System.currentTimeMillis()).toString(), actionable.getParent().getName(), message);
-		logMessages.add(logMessage);
+		logMessages.add(new LogEntry(actionable.getParent(), message));
 		currentPosition++;
 		if (currentPosition < actionables.size()) {
 			game.getBeforeTriggerActionables(actionables.get(currentPosition)).forEach(p -> queue(p,true));

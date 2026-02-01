@@ -2,10 +2,11 @@ package com.rebeyka.acapi.random;
 
 import java.util.List;
 
+import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.exceptions.DieAlreadyRolledException;
 import com.rebeyka.acapi.exceptions.DieNotRolledException;
 
-public class Die<T> {
+public class Die<T> extends Playable {
 
 	private Seed seed;
 
@@ -15,7 +16,10 @@ public class Die<T> {
 
 	private List<DieFace<T>> dieFaces;
 
+	private static int dieId = 0;
+	
 	public Die(List<DieFace<T>> dieFaces, Seed seed) {
+		super("Die"+dieId++, null);
 		this.dieFaces = dieFaces;
 		this.seed = seed;
 		this.rolledValue = null;
