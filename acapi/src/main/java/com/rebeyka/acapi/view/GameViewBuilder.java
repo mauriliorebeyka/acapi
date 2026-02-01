@@ -29,7 +29,7 @@ public class GameViewBuilder {
 		gameAttributes.add(new AttributeView<Integer>("Round", game.getGameFlow().getRound()));
 		if (game.getGameFlow().getCurrentPlayer() != null) {
 			gameAttributes
-					.add(new AttributeView<String>("Current Player", game.getGameFlow().getCurrentPlayer().getId()));
+					.add(new AttributeView<Player>("Current Player", game.getGameFlow().getCurrentPlayer()));
 		}
 		if (game.getGameFlow().getFirstPlayer() != null) {
 			gameAttributes.add(new AttributeView<Player>("First Player", game.getGameFlow().getFirstPlayer()));
