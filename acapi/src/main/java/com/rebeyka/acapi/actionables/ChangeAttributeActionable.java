@@ -2,17 +2,18 @@ package com.rebeyka.acapi.actionables;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.rebeyka.acapi.entities.Attribute;
 
 public class ChangeAttributeActionable<T extends Comparable<? super T>> extends Actionable {
 
 	private Attribute<T> attribute;
-	
+
 	private Function<T, T> function;
-	
+
 	private T originalValue;
-	
+
 	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, Function<T, T> function) {
 		super(actionableId);
 		this.attribute = attribute;
@@ -22,11 +23,12 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, T value) {
 		this(actionableId, attribute, _ -> value);
 	}
-	
-	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, T value, BiFunction<T, T, T> function) {
+
+	public ChangeAttributeActionable(String actionableId, Attribute<T> attribute, T value,
+			BiFunction<T, T, T> function) {
 		this(actionableId, attribute, _ -> function.apply(attribute.getValue(), value));
 	}
-	
+
 	@Override
 	public void execute() {
 		originalValue = attribute.getValue();
@@ -40,8 +42,13 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 
 	@Override
 	public String getMessage() {
-		return "Changing attribute %s on %s to %s".formatted(attribute.getName(),getParent().getOrigin(),attribute.getValue());
+		return "Changing attribute %s on %s to %s".formatted(attribute.getName(), getParent().getOrigin(),
+				attribute.getValue());
 	}
 
-	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new ChangeAttributeActionable(getActionableId(), attribute, function);
+	}
 }

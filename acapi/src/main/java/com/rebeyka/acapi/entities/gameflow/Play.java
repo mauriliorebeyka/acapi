@@ -28,7 +28,7 @@ public class Play {
 
 	private AbstractCheck<?,Playable,Playable> condition;
 
-	private List<Supplier<Actionable>> actionables;
+	private List<Actionable> actionables;
 
 	private Trigger triggeredBy;
 	
@@ -71,7 +71,7 @@ public class Play {
 	}
 
 	public List<Actionable> getActionables() {
-		return actionables.stream().map(this::enrich).collect(Collectors.toList());
+		return actionables.stream().map(Actionable::supply).map(this::enrich).collect(Collectors.toList());
 	}
 
 	private Actionable enrich(Supplier<Actionable> supplier) {
@@ -80,7 +80,7 @@ public class Play {
 		return actionable;
 	}
 	
-	public List<Supplier<Actionable>> getActionableSuppliers() {
+	public List<Actionable> getActionableTemplates() {
 		return actionables;
 	}
 
@@ -110,7 +110,7 @@ public class Play {
 
 		private AbstractCheck<?,Playable,Playable> condition;
 
-		private List<Supplier<Actionable>> actionables;
+		private List<Actionable> actionables;
 		
 		private Trigger triggeredBy;
 
@@ -126,7 +126,7 @@ public class Play {
 			this.targets = copy.getTargets();
 			this.cost = copy.getCost();
 			this.condition = copy.getCondition();
-			this.actionables = copy.getActionableSuppliers();
+			this.actionables = copy.getActionableTemplates();
 
 			this.game = copy.getGame();
 		}
@@ -165,18 +165,18 @@ public class Play {
 			return this;
 		}
 		
-		public Builder actionables(List<Supplier<Actionable>> actionables) {
-			this.actionables = new ArrayList<Supplier<Actionable>>(actionables);
+		public Builder actionables(List<Actionable> actionables) {
+			this.actionables = new ArrayList<Actionable>(actionables);
 			return this;
 		}
 		
 		@SuppressWarnings("unchecked")
-		public Builder actionables(Supplier<Actionable>... actionables) {
+		public Builder actionables(Actionable... actionables) {
 			this.actionables = Stream.of(actionables).toList();
 			return this;
 		}
 		
-		public Builder actionable(Supplier<Actionable> actionable) {
+		public Builder actionable(Actionable actionable) {
 			return actionables(List.of(actionable));
 		}
 

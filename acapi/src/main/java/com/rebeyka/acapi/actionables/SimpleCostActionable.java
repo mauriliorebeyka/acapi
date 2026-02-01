@@ -7,16 +7,20 @@ import com.rebeyka.acapi.entities.Playable;
 
 public class SimpleCostActionable extends CostActionable {
 
-	private Supplier<Actionable> actionableSupplier;
+	private Actionable actionableSupplier;
 
-	public SimpleCostActionable(String actionableId, Cost cost, Supplier<Actionable> actionable) {
+	public SimpleCostActionable(String actionableId, Cost cost, Actionable actionable) {
 		super(actionableId, cost);
 		this.actionableSupplier = actionable;
 	}
 
 	@Override
 	public Supplier<Actionable> getActionable(Playable playable) {
-		return actionableSupplier;
+		return actionableSupplier.supply();
 	}
-	
+
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new SimpleCostActionable(getActionableId(),cost,actionableSupplier);
+	}
 }

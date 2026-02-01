@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.function.Supplier;
+
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Types;
 import com.rebeyka.acapi.random.DiceSet;
@@ -15,7 +17,7 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 
 	@Override
 	public void execute() {
-		this.getDice().rollAll();
+		this.getDice().rerollAll();
 		Attribute<DiceSet<T>> attr = getParent().getOrigin().getAttribute("DICE_ROLL", Types.diceSetOf(dice));
 		attr.setValue(dice);
 	}
@@ -30,6 +32,11 @@ public class ThrowDiceSetActionable<T> extends Actionable {
 		return "Rolling %s dice. Values %s".formatted(getDice().getCount(),getDice());
 	}
 
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new ThrowDiceSetActionable<T>(getActionableId(), dice);
+	}
+	
 	public DiceSet<T> getDice() {
 		return dice;
 	}

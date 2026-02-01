@@ -21,4 +21,9 @@ public class FreeCostActionable extends CostActionable {
 		return () -> new EmptyActionable();
 	}
 	
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new FreeCostActionable((FreeCost)this.cost);
+	}
+	
 }

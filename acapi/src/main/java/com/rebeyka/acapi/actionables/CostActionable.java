@@ -16,7 +16,7 @@ public abstract class CostActionable extends ConditionalActionable {
 
 	protected static Logger LOG = LogManager.getLogger();
 
-	private Cost cost;
+	protected Cost cost;
 
 	private List<Playable> selectedChoices;
 
@@ -48,7 +48,7 @@ public abstract class CostActionable extends ConditionalActionable {
 		Play.Builder template = new Play.Builder().name("cost of " + getParent().getName()).cost(null)
 				.origin(getParent().getOrigin()).game(getParent().getGame());
 		costPlays = selectedChoices.reversed().stream()//.filter(p -> generatePlay(p) != null)
-				.map(p -> template.actionable(getActionable(p)).target(p).build()).toList();
+				.map(p -> template.actionable(getActionable(p).get()).target(p).build()).toList();
 		getParent().getGame().setSelectedChoices(Collections.emptyList());
 	}
 

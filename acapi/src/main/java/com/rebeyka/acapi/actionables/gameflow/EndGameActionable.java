@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.actionables.gameflow;
 
+import java.util.function.Supplier;
+
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Game;
@@ -32,4 +34,8 @@ public class EndGameActionable extends Actionable {
 		return "Ending game";
 	}
 
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new EndGameActionable(game);
+	}
 }

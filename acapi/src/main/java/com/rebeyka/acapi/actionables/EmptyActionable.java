@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.function.Supplier;
+
 public class EmptyActionable extends Actionable{
 
 	public EmptyActionable() {
@@ -21,4 +23,8 @@ public class EmptyActionable extends Actionable{
 		return "empty";
 	}
 
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new EmptyActionable();
+	}
 }

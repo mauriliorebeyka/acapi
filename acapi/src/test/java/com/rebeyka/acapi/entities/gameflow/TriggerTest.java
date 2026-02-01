@@ -16,12 +16,13 @@ public class TriggerTest {
 	@Test
 	public void testTriggeredPlay() {
 		Actionable mockActionable = mock(Actionable.class);
-		Play play = new Play.Builder().name("play").actionable(() -> mockActionable).build();
+		Play play = new Play.Builder().name("play").actionable(mockActionable).build();
 		when(mockActionable.getParent()).thenReturn(play);
 		Trigger trigger = new Trigger(play);
 		assertThat(trigger.test(mockActionable)).isTrue();
 		Play triggeredPlay = trigger.getTriggeredPlay(play);
 		when(mockActionable.getParent()).thenReturn(triggeredPlay);
+		when(mockActionable.supply()).thenReturn(() -> mockActionable);
 		assertThat(trigger.test(triggeredPlay.getActionables().get(0))).isFalse();
 		assertThat(play).isNotEqualTo(triggeredPlay);
 	}

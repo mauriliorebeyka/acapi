@@ -39,11 +39,12 @@ public class SimpleCostActionableTest {
 		when(mockPlay.getGame()).thenReturn(mockGame);
 		when(mockGame.getSelectedChoices()).thenReturn(Collections.emptyList());
 		when(mockCost.isPaid(Collections.emptyList())).thenReturn(true);
+		when(mockActionable.supply()).thenReturn(() -> mockActionable);
 	}
 
 	@Test
 	public void testIsSet() {
-		SimpleCostActionable actionable = new SimpleCostActionable("test", mockCost, () -> mockActionable);
+		SimpleCostActionable actionable = new SimpleCostActionable("test", mockCost, mockActionable);
 		actionable.setParent(mockPlay);
 		assertThat(actionable.getActionableId()).isEqualTo("test");
 		assertThat(actionable.isSet()).isTrue();
@@ -51,19 +52,18 @@ public class SimpleCostActionableTest {
 
 	@Test
 	public void testExecute() {
-		Supplier<Actionable> supplierMockActionable = () -> mockActionable;
 		Playable mockPlayable1 = mock(Playable.class);
 		when(mockPlayable1.toString()).thenReturn("mockPlayable1");
 		Playable mockPlayable2 = mock(Playable.class);
 		when(mockPlayable2.toString()).thenReturn("mockPlayable2");
 		when(mockGame.getSelectedChoices()).thenReturn(List.of(mockPlayable1, mockPlayable2));
-		SimpleCostActionable actionable = new SimpleCostActionable("test", mockCost, supplierMockActionable);
+		SimpleCostActionable actionable = new SimpleCostActionable("test", mockCost, mockActionable);
 		actionable.setParent(mockPlay);
 		actionable.execute();
 		verify(mockGame).setSelectedChoices(Collections.emptyList());
 		assertThat(actionable.getCostPlays()).hasSize(2).extracting(Play::getTargets)
 				.containsExactly(List.of(mockPlayable2), List.of(mockPlayable1));
-		assertThat(actionable.getCostPlays().get(0).getActionableSuppliers()).containsExactly(supplierMockActionable);
+		assertThat(actionable.getCostPlays().get(0).getActionableTemplates()).containsExactly(mockActionable);
 		assertThat(actionable.getMessage()).isEqualTo("Paying cost mockCost with playables [mockPlayable1, mockPlayable2]");
 	}
 	

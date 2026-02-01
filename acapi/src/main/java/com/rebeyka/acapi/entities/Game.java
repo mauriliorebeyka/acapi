@@ -44,7 +44,7 @@ public class Game {
 	private List<Playable> selectedChoices;
 
 	private Ranking ranking;
-	
+
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
@@ -69,6 +69,9 @@ public class Game {
 		return declarePlay(play, List.of(target), false);
 	}
 
+	// TODO there's a potential bug here where you can declare two plays that are
+	// possible at the same time, but the second one will still be executed if it's
+	// not possible anymore at execution time.
 	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
 		if (!play.isPossible()) {
 			return false;
@@ -120,7 +123,7 @@ public class Game {
 		return Stream.concat(playables, getDecks().values().stream().flatMap(d -> d.getCards().stream()))
 				.anyMatch(p -> p.getId().equals(playableName));
 	}
-	
+
 	public Player findPlayer(String playerName) {
 		return players.stream().filter(p -> p.getId().equals(playerName)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException("Could not find player %s".formatted(playerName)));
@@ -134,7 +137,7 @@ public class Game {
 		card.setGame(this);
 		return card;
 	}
-	
+
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -229,7 +232,7 @@ public class Game {
 		if (gameEndActionable != null) {
 			Play.Builder gameEnd = new Play.Builder();
 			gameEnd.game(this).condition(Checker.whenPlayable().always()).cost(null).name("GAME END")
-					.actionable(() -> gameEndActionable);
+					.actionable(gameEndActionable);
 			timeline.queue(gameEnd.build());
 		}
 	}
@@ -271,7 +274,7 @@ public class Game {
 		}
 		return count;
 	}
-	
+
 	public List<Actionable> getQueuedActionables() {
 		return timeline.getQueuedActionables();
 	}

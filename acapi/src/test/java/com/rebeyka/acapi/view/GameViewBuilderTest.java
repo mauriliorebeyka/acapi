@@ -22,13 +22,15 @@ public class GameViewBuilderTest {
 
 	private Player opponent;
 
+	private Game game;
+	
 	@BeforeEach
 	public void setup() {
 		player = new Player("Player");
 		player.setAttribute("name", Types.string(), "main player");
 		opponent = new Player("Opponent");
 		opponent.setAttribute("name", Types.string(), "opponent");
-		Game game = new Game("TEST", List.of(player, opponent));
+		game = new Game("TEST", List.of(player, opponent));
 
 		gameViewBuilder = new GameViewBuilder(game);
 	}
@@ -37,8 +39,8 @@ public class GameViewBuilderTest {
 	public void testGameViewBuilder() {
 		GameView view = gameViewBuilder.buildView(player);
 		assertThat(view.getAttributeView()).extracting(AttributeView::getAttributeName, AttributeView::getAttributeValue).containsExactly(
-				tuple("ID", "TEST"), tuple("Round", 1), tuple("Current Player", null), tuple("First Player", player),
-				tuple("Active Players", Collections.emptyList()));
+				tuple("ID", "TEST"), tuple("Round", 1), tuple("First Player", player),
+				tuple("Active Players", Collections.emptyList()), tuple("Ranking", game.getRanking().getRankingPosition()), tuple("Log",Collections.emptyList()), tuple("Queue", Collections.emptyList()));
 		assertThat(view.getPlayerView()).hasSize(2).flatExtracting(PlayerView::getAttributeView)
 				.extracting(AttributeView::getAttributeName, AttributeView::getAttributeValue)
 				.containsExactly(tuple("ID", "Player"), tuple("name", "main player"), tuple("ID", "Opponent"), tuple("name", "opponent"));

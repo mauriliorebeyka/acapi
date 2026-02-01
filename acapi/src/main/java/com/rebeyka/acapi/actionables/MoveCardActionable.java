@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.function.Supplier;
+
 import com.rebeyka.acapi.entities.Card;
 import com.rebeyka.acapi.entities.Deck;
 
@@ -32,4 +34,8 @@ public class MoveCardActionable extends Actionable {
 		return "moving %s from %s to %s".formatted(getParent().getTargets(),originDeck,targetDeck);
 	}
 
+	@Override
+	public Supplier<Actionable> supply() {
+		return () -> new MoveCardActionable(getActionableId(), originDeck, targetDeck);
+	}
 }

@@ -1,5 +1,7 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.function.Supplier;
+
 import com.rebeyka.acapi.check.AbstractCheck;
 import com.rebeyka.acapi.entities.gameflow.Play;
 
@@ -19,6 +21,8 @@ public abstract class Actionable {
 
 	public abstract String getMessage();
 
+	public abstract Supplier<Actionable> supply();
+	
 	public String getActionableId() {
 		return actionableId;
 	}
@@ -34,4 +38,5 @@ public abstract class Actionable {
 	public boolean check(AbstractCheck<?,Actionable,?> condition) {
 		return condition.check(this);
 	}
+	
 }
