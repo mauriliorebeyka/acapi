@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.check.AbstractCheck;
 import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.check.Checker;
 

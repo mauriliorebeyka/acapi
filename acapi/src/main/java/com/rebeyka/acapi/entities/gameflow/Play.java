@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.check.AbstractCheck;
 import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.check.Checker;
 import com.rebeyka.acapi.entities.Cost;
