@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.check.AbstractCheck;
+import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.check.Checker;
 import com.rebeyka.acapi.entities.Cost;
 import com.rebeyka.acapi.entities.Game;
@@ -26,7 +27,7 @@ public class Play {
 
 	private Cost cost;
 
-	private AbstractCheck<?,Playable,Playable> condition;
+	private Checkable<Playable> condition;
 
 	private List<Actionable> actionables;
 
@@ -66,7 +67,7 @@ public class Play {
 	public Cost getCost() {
 		return cost;
 	}
-	public AbstractCheck<?,Playable,Playable> getCondition() {
+	public Checkable<Playable> getCondition() {
 		return condition;
 	}
 
@@ -96,7 +97,7 @@ public class Play {
 		return new Builder(this);
 	}
 	
-	public static final class Builder {
+	public static class Builder {
 		
 		private String name;
 
@@ -108,7 +109,7 @@ public class Play {
 
 		private Cost cost;
 
-		private AbstractCheck<?,Playable,Playable> condition;
+		private Checkable<Playable> condition;
 
 		private List<Actionable> actionables;
 		
@@ -160,7 +161,7 @@ public class Play {
 			return this;
 		}
 		
-		public Builder condition(AbstractCheck<?,Playable,Playable> condition) {
+		public Builder condition(Checkable<Playable> condition) {
 			this.condition = condition;
 			return this;
 		}

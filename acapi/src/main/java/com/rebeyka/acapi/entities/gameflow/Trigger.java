@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.check.AbstractCheck;
+import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.check.Checker;
 
 public class Trigger {
@@ -13,11 +14,11 @@ public class Trigger {
 
 	private String triggerOnActionableId;
 
-	private AbstractCheck<?,Actionable,Actionable> condition;
+	private Checkable<Actionable> condition;
 
 	private Play playToTrigger;
 
-	public Trigger(AbstractCheck<?,Actionable,Actionable> condition, Play playToTrigger, String triggerOnActionableId) {
+	public Trigger(Checkable<Actionable> condition, Play playToTrigger, String triggerOnActionableId) {
 		this.condition = condition;
 		this.playToTrigger = playToTrigger;
 		this.triggerOnActionableId = triggerOnActionableId;

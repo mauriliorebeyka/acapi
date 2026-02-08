@@ -2,14 +2,19 @@ package com.rebeyka.acapi.entities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.WinningCondition;
+import com.rebeyka.acapi.builders.DefaultPlayFactory;
 import com.rebeyka.acapi.builders.GameFlowBuilder;
-import com.rebeyka.acapi.check.Checker;
+import com.rebeyka.acapi.builders.PlayFactory;
 import com.rebeyka.acapi.entities.gameflow.DisabledRanking;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
 import com.rebeyka.acapi.entities.gameflow.LogEntry;
@@ -23,6 +28,8 @@ import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
 public class Game {
 
+	private static final Logger LOG = LogManager.getLogger();
+	
 	private String id;
 
 	private List<Player> players;
@@ -30,6 +37,8 @@ public class Game {
 	private Map<String, Deck> decks;
 
 	private Timeline timeline;
+
+	private List<Play> queuedPlays;
 
 	private List<Trigger> afterTriggers;
 
@@ -45,13 +54,16 @@ public class Game {
 
 	private Ranking ranking;
 
+	private PlayFactory playFactory;
+	
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
 		this.decks = new HashMap<>();
-		timeline = new Timeline(this);
-		afterTriggers = new ArrayList<>();
-		beforeTriggers = new ArrayList<>();
+		this.timeline = new Timeline(this);
+		this.queuedPlays = new LinkedList<Play>();
+		this.afterTriggers = new ArrayList<>();
+		this.beforeTriggers = new ArrayList<>();
 		List<GameFlow> gameFlow = new ArrayList<>();
 		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder(this)));
 		setCurrentGameFlow(0);
@@ -59,8 +71,17 @@ public class Game {
 		this.players.stream().forEach(p -> p.setGame(this));
 		this.selectedChoices = new ArrayList<>();
 		setRanking(new DisabledRanking());
+		this.playFactory = new DefaultPlayFactory();
 	}
-
+	
+	public void setTimeline(Timeline timeline) {
+		this.timeline = timeline;
+	}
+	
+	public void setPlayFactory(PlayFactory playFactory) {
+		this.playFactory = playFactory;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -69,17 +90,20 @@ public class Game {
 		return declarePlay(play, List.of(target), false);
 	}
 
-	// TODO there's a potential bug here where you can declare two plays that are
-	// possible at the same time, but the second one will still be executed if it's
-	// not possible anymore at execution time.
 	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
-		if (!play.isPossible()) {
-			return false;
+		LOG.info("{} declaring play {} with skipQueue {}",play.getOrigin(),play.getName(),skipQueue);
+		Play newPlay = playFactory.copyOf(play, targets, this);
+		if (!timeline.hasNext() || skipQueue) {
+			if (play.isPossible()) {
+				timeline.queue(newPlay, skipQueue);
+				return true;
+			}
+		} else {
+			LOG.info("Timeline busy, so queueing for the future");
+			queuedPlays.add(newPlay);
+			return true;
 		}
-
-		Play newPlay = new Play.Builder(play).targets(targets).game(this).build();
-		timeline.queue(newPlay, skipQueue);
-		return true;
+		return false;
 	}
 
 	public Deck findDeck(Playable c) {
@@ -204,6 +228,13 @@ public class Game {
 	public boolean executeNext() {
 		if (timeline.executeNext()) {
 			ranking.updateRanking(players);
+			while (!timeline.hasNext() && !queuedPlays.isEmpty()) {
+				LOG.debug("Timeline finished last queued actionable, checking for more queued plays");
+				Play nextPlay = queuedPlays.removeFirst();
+				if (nextPlay.isPossible()) {
+					timeline.queue(nextPlay);
+				}
+			}
 			return true;
 		}
 		return false;
@@ -230,10 +261,8 @@ public class Game {
 		afterTriggers.clear();
 		beforeTriggers.clear();
 		if (gameEndActionable != null) {
-			Play.Builder gameEnd = new Play.Builder();
-			gameEnd.game(this).condition(Checker.whenPlayable().always()).cost(null).name("GAME END")
-					.actionable(gameEndActionable);
-			timeline.queue(gameEnd.build());
+			Play gameEnd = playFactory.createGameEndPlay(this, gameEndActionable);
+			timeline.queue(gameEnd);
 		}
 	}
 
@@ -277,5 +306,10 @@ public class Game {
 
 	public List<Actionable> getQueuedActionables() {
 		return timeline.getQueuedActionables();
+	}
+	
+	
+	public List<Play> getQueuedPlays() {
+		return queuedPlays;
 	}
 }

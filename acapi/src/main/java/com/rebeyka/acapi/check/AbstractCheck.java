@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.check;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -8,18 +9,18 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, BASE, T> {
+public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, BASE, T> implements Checkable<BASE> {
 
 	private static final Logger LOG = LogManager.getLogger();
 
 	protected Function<BASE, T> function;
 
-	protected final List<TestResult<BASE>> testResults;
+	protected List<TestResult<BASE>> testResults = new ArrayList<>();
 	
 	private boolean negate;
-
+	
 	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
-		this.testResults = testResults;
+		this.testResults = testResults == null ? new ArrayList<>() : testResults;
 		this.function = function;
 		this.negate = false;
 	}
@@ -78,11 +79,11 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	}
 	
 	public final boolean check(BASE testedValue) {
-		LOG.debug("Beginning checks for {}, total of {} checks", testedValue, testResults.size());
 		if (testResults.isEmpty()) {
 			LOG.warn("No checks configured, failing check for {}",testedValue);
 			return false;
 		}
+		LOG.debug("Beginning checks for {}, total of {} checks", testedValue, testResults.size());
 		if (LOG.isTraceEnabled()) {
 			testResults.stream().forEach(t -> LOG.trace(t.getMessage(testedValue)));
 		}

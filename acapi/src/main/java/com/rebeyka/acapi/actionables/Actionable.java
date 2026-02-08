@@ -2,7 +2,7 @@ package com.rebeyka.acapi.actionables;
 
 import java.util.function.Supplier;
 
-import com.rebeyka.acapi.check.AbstractCheck;
+import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.entities.gameflow.Play;
 
 public abstract class Actionable {
@@ -35,7 +35,7 @@ public abstract class Actionable {
 		this.parent = parent;
 	}
 
-	public boolean check(AbstractCheck<?,Actionable,?> condition) {
+	public boolean check(Checkable<Actionable> condition) {
 		return condition.check(this);
 	}
 	
