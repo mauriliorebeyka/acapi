@@ -47,11 +47,8 @@ public class Trigger {
 		}
 	}
 
-	public Play getTriggeredPlay(Play base) {
-		Play play = new Play.Builder(playToTrigger).targets(base.getTargets())
-				.game(base.getGame()).triggeredBy(this)
-				.origin(base.getOrigin()).build();
-		return play;
+	public Play getTriggeredPlay() {
+		return playToTrigger;
 	}
 
 }

@@ -29,7 +29,7 @@ import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 public class Game {
 
 	private static final Logger LOG = LogManager.getLogger();
-	
+
 	private String id;
 
 	private List<Player> players;
@@ -55,7 +55,7 @@ public class Game {
 	private Ranking ranking;
 
 	private PlayFactory playFactory;
-	
+
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
@@ -71,17 +71,17 @@ public class Game {
 		this.players.stream().forEach(p -> p.setGame(this));
 		this.selectedChoices = new ArrayList<>();
 		setRanking(new DisabledRanking());
-		this.playFactory = new DefaultPlayFactory();
+		this.playFactory = new DefaultPlayFactory(this);
 	}
-	
+
 	public void setTimeline(Timeline timeline) {
 		this.timeline = timeline;
 	}
-	
+
 	public void setPlayFactory(PlayFactory playFactory) {
 		this.playFactory = playFactory;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -91,8 +91,8 @@ public class Game {
 	}
 
 	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
-		LOG.info("{} declaring play {} with skipQueue {}",play.getOrigin(),play.getName(),skipQueue);
-		Play newPlay = playFactory.copyOf(play, targets, this);
+		LOG.info("{} declaring play {} with skipQueue {}", play.getOrigin(), play.getName(), skipQueue);
+		Play newPlay = playFactory.copyOf(play, targets);
 		if (!timeline.hasNext() || skipQueue) {
 			if (play.isPossible()) {
 				timeline.queue(newPlay, skipQueue);
@@ -261,7 +261,7 @@ public class Game {
 		afterTriggers.clear();
 		beforeTriggers.clear();
 		if (gameEndActionable != null) {
-			Play gameEnd = playFactory.createGameEndPlay(this, gameEndActionable);
+			Play gameEnd = playFactory.createGameEndPlay(gameEndActionable);
 			timeline.queue(gameEnd);
 		}
 	}
@@ -276,7 +276,7 @@ public class Game {
 
 	public List<Play> getAfterTriggerActionables(Actionable triggeringActionable) {
 		return afterTriggers.stream().filter(t -> t.test(triggeringActionable))
-				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent())).toList();
+				.map(t -> playFactory.fromTrigger(triggeringActionable.getParent(), t)).toList();
 	}
 
 	public void registerBeforeTrigger(Trigger trigger) {
@@ -289,7 +289,7 @@ public class Game {
 
 	public List<Play> getBeforeTriggerActionables(Actionable triggeringActionable) {
 		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable))
-				.map(t -> t.getTriggeredPlay(triggeringActionable.getParent())).toList();
+				.map(t -> playFactory.fromTrigger(triggeringActionable.getParent(), t)).toList();
 	}
 
 	public int countActionables(String actionableId, String actionableIdBound) {
@@ -307,8 +307,7 @@ public class Game {
 	public List<Actionable> getQueuedActionables() {
 		return timeline.getQueuedActionables();
 	}
-	
-	
+
 	public List<Play> getQueuedPlays() {
 		return queuedPlays;
 	}

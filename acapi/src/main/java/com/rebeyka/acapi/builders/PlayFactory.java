@@ -6,8 +6,10 @@ import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.gameflow.Play;
+import com.rebeyka.acapi.entities.gameflow.Trigger;
 
 public interface PlayFactory {
-	Play copyOf (Play template, List<Playable> targets, Game game);
-	Play createGameEndPlay (Game game, Actionable gameEndActionable);
+	Play copyOf (Play template, List<Playable> targets);
+	Play createGameEndPlay (Actionable gameEndActionable);
+	Play fromTrigger(Play triggeringPlay, Trigger trigger);
 }

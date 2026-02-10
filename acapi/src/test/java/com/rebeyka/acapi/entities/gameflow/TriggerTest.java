@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.actionables.Actionable;
@@ -14,15 +16,17 @@ public class TriggerTest {
 	@Test
 	public void testTriggeredPlay() {
 		Actionable mockActionable = mock(Actionable.class);
-		Play play = new Play.Builder().name("play").actionable(mockActionable).build();
+		Play play = mock(Play.class);
+		when(play.getActionables()).thenReturn(List.of(mockActionable));
 		when(mockActionable.getParent()).thenReturn(play);
 		Trigger trigger = new Trigger(play);
 		assertThat(trigger.test(mockActionable)).isTrue();
-		Play triggeredPlay = trigger.getTriggeredPlay(play);
+		Play triggeredPlay = trigger.getTriggeredPlay();
 		when(mockActionable.getParent()).thenReturn(triggeredPlay);
 		when(mockActionable.supply()).thenReturn(() -> mockActionable);
+		when(triggeredPlay.getTriggeredBy()).thenReturn(trigger);
 		assertThat(trigger.test(triggeredPlay.getActionables().get(0))).isFalse();
-		assertThat(play).isNotEqualTo(triggeredPlay);
+		assertThat(play).isSameAs(triggeredPlay);
 	}
 	
 	@Test
