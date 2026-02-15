@@ -21,7 +21,7 @@ public class RankingByAttribute extends Ranking {
 		this.attributeName = attributeName;
 		comparator = Comparator.nullsLast(null);
 		for (String attribute : attributeName) {
-			comparator = comparator.thenComparing(Comparator.comparing(p -> p.getAttribute(attribute),
+			comparator = comparator.thenComparing(Comparator.comparing(p -> p.getRawAttribute(attribute),
 					Comparator.nullsFirst(Comparator.naturalOrder())));
 		}
 	}
@@ -38,7 +38,7 @@ public class RankingByAttribute extends Ranking {
 			Player next = sorted.get(i);
 			if (comparator.compare(current, next) != 0) {
 				List<String> finalScore = attributeName.stream()
-						.map(a -> (next.getAttribute(a) != null ? next.getAttribute(a).getValue().toString() : "no")
+						.map(a -> (next.getRawAttribute(a) != null ? next.getRawAttribute(a).getValue().toString() : "no")
 								+ " " + a)
 						.toList();
 				currentPosition = new RankingPosition(i + 1, next.getId(), finalScore);

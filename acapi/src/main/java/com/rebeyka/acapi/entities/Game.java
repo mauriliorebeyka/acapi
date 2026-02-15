@@ -25,6 +25,7 @@ import com.rebeyka.acapi.entities.gameflow.Timeline;
 import com.rebeyka.acapi.entities.gameflow.Trigger;
 import com.rebeyka.acapi.exceptions.DuplicatedPlayableException;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
+import com.rebeyka.acapi.modifiers.Modifier;
 
 public class Game {
 
@@ -56,6 +57,8 @@ public class Game {
 
 	private PlayFactory playFactory;
 
+	private List<Modifier<?>> modifiers;
+
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
@@ -72,6 +75,7 @@ public class Game {
 		this.selectedChoices = new ArrayList<>();
 		setRanking(new DisabledRanking());
 		this.playFactory = new DefaultPlayFactory(this);
+		this.modifiers = new ArrayList<>();
 	}
 
 	public void setTimeline(Timeline timeline) {
@@ -166,10 +170,13 @@ public class Game {
 		return players;
 	}
 
-//	public Attribute<?> getModifiedPlayerAttribute(Player player, String attributeName) {
-//		// TODO Implement modifiers
-//		return player.getAttribute(attributeName);
-//	}
+	public <T extends Comparable<? super T>> Attribute<T> getModifiedAttribute(Playable playable, Attribute<T> attribute) {
+		Attribute<T> newAttribute = attribute;
+		for (Modifier<T> mod : modifiers.stream().filter(m -> m.valid(playable, attribute.getName())).map(m -> (Modifier<T>)m).toList()) {
+			newAttribute = mod.apply(newAttribute);
+		}
+		return newAttribute;
+	}
 
 	public Deck getDeck(String name) {
 		return decks.get(name);

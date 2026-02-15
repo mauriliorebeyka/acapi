@@ -52,7 +52,7 @@ public class GameTest {
 	public void testDeclarePlay() {
 		Play play = mock(Play.class);
 		when(play.isPossible()).thenReturn(true);
-		when(mockPlayFactory.copyOf(play, List.of(mockPlayer), game)).thenReturn(play);
+		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(false);
 		
 		assertThat(game.declarePlay(play, mockPlayer)).isTrue();
@@ -69,7 +69,7 @@ public class GameTest {
 	@Test
 	public void testDeclarePlayQueued() {
 		Play play = mock(Play.class);
-		when(mockPlayFactory.copyOf(play, List.of(mockPlayer), game)).thenReturn(play);
+		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(true);
 		
 		assertThat(game.declarePlay(play, mockPlayer)).isTrue();
@@ -85,7 +85,7 @@ public class GameTest {
 	public void testPlayNotPossible() {
 		Play play = mock(Play.class);
 		when(play.isPossible()).thenReturn(false);
-		when(mockPlayFactory.copyOf(play, List.of(mockPlayer), game)).thenReturn(play);
+		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(false);
 		
 		assertThat(game.declarePlay(play, mockPlayer)).isFalse();
@@ -102,7 +102,7 @@ public class GameTest {
 	public void testPlaySkipQueue() {
 		Play play = mock(Play.class);
 		when(play.isPossible()).thenReturn(true);
-		when(mockPlayFactory.copyOf(play, List.of(mockPlayer), game)).thenReturn(play);
+		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(true);
 		
 		assertThat(game.declarePlay(play, List.of(mockPlayer), true)).isTrue();

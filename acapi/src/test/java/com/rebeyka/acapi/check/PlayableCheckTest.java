@@ -24,7 +24,8 @@ public class PlayableCheckTest {
 		when(gameflow.getCurrentPlayer()).thenReturn(player);
 		when(gameflow.isPlayerActive(player)).thenReturn(true);
 		player.setGame(game);
-		player.getAttribute("title", Types.string()).setValue("A TITLE");
+		player.getRawAttribute("title", Types.string()).setValue("A TITLE");
+		when(game.getModifiedAttribute(player, player.getRawAttribute("title", Types.string()))).thenReturn(player.getRawAttribute("title", Types.string()));
 		PlayableCheck<Playable> checker = Checker.whenPlayable();
 		checker.not().is(another).attribute("title").is("A TITLE").not().sameValue("TITLE").isActivePlayer();
 		assertThat(checker.check(player)).isTrue();

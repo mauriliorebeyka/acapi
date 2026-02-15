@@ -42,9 +42,9 @@ public class CustomOrderedGameFlowTest {
 	public void setup() {
 		openMocks(this);
 
-		when(player1.getAttribute("VP")).then(_ -> new Attribute<Integer>("",10,Types.integer()));
-		when(player2.getAttribute("VP")).then(_ -> new Attribute<Integer>("",20,Types.integer()));
-		when(player3.getAttribute("VP")).then(_ -> new Attribute<Integer>("",5,Types.integer()));
+		when(player1.getRawAttribute("VP")).then(_ -> new Attribute<Integer>("",10,Types.integer()));
+		when(player2.getRawAttribute("VP")).then(_ -> new Attribute<Integer>("",20,Types.integer()));
+		when(player3.getRawAttribute("VP")).then(_ -> new Attribute<Integer>("",5,Types.integer()));
 		players = Arrays.asList(player1, player2, player3);
 		when(game.getPlayers()).thenReturn(players);
 

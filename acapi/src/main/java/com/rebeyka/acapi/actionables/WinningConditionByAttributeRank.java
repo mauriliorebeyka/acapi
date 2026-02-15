@@ -22,7 +22,7 @@ public class WinningConditionByAttributeRank extends WinningCondition {
 
 	@Override
 	public void execute() {
-		Comparator<Player> comparator = Comparator.comparing(p -> p.getAttribute(attributeName));
+		Comparator<Player> comparator = Comparator.comparing(p -> p.getRawAttribute(attributeName));
 		rank = new ArrayList<>(game.getPlayers());
 		rank.sort(comparator.reversed());
 	}
@@ -30,9 +30,9 @@ public class WinningConditionByAttributeRank extends WinningCondition {
 	@Override
 	public String getMessage() {
 		StringBuilder fullRank = new StringBuilder();
-		rank.forEach(p -> fullRank.append("%s - %s %s ".formatted(p, p.getAttribute(attributeName).getValue(), attributeName)));
+		rank.forEach(p -> fullRank.append("%s - %s %s ".formatted(p, p.getRawAttribute(attributeName).getValue(), attributeName)));
 		Player winner = rank.get(0);
-		Attribute<?> attribute = winner.getAttribute(attributeName);
+		Attribute<?> attribute = winner.getRawAttribute(attributeName);
 		return "Winner is %s with %s %s. Full rank is %s".formatted(winner,attribute.getValue(),attributeName, fullRank);
 	}
 

@@ -8,7 +8,7 @@ public class Card extends Playable {
 
 	@Override
 	public String toString() {
-		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
+		if (getRawAttribute("name") != null && getRawAttribute("name").getValue() instanceof String value) {
 			return value;
 		}
 		return "Card ID %s".formatted(getId());

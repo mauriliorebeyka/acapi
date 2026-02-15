@@ -52,12 +52,12 @@ public abstract class Playable {
 		return attributes.keySet();
 	}
 
-	public Attribute<?> getAttribute(String name) {
+	public Attribute<?> getRawAttribute(String name) {
 		return attributes.get(name);
 	}
-
+	
 	@SuppressWarnings("unchecked")
-	public <T extends Comparable<? super T>> Attribute<T> getAttribute(String name, TypeToken<T> type) {
+	public <T extends Comparable<? super T>> Attribute<T> getRawAttribute(String name, TypeToken<T> type) {
 		if (!attributes.containsKey(name)) {
 			attributes.put(name, new Attribute<T>(name, type));
 		}
@@ -68,9 +68,13 @@ public abstract class Playable {
 		throw new InvalidAttributeTypeException("Expected attribute type to be %s, but was %s instead"
 				.formatted(type.getType(), attribute.getType().getType()));
 	}
+	
+	public <T extends Comparable<? super T>> Attribute<T> getAttribute(String name, TypeToken<T> type) {
+		return game.getModifiedAttribute(this, getRawAttribute(name, type));
+	}
 
 	public <T extends Comparable<? super T>> void setAttribute(String name, TypeToken<T> type, T value) {
-		getAttribute(name, type).setValue(value);
+		getRawAttribute(name, type).setValue(value);
 	}
 	
 	public Game getGame() {
@@ -104,7 +108,7 @@ public abstract class Playable {
 	@Override
 	public String toString() {
 		String id = "";
-		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
+		if (getRawAttribute("name") != null && getRawAttribute("name").getValue() instanceof String value) {
 			id = value;
 		} else {
 			id = getId();

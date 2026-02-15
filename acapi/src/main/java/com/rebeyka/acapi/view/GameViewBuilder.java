@@ -55,7 +55,7 @@ public class GameViewBuilder {
 		playerView.setAttributeView(new ArrayList<>());
 		playerView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", player.getId()));
 		playerView.getAttributeView()
-				.addAll(player.getAttributes().stream().map(attribute -> player.getAttribute(attribute))
+				.addAll(player.getAttributes().stream().map(attribute -> player.getRawAttribute(attribute))
 						.map(attribute -> new AttributeView<Comparable<?>>(attribute.getName(), attribute.getValue()))
 						.toList());
 		if (player.getPlays().stream().anyMatch(Play::isPossible)) {
@@ -99,7 +99,7 @@ public class GameViewBuilder {
 		playableView.setAttributeView(new ArrayList<>());
 		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", card.getId()));
 		playableView.getAttributeView().addAll(card.getAttributes().stream()
-				.map(attr -> new AttributeView<Comparable<?>>(attr, card.getAttribute(attr).getValue())).toList());
+				.map(attr -> new AttributeView<Comparable<?>>(attr, card.getRawAttribute(attr).getValue())).toList());
 		if (card.getPlays().stream().anyMatch(Play::isPossible)) {
 			playableView.getAttributeView().add(new AttributeView<List<String>>("Available Plays",
 					card.getPlays().stream().map(Play::getName).toList()));

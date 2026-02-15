@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.entities.cost;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.entities.Attribute;
+import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.Types;
@@ -55,7 +57,11 @@ public class PlayableSequenceTest {
 	@Test
 	public void testMissingAttribute() {
 		PlayableSequenceCost cost = new PlayableSequenceCost("");
-		assertThat(cost.isPaid(List.of(new Player("")))).isFalse();
+		Player player = mock(Player.class);
+		Attribute attribute = mock(Attribute.class);
+		when(player.getAttribute(any(), any())).thenReturn(attribute);
+		when(attribute.getType()).thenReturn(Types.integer());
+		assertThat(cost.isPaid(List.of(player))).isFalse();
 	}
 	
 	@Test

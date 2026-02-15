@@ -2,8 +2,12 @@ package com.rebeyka.acapi.entities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.google.common.reflect.TypeToken;
 import com.rebeyka.acapi.exceptions.InvalidAttributeTypeException;
@@ -12,23 +16,35 @@ import com.rebeyka.acapi.random.DieBuilder;
 
 public class PlayableTest {
 
+	@Mock
+	private Game game;
+	
+	@BeforeEach
+	public void setup() {
+		MockitoAnnotations.openMocks(this);
+	}
+	
 	@Test
 	public void testGetAttribute() {
 		Player player = new Player("player");
-		player.getAttribute("string", Types.string()).setValue("String value");
-		player.getAttribute("int",Types.integer()).setValue(5);
-		Attribute<String> expectedString = player.getAttribute("string", Types.string());
-		Attribute<Integer> expectedInt = player.getAttribute("int", Types.integer());
+		player.getRawAttribute("string", Types.string()).setValue("String value");
+		player.setAttribute("int", Types.integer(), 5);
+		player.setGame(game);
+		Attribute<String> expectedString = player.getRawAttribute("string", Types.string());
+		Attribute<Integer> expectedInt = player.getRawAttribute("int", Types.integer());
+		when(game.getModifiedAttribute(player, expectedString)).thenReturn(expectedString);
+		when(game.getModifiedAttribute(player, expectedInt)).thenReturn(expectedInt);
 		assertThat(expectedString.get()).isEqualTo("String value");
 		assertThat(expectedInt.getValue()).isEqualTo(5);
 	}
 
 	@Test
-	public void testAttributeSameInstance() {
+	public void testRawAttributeSameInstance() {
 		Player player = new Player("test");
-		Attribute<String> preInitialize = player.getAttribute("test", Types.string());
-		player.getAttribute("test", Types.string()).setValue("value");
-		Attribute<String> attribute = player.getAttribute("test", Types.string());
+		Attribute<String> preInitialize = player.getRawAttribute("test", Types.string());
+		player.getRawAttribute("test", Types.string()).setValue("value");
+		player.setGame(game);
+		Attribute<String> attribute = player.getRawAttribute("test", Types.string());
 		attribute.setValue("other test");
 		assertThat(attribute).isSameAs(preInitialize);
 	}
@@ -37,9 +53,10 @@ public class PlayableTest {
 	@Test
 	public void testChangeAttributeType() {
 		Player player = new Player("");
-		Attribute attr = player.getAttribute("test", Types.string());
-		player.getAttribute("test", Types.string()).setValue("test");
-		assertThatThrownBy(() -> player.getAttribute("test", Types.integer()))
+		player.setGame(game);
+		Attribute attr = player.getRawAttribute("test", Types.string());
+		player.getRawAttribute("test", Types.string()).setValue("test");
+		assertThatThrownBy(() -> player.getRawAttribute("test", Types.integer()))
 				.isExactlyInstanceOf(InvalidAttributeTypeException.class)
 				.hasMessage("Expected attribute type to be class java.lang.Integer, but was class java.lang.String instead");
 		assertThat(attr.getValue()).isEqualTo("test");
@@ -53,11 +70,12 @@ public class PlayableTest {
 	@Test
 	public void testGenericTypedAttribute() {
 		Player player = new Player("");
-		Attribute<DiceSet<Integer>> dice = player.getAttribute("attr", new TypeToken<DiceSet<Integer>>() {
+		player.setGame(game);
+		Attribute<DiceSet<Integer>> dice = player.getRawAttribute("attr", new TypeToken<DiceSet<Integer>>() {
 			private static final long serialVersionUID = 3170576435674745924L;});
 		dice.setValue(DieBuilder.buildBasicDiceSet(1, 2));
 		dice.getValue().rollAll();
-		assertThat(dice).isSameAs(player.getAttribute("attr", Types.diceSetOf(dice.getValue())));
+		assertThat(dice).isSameAs(player.getRawAttribute("attr", Types.diceSetOf(dice.getValue())));
 		assertThat(dice.getValue()).isInstanceOf(DiceSet.class);
 	}
 
