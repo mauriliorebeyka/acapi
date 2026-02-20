@@ -35,7 +35,7 @@ public class Game {
 
 	private List<Player> players;
 
-	private Map<String, Deck> decks;
+	private Map<String, PlayArea> playAreas;
 
 	private Timeline timeline;
 
@@ -62,7 +62,7 @@ public class Game {
 	public Game(String id, List<Player> players) {
 		this.id = id;
 		this.players = players;
-		this.decks = new HashMap<>();
+		this.playAreas = new HashMap<>();
 		this.timeline = new Timeline(this);
 		this.queuedPlays = new LinkedList<Play>();
 		this.afterTriggers = new ArrayList<>();
@@ -110,27 +110,27 @@ public class Game {
 		return false;
 	}
 
-	public Deck findDeck(Playable c) {
-		for (Deck d : decks.values()) {
-			if (d.getCards().contains(c)) {
+	public PlayArea findPlayArea(Playable c) {
+		for (PlayArea d : playAreas.values()) {
+			if (d.getAllPlayables().contains(c)) {
 				return d;
 			}
 		}
-		for (Deck d : players.stream().flatMap(p -> p.getDeckNames().stream().map(n -> p.getDeck(n))).toList()) {
-			if (d.getCards().contains(c)) {
+		for (PlayArea d : players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n))).toList()) {
+			if (d.getAllPlayables().contains(c)) {
 				return d;
 			}
 		}
 		return null;
 	}
 
-	public Deck findDeck(String deckName) {
-		return players.stream().flatMap(p -> p.getDeckNames().stream().map(n -> p.getDeck(n)))
-				.filter(d -> d.getId().equals(deckName)).findFirst().get();
+	public PlayArea findPlayArea(String playAreaName) {
+		return players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n)))
+				.filter(d -> d.getId().equals(playAreaName)).findFirst().get();
 	}
 
 	public Play findPlay(Player owner, String playName) {
-		Stream<Play> playStream = owner.getDeckNames().stream().flatMap(d -> owner.getDeck(d).getCards().stream())
+		Stream<Play> playStream = owner.getPlayAreaNames().stream().flatMap(d -> owner.getPlayArea(d).getAllPlayables().stream())
 				.flatMap(c -> c.getPlays().stream());
 		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName))
 				.findFirst().orElseThrow(() -> new GameElementNotFoundException(
@@ -139,16 +139,16 @@ public class Game {
 
 	public Playable findPlayable(String playableName) {
 		Stream<Playable> playables = players.stream()
-				.flatMap(p -> p.getDeckNames().stream().flatMap(d -> p.getDeck(d).getCards().stream()));
-		return Stream.concat(playables, getDecks().values().stream().flatMap(d -> d.getCards().stream()))
+				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAllPlayables().stream()));
+		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAllPlayables().stream()))
 				.filter(p -> p.getId().equals(playableName)).findFirst().orElseThrow(
 						() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableName)));
 	}
 
 	public boolean hasPlayable(String playableName) {
 		Stream<Playable> playables = players.stream()
-				.flatMap(p -> p.getDeckNames().stream().flatMap(d -> p.getDeck(d).getCards().stream()));
-		return Stream.concat(playables, getDecks().values().stream().flatMap(d -> d.getCards().stream()))
+				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAllPlayables().stream()));
+		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAllPlayables().stream()))
 				.anyMatch(p -> p.getId().equals(playableName));
 	}
 
@@ -178,12 +178,12 @@ public class Game {
 		return newAttribute;
 	}
 
-	public Deck getDeck(String name) {
-		return decks.get(name);
+	public PlayArea getPlayArea(String name) {
+		return playAreas.get(name);
 	}
 
-	public Map<String, Deck> getDecks() {
-		return decks;
+	public Map<String, PlayArea> getPlayArea() {
+		return playAreas;
 	}
 
 	public GameFlow getGameFlow() {

@@ -2,25 +2,24 @@ package com.rebeyka.acapi.actionables;
 
 import java.util.function.Supplier;
 
-import com.rebeyka.acapi.entities.Card;
-import com.rebeyka.acapi.entities.Deck;
+import com.rebeyka.acapi.entities.PlayArea;
 
 public class MoveCardActionable extends Actionable {
 
-	private Deck originDeck;
+	private PlayArea originPlayArea;
 	
-	private Deck targetDeck;
+	private PlayArea targetPlayArea;
 	
-	public MoveCardActionable(String actionableId, Deck originDeck, Deck targetDeck) {
+	public MoveCardActionable(String actionableId, PlayArea originPlayArea, PlayArea targetPlayArea) {
 		super(actionableId);
-		this.originDeck = originDeck;
-		this.targetDeck = targetDeck;
+		this.originPlayArea = originPlayArea;
+		this.targetPlayArea = targetPlayArea;
 	}
 
 	@Override
 	public void execute() {
-		originDeck.getCards().removeAll(getParent().getTargets());
-		targetDeck.getCards().addAll(getParent().getTargets().stream().map(c -> (Card)c).toList());
+		originPlayArea.getAllPlayables().removeAll(getParent().getTargets());
+		targetPlayArea.getAllPlayables().addAll(getParent().getTargets().stream().map(c -> c).toList());
 	}
 
 	@Override
@@ -31,11 +30,11 @@ public class MoveCardActionable extends Actionable {
 
 	@Override
 	public String getMessage() {
-		return "moving %s from %s to %s".formatted(getParent().getTargets(),originDeck,targetDeck);
+		return "moving %s from %s to %s".formatted(getParent().getTargets(),originPlayArea,targetPlayArea);
 	}
 
 	@Override
 	public Supplier<Actionable> supply() {
-		return () -> new MoveCardActionable(getActionableId(), originDeck, targetDeck);
+		return () -> new MoveCardActionable(getActionableId(), originPlayArea, targetPlayArea);
 	}
 }

@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.entities.Card;
+import com.rebeyka.acapi.entities.Deck;
 import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.Types;
 

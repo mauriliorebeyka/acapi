@@ -6,24 +6,38 @@ import java.util.Set;
 
 public class Player extends Playable {
 
-	private Map<String, Deck> decks;
+	private Map<String, PlayArea> playAreas;
 
 	private boolean automatic;
 
 	public Player(String id) {
 		super(id, null);
-		this.decks = new HashMap<>();
+		this.playAreas = new HashMap<>();
 	}
 
-	public Set<String> getDeckNames() {
-		return decks.keySet();
+	public Set<String> getPlayAreaNames() {
+		return playAreas.keySet();
 	}
-	
+
 	public Deck getDeck(String name) {
-		if (!decks.containsKey(name)) {
-			decks.put(name, new Deck(name, getOwner()));
+		if (!playAreas.containsKey(name)) {
+			playAreas.put(name, new Deck(name, getOwner()));
 		}
-		return decks.get(name);
+
+		return getPlayArea(name, Deck.class);
+	}
+
+	public PlayArea getPlayArea(String name) {
+		return playAreas.get(name);
+	}
+
+	public <T extends PlayArea> T getPlayArea(String name, Class<T> type) {
+		PlayArea playArea = getPlayArea(name);
+		if (!type.isInstance(playArea)) {
+			throw new IllegalStateException("Expected %s to be a %s, but it was %s instead".formatted(name,
+					type.getSimpleName(), playArea.getClass().getSimpleName()));
+		}
+		return type.cast(playArea);
 	}
 
 	public boolean isAutomatic() {
@@ -38,5 +52,5 @@ public class Player extends Playable {
 	public Player getOwner() {
 		return this;
 	}
-	
+
 }

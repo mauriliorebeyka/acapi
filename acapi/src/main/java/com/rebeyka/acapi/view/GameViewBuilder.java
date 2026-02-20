@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.rebeyka.acapi.actionables.Actionable;
-import com.rebeyka.acapi.entities.Deck;
 import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.PlayArea;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.gameflow.LogEntry;
@@ -63,32 +63,32 @@ public class GameViewBuilder {
 					player.getPlays().stream().map(Play::getName).toList()));
 		}
 
-		playerView.setDeckView(player.getDeckNames().stream().map(deck -> player.getDeck(deck))
-				.filter(deck -> deck.getVisibilityType() != VisibilityType.HIDDEN).map(deck -> buildDeckView(pov, deck))
+		playerView.setPlayAreaView(player.getPlayAreaNames().stream().map(playArea -> player.getPlayArea(playArea))
+				.filter(playArea -> playArea.getVisibilityType() != VisibilityType.HIDDEN).map(playArea -> buildPlayAreaView(pov, playArea))
 				.toList());
 
 		return playerView;
 	}
 
-	public DeckView buildDeckView(Player pov, Deck deck) {
-		DeckView deckView = new DeckView();
+	public PlayAreaView buildPlayAreaView(Player pov, PlayArea playArea) {
+		PlayAreaView playAreaView = new PlayAreaView();
 
-		List<AttributeView<?>> deckAttributes = new ArrayList<>();
-		deckAttributes.add(new AttributeView<String>("ID", deck.getId()));
-		deckAttributes.add(new AttributeView<Integer>("Size", deck.getCards().size()));
-		deckView.setAttributesView(deckAttributes);
+		List<AttributeView<?>> playAreaAttributes = new ArrayList<>();
+		playAreaAttributes.add(new AttributeView<String>("ID", playArea.getId()));
+		playAreaAttributes.add(new AttributeView<Integer>("Size", playArea.getAllPlayables().size()));
+		playAreaView.setAttributesView(playAreaAttributes);
 
-		deckView.setCardView(deck.getCards().stream().filter(card -> isVisible(card, pov, deck))
+		playAreaView.setCardView(playArea.getAllPlayables().stream().filter(card -> isVisible(card, pov, playArea))
 				.map(this::buildPlayableView).toList());
 
-		return deckView;
+		return playAreaView;
 	}
 
-	public boolean isVisible(Playable card, Player pov, Deck deck) {
+	public boolean isVisible(Playable card, Player pov, PlayArea playArea) {
 		return switch (card.getvisibilityForPlayer(pov)) {
 		case VisibilityType.HIDDEN -> false;
-		case VisibilityType.INHERIT -> deck.getVisibilityType().equals(VisibilityType.PUBLIC);
-		case VisibilityType.PRIVATE -> card.getOwner().equals(deck.getOwner());
+		case VisibilityType.INHERIT -> playArea.getVisibilityType().equals(VisibilityType.PUBLIC);
+		case VisibilityType.PRIVATE -> card.getOwner().equals(playArea.getOwner());
 		case VisibilityType.PUBLIC -> true;
 		default -> false;
 		};

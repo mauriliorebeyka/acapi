@@ -4,16 +4,16 @@ import java.util.List;
 
 public class PlayerView {
 
-	private List<DeckView> deckView;
+	private List<PlayAreaView> playAreaView;
 	
 	private List<AttributeView<?>> attributeView;
-	
-	public List<DeckView> getDeckView() {
-		return deckView;
+
+	public List<PlayAreaView> getPlayAreaView() {
+		return playAreaView;
 	}
 
-	public void setDeckView(List<DeckView> deckView) {
-		this.deckView = deckView;
+	public void setPlayAreaView(List<PlayAreaView> playAreaView) {
+		this.playAreaView = playAreaView;
 	}
 
 	public List<AttributeView<?>> getAttributeView() {

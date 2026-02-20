@@ -2,7 +2,7 @@ package com.rebeyka.acapi.view;
 
 import java.util.List;
 
-public class DeckView {
+public class PlayAreaView {
 
 	private List<PlayableView> cardView;
 	

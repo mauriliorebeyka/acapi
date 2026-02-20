@@ -5,24 +5,24 @@ import java.util.List;
 
 public class GameView {
 
-	private List<DeckView> deckView;
+	private List<PlayAreaView> playAreaView;
 	
 	private List<PlayerView> playerView;
 	
 	private List<AttributeView<?>> attributeView;
 
 	public GameView() {
-		deckView = new ArrayList<>();
+		playAreaView = new ArrayList<>();
 		playerView = new ArrayList<>();
 		attributeView = new ArrayList<>();
 	}
 	
-	public List<DeckView> getDeckView() {
-		return deckView;
+	public List<PlayAreaView> getPlayAreaView() {
+		return playAreaView;
 	}
 
-	public void setDeckView(List<DeckView> deckView) {
-		this.deckView = deckView;
+	public void setPlayAreaView(List<PlayAreaView> playAreaView) {
+		this.playAreaView = playAreaView;
 	}
 
 	public List<PlayerView> getPlayerView() {
