@@ -6,24 +6,24 @@ import java.util.List;
 
 import com.rebeyka.acapi.view.VisibilityType;
 
-public class Deck extends PlayArea {
+public class Deck extends PlayArea<List<Card>,Card> {
 
 	public Deck(String id, Player owner) {
 		super(id,owner);
-		playables = new ArrayList<Playable>();
+		playables = new ArrayList<Card>();
 		visibilityType = VisibilityType.PUBLIC;
 	}
 
 	public void shuffle() {
-		Collections.shuffle((List<Playable>)playables);
+		Collections.shuffle(getAll());
 	}
 
 	public Card draw() {
-		return (Card)((List<Playable>)playables).removeFirst();
+		return getAll().removeFirst();
 	}
 
-	public void add(Card card) {
-		((List<Playable>)playables).add(card);
+	public Card drawFromBottom() {
+		return getAll().removeLast();
 	}
 
 }

@@ -67,7 +67,7 @@ public class Modifier<T extends Comparable<? super T>> {
 	}
 
 	public Attribute<T> apply(Attribute<T> value) {
-		Attribute<T> updatedAttribute = new Attribute<T>(value.getName(), value.getType());
+		Attribute<T> updatedAttribute = new Attribute<T>(value.getName(), value.getType(), value.getOrigin());
 		updatedAttribute.setMaxValue(isUpdateMax() ? function.apply(value.getMaxValue()) : value.getMaxValue());
 		updatedAttribute.setMinValue(isUpdateMin() ? function.apply(value.getMinValue()) : value.getMinValue());
 		updatedAttribute.setValue(isUpdateValue() ? function.apply(value.getValue()) : value.getValue());

@@ -19,7 +19,8 @@ public class ChangeAttributeActionableTest {
 		Playable playable = mock(Playable.class);
 		Game game = mock(Game.class);
 		when(playable.getGame()).thenReturn(game);
-		Attribute<Integer> attribute = new Attribute<Integer>("", 0, Types.integer());
+		Attribute<Integer> attribute = new Attribute<Integer>("", 0, Types.integer(), playable);
+		when(playable.getRawAttribute("", Types.integer())).thenReturn(attribute);
 		when(game.getModifiedAttribute(playable, attribute)).thenReturn(attribute);
 		ChangeAttributeActionable<Integer> actionable = new ChangeAttributeActionable<Integer>("", playable, attribute,
 				a -> a + 3);
@@ -34,9 +35,9 @@ public class ChangeAttributeActionableTest {
 		Playable playable = mock(Playable.class);
 		Game game = mock(Game.class);
 		when(playable.getGame()).thenReturn(game);
-		Attribute<Integer> attribute = new Attribute<Integer>("ATTR", 20, Types.integer());
+		Attribute<Integer> attribute = new Attribute<Integer>("ATTR", 20, Types.integer(), playable);
 		when(game.getModifiedAttribute(playable, attribute)).thenReturn(attribute);
-		
+		when(playable.getRawAttribute("ATTR", Types.integer())).thenReturn(attribute);
 		ChangeAttributeActionable<Integer> actionable = new ChangeAttributeActionable<Integer>("", playable, attribute, 33);
 		Play play = mock(Play.class);
 		actionable.setParent(play);
@@ -52,11 +53,13 @@ public class ChangeAttributeActionableTest {
 		Playable playable = mock(Playable.class);
 		Game game = mock(Game.class);
 		
-		Attribute<Integer> attribute = new Attribute<Integer>("", 10, Types.integer());
-		Attribute<Integer> attribute2 = new Attribute<Integer>("", 2, Types.integer());
+		Attribute<Integer> attribute = new Attribute<Integer>("ONE", 10, Types.integer(), playable);
+		Attribute<Integer> attribute2 = new Attribute<Integer>("TWO", 2, Types.integer(), playable);
 		
 		when(playable.getGame()).thenReturn(game);
 		when(game.getModifiedAttribute(playable, attribute)).thenReturn(attribute);
+		when(playable.getRawAttribute("ONE", Types.integer())).thenReturn(attribute);
+		when(playable.getRawAttribute("TWO", Types.integer())).thenReturn(attribute2);
 		ChangeAttributeActionable<Integer> actionable = new ChangeAttributeActionable<Integer>("", playable, attribute,
 				attribute2.getValue(), Math::subtractExact);
 		actionable.execute();

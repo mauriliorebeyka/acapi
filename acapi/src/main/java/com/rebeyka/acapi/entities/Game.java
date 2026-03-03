@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class Game {
 
 	private List<Player> players;
 
-	private Map<String, PlayArea> playAreas;
+	private Map<String, PlayArea<? extends Collection<? extends BasePlayable>,? extends BasePlayable>> playAreas;
 
 	private Timeline timeline;
 
@@ -110,27 +111,27 @@ public class Game {
 		return false;
 	}
 
-	public PlayArea findPlayArea(Playable c) {
-		for (PlayArea d : playAreas.values()) {
-			if (d.getAllPlayables().contains(c)) {
+	public PlayArea<? extends Collection<?>, ? extends BasePlayable> findPlayArea(Playable c) {
+		for (PlayArea<? extends Collection<?>, ? extends BasePlayable> d : playAreas.values()) {
+			if (d.getAll().contains(c)) {
 				return d;
 			}
 		}
-		for (PlayArea d : players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n))).toList()) {
-			if (d.getAllPlayables().contains(c)) {
+		for (PlayArea<? extends Collection<?>, ? extends BasePlayable> d : players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n))).toList()) {
+			if (d.getAll().contains(c)) {
 				return d;
 			}
 		}
 		return null;
 	}
 
-	public PlayArea findPlayArea(String playAreaName) {
+	public PlayArea<? extends Collection<?>,? extends BasePlayable> findPlayArea(String playAreaName) {
 		return players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n)))
 				.filter(d -> d.getId().equals(playAreaName)).findFirst().get();
 	}
 
 	public Play findPlay(Player owner, String playName) {
-		Stream<Play> playStream = owner.getPlayAreaNames().stream().flatMap(d -> owner.getPlayArea(d).getAllPlayables().stream())
+		Stream<Play> playStream = owner.getPlayAreaNames().stream().flatMap(d -> owner.getPlayArea(d).getAllPlayables())
 				.flatMap(c -> c.getPlays().stream());
 		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName))
 				.findFirst().orElseThrow(() -> new GameElementNotFoundException(
@@ -138,17 +139,17 @@ public class Game {
 	}
 
 	public Playable findPlayable(String playableName) {
-		Stream<Playable> playables = players.stream()
-				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAllPlayables().stream()));
-		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAllPlayables().stream()))
+		Stream<BasePlayable> playables = players.stream()
+				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAllPlayables()));
+		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAllPlayables()))
 				.filter(p -> p.getId().equals(playableName)).findFirst().orElseThrow(
 						() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableName)));
 	}
 
 	public boolean hasPlayable(String playableName) {
 		Stream<Playable> playables = players.stream()
-				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAllPlayables().stream()));
-		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAllPlayables().stream()))
+				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAll().stream()));
+		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAll().stream()))
 				.anyMatch(p -> p.getId().equals(playableName));
 	}
 
@@ -170,6 +171,7 @@ public class Game {
 		return players;
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Comparable<? super T>> Attribute<T> getModifiedAttribute(Playable playable, Attribute<T> attribute) {
 		Attribute<T> newAttribute = attribute;
 		for (Modifier<T> mod : modifiers.stream().filter(m -> m.valid(playable, attribute.getName())).map(m -> (Modifier<T>)m).toList()) {
@@ -178,11 +180,7 @@ public class Game {
 		return newAttribute;
 	}
 
-	public PlayArea getPlayArea(String name) {
-		return playAreas.get(name);
-	}
-
-	public Map<String, PlayArea> getPlayArea() {
+	public Map<String, PlayArea<? extends Collection<? extends BasePlayable>, ? extends BasePlayable>> getPlayArea() {
 		return playAreas;
 	}
 

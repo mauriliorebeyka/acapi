@@ -2,7 +2,7 @@ package com.rebeyka.acapi.entities;
 
 public class DeckTest {
 
-	private Deck deck;
+//	private Deck deck;
 
 	public void setup() {
 

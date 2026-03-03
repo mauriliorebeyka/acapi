@@ -6,6 +6,8 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 
 	private String name;
 
+	private Playable origin;
+
 	private T value;
 
 	private T initialValue;
@@ -16,20 +18,25 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 
 	private TypeToken<T> type;
 
-	public Attribute(String name, T value, TypeToken<T> type) {
+	public Attribute(String name, T value, TypeToken<T> type, Playable origin) {
 		this.name = name;
 		this.value = value;
 		this.type = type;
+		this.origin = origin;
 	}
 
-	public Attribute(String name, TypeToken<T> type) {
-		this(name, null, type);
+	public Attribute(String name, TypeToken<T> type, Playable origin) {
+		this(name, null, type, origin);
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	public Playable getOrigin() {
+		return origin;
+	}
+	
 	public T getValue() {
 		return value;
 	}
@@ -45,7 +52,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 		if (this.initialValue == null) {
 			this.initialValue = finalValue;
 		}
-		this.value = finalValue;
+		origin.getRawAttribute(name, type).value = finalValue;
 	}
 
 	public T getInitialValue() {
@@ -57,7 +64,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	}
 
 	public void setMinValue(T minValue) {
-		this.minValue = minValue;
+		origin.getRawAttribute(name,type).minValue = minValue;
 	}
 
 	public T getMaxValue() {
@@ -65,7 +72,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	}
 
 	public void setMaxValue(T maxValue) {
-		this.maxValue = maxValue;
+		origin.getRawAttribute(name, type).maxValue = maxValue;
 	}
 
 	public TypeToken<T> getType() {

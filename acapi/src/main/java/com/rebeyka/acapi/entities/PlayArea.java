@@ -1,14 +1,15 @@
 package com.rebeyka.acapi.entities;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 import com.rebeyka.acapi.view.VisibilityType;
 
-public abstract class PlayArea {
+public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 
 	private String id;
 
-	protected Collection<Playable> playables;
+	protected C playables;
 
 	protected VisibilityType visibilityType;
 	
@@ -20,10 +21,34 @@ public abstract class PlayArea {
 		this.owner = owner;
 	}
 
-	public Collection<Playable> getAllPlayables() {
+	public C getAll() {
 		return playables;
 	}
 
+	public Stream<BasePlayable> getAllPlayables() {
+		return playables.stream().map(p -> (BasePlayable)p);
+	}
+	
+	public T remove(String playableId) {
+		T playable = get(playableId);
+		if (playable != null) {
+			playables.remove(playable);
+		}
+		return playable;
+	}
+	
+	public T get(String playableId) {
+		return playables.stream().filter(p -> p.getId().equals(playableId)).findAny().orElse(null);
+	}
+	
+	public void add(T playable) {
+		playables.add(playable);
+	}
+	
+	public boolean contains(String playableId) {
+		return playables.stream().anyMatch(p -> p.getId().equals(playableId));
+	}
+	
 	public String getId() {
 		return id;
 	}

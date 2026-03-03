@@ -9,7 +9,6 @@ import java.util.Set;
 import com.google.common.reflect.TypeToken;
 import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.exceptions.InvalidAttributeTypeException;
-import com.rebeyka.acapi.view.VisibilityType;
 
 public abstract class Playable {
 
@@ -21,19 +20,10 @@ public abstract class Playable {
 
 	private Game game;
 	
-	private VisibilityType defaultVisibility;
-	
-	private Map<Player,VisibilityType> visibilityByPlayer;
-	
-	private Player owner;
-
-	public Playable(String id, Player owner) {
+	public Playable(String id) {
 		this.id = id;
 		plays = new ArrayList<>();
 		attributes = new HashMap<>();
-		defaultVisibility = VisibilityType.INHERIT;
-		visibilityByPlayer = new HashMap<>();
-		this.owner = owner;
 	}
 
 	public String getId() {
@@ -59,7 +49,7 @@ public abstract class Playable {
 	@SuppressWarnings("unchecked")
 	public <T extends Comparable<? super T>> Attribute<T> getRawAttribute(String name, TypeToken<T> type) {
 		if (!attributes.containsKey(name)) {
-			attributes.put(name, new Attribute<T>(name, type));
+			attributes.put(name, new Attribute<T>(name, type,this));
 		}
 		Attribute<?> attribute = attributes.get(name);
 		if (attribute.getValue() == null || attribute.getType().equals(type)) {
@@ -85,25 +75,6 @@ public abstract class Playable {
 		this.game = game;
 	}
 
-	public VisibilityType getDefaultVisibility() {
-		return defaultVisibility;
-	}
-	
-	public void setDefaultVisibility(VisibilityType visibilityType) {
-		this.defaultVisibility = visibilityType;
-	}
-	
-	public void setVisibilityForPlayer(Player player, VisibilityType visibility) {
-		visibilityByPlayer.put(player, visibility);
-	}
-	
-	public VisibilityType getvisibilityForPlayer(Player player) {
-		return visibilityByPlayer.getOrDefault(player, defaultVisibility);
-	}
-	
-	public Player getOwner() {
-		return owner;
-	}
 	
 	@Override
 	public String toString() {

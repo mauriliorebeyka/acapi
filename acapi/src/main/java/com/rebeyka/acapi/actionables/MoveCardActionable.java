@@ -1,7 +1,9 @@
 package com.rebeyka.acapi.actionables;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
+import com.rebeyka.acapi.entities.BasePlayable;
 import com.rebeyka.acapi.entities.PlayArea;
 
 public class MoveCardActionable extends Actionable {
@@ -10,7 +12,7 @@ public class MoveCardActionable extends Actionable {
 	
 	private PlayArea targetPlayArea;
 	
-	public MoveCardActionable(String actionableId, PlayArea originPlayArea, PlayArea targetPlayArea) {
+	public MoveCardActionable(String actionableId, PlayArea<? extends Collection<?>,? extends BasePlayable> originPlayArea, PlayArea<? extends Collection<?>,? extends BasePlayable> targetPlayArea) {
 		super(actionableId);
 		this.originPlayArea = originPlayArea;
 		this.targetPlayArea = targetPlayArea;
@@ -18,8 +20,9 @@ public class MoveCardActionable extends Actionable {
 
 	@Override
 	public void execute() {
-		originPlayArea.getAllPlayables().removeAll(getParent().getTargets());
-		targetPlayArea.getAllPlayables().addAll(getParent().getTargets().stream().map(c -> c).toList());
+		//TODO add generic types
+		originPlayArea.getAll().removeAll(getParent().getTargets());
+		targetPlayArea.getAll().addAll(getParent().getTargets().stream().map(c -> c).toList());
 	}
 
 	@Override

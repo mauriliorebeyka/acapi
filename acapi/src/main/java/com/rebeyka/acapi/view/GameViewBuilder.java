@@ -1,12 +1,13 @@
 package com.rebeyka.acapi.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.entities.BasePlayable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.PlayArea;
-import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.gameflow.LogEntry;
 import com.rebeyka.acapi.entities.gameflow.Play;
@@ -70,21 +71,21 @@ public class GameViewBuilder {
 		return playerView;
 	}
 
-	public PlayAreaView buildPlayAreaView(Player pov, PlayArea playArea) {
+	public PlayAreaView buildPlayAreaView(Player pov, PlayArea<? extends Collection<?>,? extends BasePlayable> playArea) {
 		PlayAreaView playAreaView = new PlayAreaView();
 
 		List<AttributeView<?>> playAreaAttributes = new ArrayList<>();
 		playAreaAttributes.add(new AttributeView<String>("ID", playArea.getId()));
-		playAreaAttributes.add(new AttributeView<Integer>("Size", playArea.getAllPlayables().size()));
+		playAreaAttributes.add(new AttributeView<Integer>("Size", playArea.getAll().size()));
 		playAreaView.setAttributesView(playAreaAttributes);
 
-		playAreaView.setCardView(playArea.getAllPlayables().stream().filter(card -> isVisible(card, pov, playArea))
+		playAreaView.setCardView(playArea.getAllPlayables().filter(card -> isVisible(card, pov, playArea))
 				.map(this::buildPlayableView).toList());
 
 		return playAreaView;
 	}
 
-	public boolean isVisible(Playable card, Player pov, PlayArea playArea) {
+	public boolean isVisible(BasePlayable card, Player pov, PlayArea<? extends Collection<?>,? extends BasePlayable> playArea) {
 		return switch (card.getvisibilityForPlayer(pov)) {
 		case VisibilityType.HIDDEN -> false;
 		case VisibilityType.INHERIT -> playArea.getVisibilityType().equals(VisibilityType.PUBLIC);
@@ -94,7 +95,7 @@ public class GameViewBuilder {
 		};
 	}
 
-	public PlayableView buildPlayableView(Playable card) {
+	public PlayableView buildPlayableView(BasePlayable card) {
 		PlayableView playableView = new PlayableView();
 		playableView.setAttributeView(new ArrayList<>());
 		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", card.getId()));

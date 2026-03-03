@@ -19,7 +19,7 @@ public class Die<T> extends Playable {
 	private static int dieId = 0;
 	
 	public Die(List<DieFace<T>> dieFaces, Seed seed) {
-		super("Die"+dieId++, null);
+		super("Die"+dieId++);
 		this.dieFaces = dieFaces;
 		this.seed = seed;
 		this.rolledValue = null;
