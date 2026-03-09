@@ -39,21 +39,17 @@ public class RankingByAttributeTest {
 		Attribute fifthAttribute = mock(Attribute.class);
 
 		// --- Comparison behavior ---
-		// High group: high1 == high2
 		when(firstAttribute.compareTo(firstTieAttribute)).thenReturn(0);
 		when(firstTieAttribute.compareTo(firstAttribute)).thenReturn(0);
 
-		// High > mid
 		when(firstAttribute.compareTo(thirdAttribute)).thenReturn(1);
 		when(firstAttribute.compareTo(thirdTieAttribute)).thenReturn(1);
 		when(firstTieAttribute.compareTo(thirdAttribute)).thenReturn(1);
 		when(firstTieAttribute.compareTo(thirdTieAttribute)).thenReturn(1);
 
-		// Mid group: mid1 == mid2
 		when(thirdAttribute.compareTo(thirdTieAttribute)).thenReturn(0);
 		when(thirdTieAttribute.compareTo(thirdAttribute)).thenReturn(0);
 
-		// Mid > low
 		when(thirdAttribute.compareTo(fifthAttribute)).thenReturn(1);
 		when(thirdTieAttribute.compareTo(fifthAttribute)).thenReturn(1);
 
