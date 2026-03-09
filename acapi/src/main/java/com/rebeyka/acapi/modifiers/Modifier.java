@@ -62,7 +62,7 @@ public class Modifier<T extends Comparable<? super T>> {
 	}
 
 	public boolean valid(Playable playable, String attributeName) {
-		return condition.check(playable) && attributeName.equals(this.attributeName)
+		return condition.check(playable) && attributeName.equals(this.attributeName) && origin.equals(playable)
 				&& origin.getRawAttribute(attributeName).getType().equals(playable.getRawAttribute(attributeName).getType());
 	}
 

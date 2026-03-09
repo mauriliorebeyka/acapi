@@ -180,6 +180,10 @@ public class Game {
 		return newAttribute;
 	}
 
+	public List<Modifier<?>> getModifiers() {
+		return modifiers;
+	}
+	
 	public Map<String, PlayArea<? extends Collection<? extends BasePlayable>, ? extends BasePlayable>> getPlayArea() {
 		return playAreas;
 	}

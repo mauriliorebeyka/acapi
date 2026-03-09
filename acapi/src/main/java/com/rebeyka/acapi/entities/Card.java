@@ -8,7 +8,7 @@ public class Card extends BasePlayable {
 
 	@Override
 	public String toString() {
-		if (getRawAttribute("name") != null && getRawAttribute("name").getValue() instanceof String value) {
+		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
 			return value;
 		}
 		return "Card ID %s".formatted(getId());

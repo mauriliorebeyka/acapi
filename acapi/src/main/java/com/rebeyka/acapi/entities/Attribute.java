@@ -52,7 +52,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 		if (this.initialValue == null) {
 			this.initialValue = finalValue;
 		}
-		origin.getRawAttribute(name, type).value = finalValue;
+		this.value = finalValue;
 	}
 
 	public T getInitialValue() {
@@ -64,7 +64,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	}
 
 	public void setMinValue(T minValue) {
-		origin.getRawAttribute(name,type).minValue = minValue;
+		this.minValue = minValue;
 	}
 
 	public T getMaxValue() {
@@ -72,7 +72,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	}
 
 	public void setMaxValue(T maxValue) {
-		origin.getRawAttribute(name, type).maxValue = maxValue;
+		this.maxValue = maxValue;
 	}
 
 	public TypeToken<T> getType() {
@@ -85,7 +85,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 
 	@Override
 	public int compareTo(Attribute<T> o) {
-		if (o == null) {
+		if (o == null || o.getValue() == null) {
 			return Integer.MIN_VALUE;
 		}
 		return getValue().compareTo(o.getValue());

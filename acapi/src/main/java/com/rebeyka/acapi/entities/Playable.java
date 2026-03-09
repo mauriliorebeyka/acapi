@@ -46,6 +46,14 @@ public abstract class Playable {
 		return attributes.get(name);
 	}
 	
+	public Attribute<?> getAttribute(String name) {
+		Attribute<?> attribute = attributes.get(name);
+		if (attribute != null) {
+			return getAttribute(name, attribute.getType());
+		}
+		return attribute;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public <T extends Comparable<? super T>> Attribute<T> getRawAttribute(String name, TypeToken<T> type) {
 		if (!attributes.containsKey(name)) {
@@ -79,7 +87,7 @@ public abstract class Playable {
 	@Override
 	public String toString() {
 		String id = "";
-		if (getRawAttribute("name") != null && getRawAttribute("name").getValue() instanceof String value) {
+		if (getAttribute("name") != null && getAttribute("name").getValue() instanceof String value) {
 			id = value;
 		} else {
 			id = getId();

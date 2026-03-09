@@ -13,7 +13,7 @@ public abstract class Ranking {
 		rankingPosition = new ArrayList<>();
 	}
 	
-	public abstract List<RankingPosition> getUpdatedRank(List<Player> players);
+	protected abstract List<RankingPosition> getUpdatedRank(List<Player> players);
 	
 	public void updateRanking(List<Player> players) {
 		this.rankingPosition = getUpdatedRank(players);

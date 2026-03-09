@@ -10,14 +10,15 @@ import com.rebeyka.acapi.entities.Playable;
 public class ChangeAttributeActionable<T extends Comparable<? super T>> extends Actionable {
 
 	private Playable origin;
-	
+
 	private Attribute<T> attribute;
 
 	private Function<T, T> function;
 
 	private T originalValue;
-	
-	public ChangeAttributeActionable(String actionableId, Playable origin, Attribute<T> attribute, Function<T, T> function) {
+
+	public ChangeAttributeActionable(String actionableId, Playable origin, Attribute<T> attribute,
+			Function<T, T> function) {
 		super(actionableId);
 		this.origin = origin;
 		this.attribute = attribute;
@@ -36,7 +37,8 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 	@Override
 	public void execute() {
 		originalValue = attribute.getValue();
-		attribute.setValue(function.apply(origin.getGame().getModifiedAttribute(origin, attribute).getValue()));
+		origin.getRawAttribute(attribute.getName(), attribute.getType())
+				.setValue(function.apply(origin.getRawAttribute(attribute.getName(), attribute.getType()).getValue()));
 	}
 
 	@Override
