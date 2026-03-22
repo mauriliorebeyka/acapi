@@ -3,7 +3,9 @@ package com.rebeyka.acapi.entities;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.stream.Stream;
+
+import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
 public class Player extends Playable {
 
@@ -16,10 +18,14 @@ public class Player extends Playable {
 		this.playAreas = new HashMap<>();
 	}
 
-	public Set<String> getPlayAreaNames() {
-		return playAreas.keySet();
+	public Stream<PlayArea<? extends Collection<?>, ? extends BasePlayable>> getPlayAreas() {
+		return playAreas.values().stream();
 	}
 
+	public Stream<BasePlayable> getAllPlayables() {
+		return getPlayAreas().flatMap(PlayArea::getAllPlayables);
+	}
+	
 	public Deck getDeck(String name) {
 		if (!playAreas.containsKey(name)) {
 			playAreas.put(name, new Deck(name, this));
@@ -29,13 +35,16 @@ public class Player extends Playable {
 	}
 
 	public PlayArea<? extends Collection<?>, ? extends BasePlayable> getPlayArea(String name) {
+		if(!playAreas.containsKey(name)) {
+			throw new GameElementNotFoundException("No Play Area defined with name %s".formatted(name));
+		}
 		return playAreas.get(name);
 	}
 
 	public <T extends PlayArea<? extends Collection<?>,?>> T getPlayArea(String name, Class<T> type) {
 		PlayArea<? extends Collection<?>,?> playArea = getPlayArea(name);
 		if (!type.isInstance(playArea)) {
-			throw new IllegalStateException("Expected %s to be a %s, but it was %s instead".formatted(name,
+			throw new IllegalStateException("Expected Play Area %s to be a %s, but it was %s instead".formatted(name,
 					type.getSimpleName(), playArea.getClass().getSimpleName()));
 		}
 		return type.cast(playArea);

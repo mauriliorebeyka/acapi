@@ -20,6 +20,7 @@ import com.rebeyka.acapi.entities.Player;
 
 public class RankingByAttributeTest {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private Player mockPlayer(String id, Attribute attr, String attrName) {
 		Player p = mock(Player.class);
 		when(p.getId()).thenReturn(id);

@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.actionables.WinningCondition;
 import com.rebeyka.acapi.builders.DefaultPlayFactory;
@@ -36,15 +38,15 @@ public class Game {
 
 	private List<Player> players;
 
-	private Map<String, PlayArea<? extends Collection<? extends BasePlayable>,? extends BasePlayable>> playAreas;
+	private Map<String, PlayArea<? extends Collection<? extends BasePlayable>, ? extends BasePlayable>> playAreas;
 
 	private Timeline timeline;
 
 	private List<Play> queuedPlays;
 
-	private List<Trigger> afterTriggers;
+	private Multimap<Integer, Trigger> afterTriggers;
 
-	private List<Trigger> beforeTriggers;
+	private Multimap<Integer, Trigger> beforeTriggers;
 
 	private List<GameFlow> gameFlow;
 
@@ -66,8 +68,8 @@ public class Game {
 		this.playAreas = new HashMap<>();
 		this.timeline = new Timeline(this);
 		this.queuedPlays = new LinkedList<Play>();
-		this.afterTriggers = new ArrayList<>();
-		this.beforeTriggers = new ArrayList<>();
+		this.afterTriggers = ArrayListMultimap.create();
+		this.beforeTriggers = ArrayListMultimap.create();
 		List<GameFlow> gameFlow = new ArrayList<>();
 		gameFlow.add(new NoPlayerGameFlow(new GameFlowBuilder(this)));
 		setCurrentGameFlow(0);
@@ -111,46 +113,36 @@ public class Game {
 		return false;
 	}
 
-	public PlayArea<? extends Collection<?>, ? extends BasePlayable> findPlayArea(Playable c) {
-		for (PlayArea<? extends Collection<?>, ? extends BasePlayable> d : playAreas.values()) {
-			if (d.getAll().contains(c)) {
-				return d;
-			}
-		}
-		for (PlayArea<? extends Collection<?>, ? extends BasePlayable> d : players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n))).toList()) {
-			if (d.getAll().contains(c)) {
-				return d;
-			}
-		}
-		return null;
+	public PlayArea<? extends Collection<?>, ? extends BasePlayable> findPlayArea(Playable playable) {
+		return Stream.concat(players.stream().flatMap(Player::getPlayAreas), playAreas.values().stream())
+				.filter(playArea -> playArea.getAllPlayables().anyMatch(p -> playable == p)).findFirst()
+				.orElseThrow(() -> new GameElementNotFoundException("Could not find Play Area %s".formatted(playable)));
 	}
 
-	public PlayArea<? extends Collection<?>,? extends BasePlayable> findPlayArea(String playAreaName) {
-		return players.stream().flatMap(p -> p.getPlayAreaNames().stream().map(n -> p.getPlayArea(n)))
-				.filter(d -> d.getId().equals(playAreaName)).findFirst().get();
+	public PlayArea<? extends Collection<?>, ? extends BasePlayable> findPlayArea(String playAreaName) {
+		return players.stream().flatMap(Player::getPlayAreas).filter(d -> d.getId().equals(playAreaName)).findFirst()
+				.orElseThrow(
+						() -> new GameElementNotFoundException("Could not find Play Area %s".formatted(playAreaName)));
 	}
 
 	public Play findPlay(Player owner, String playName) {
-		Stream<Play> playStream = owner.getPlayAreaNames().stream().flatMap(d -> owner.getPlayArea(d).getAllPlayables())
-				.flatMap(c -> c.getPlays().stream());
+		Stream<Play> playStream = owner.getAllPlayables().flatMap(c -> c.getPlays().stream());
 		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName))
 				.findFirst().orElseThrow(() -> new GameElementNotFoundException(
 						"Could not find playId %s for Player %s".formatted(playName, owner.getId())));
 	}
 
 	public Playable findPlayable(String playableName) {
-		Stream<BasePlayable> playables = players.stream()
-				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAllPlayables()));
-		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAllPlayables()))
-				.filter(p -> p.getId().equals(playableName)).findFirst().orElseThrow(
+		Stream<BasePlayable> playables = players.stream().flatMap(Player::getAllPlayables);
+		return Stream.concat(playables, getAllPlayables()).filter(p -> p.getId().equals(playableName)).findFirst()
+				.orElseThrow(
 						() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableName)));
 	}
 
 	public boolean hasPlayable(String playableName) {
-		Stream<Playable> playables = players.stream()
-				.flatMap(p -> p.getPlayAreaNames().stream().flatMap(d -> p.getPlayArea(d).getAll().stream()));
-		return Stream.concat(playables, getPlayArea().values().stream().flatMap(d -> d.getAll().stream()))
-				.anyMatch(p -> p.getId().equals(playableName));
+		Stream<BasePlayable> playables = players.stream()
+				.flatMap(p -> p.getPlayAreas().flatMap(PlayArea::getAllPlayables));
+		return Stream.concat(playables, getAllPlayables()).anyMatch(p -> p.getId().equals(playableName));
 	}
 
 	public Player findPlayer(String playerName) {
@@ -172,9 +164,11 @@ public class Game {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Comparable<? super T>> Attribute<T> getModifiedAttribute(Playable playable, Attribute<T> attribute) {
+	public <T extends Comparable<? super T>> Attribute<T> getModifiedAttribute(Playable playable,
+			Attribute<T> attribute) {
 		Attribute<T> newAttribute = attribute;
-		for (Modifier<T> mod : modifiers.stream().filter(m -> m.valid(playable, attribute.getName())).map(m -> (Modifier<T>)m).toList()) {
+		for (Modifier<T> mod : modifiers.stream().filter(m -> m.valid(playable, attribute.getName()))
+				.map(m -> (Modifier<T>) m).toList()) {
 			newAttribute = mod.apply(newAttribute);
 		}
 		return newAttribute;
@@ -183,9 +177,13 @@ public class Game {
 	public List<Modifier<?>> getModifiers() {
 		return modifiers;
 	}
-	
-	public Map<String, PlayArea<? extends Collection<? extends BasePlayable>, ? extends BasePlayable>> getPlayArea() {
+
+	public Map<String, PlayArea<? extends Collection<? extends BasePlayable>, ? extends BasePlayable>> getPlayAreas() {
 		return playAreas;
+	}
+
+	private Stream<BasePlayable> getAllPlayables() {
+		return playAreas.values().stream().flatMap(PlayArea::getAllPlayables);
 	}
 
 	public GameFlow getGameFlow() {
@@ -275,29 +273,45 @@ public class Game {
 		}
 	}
 
-	public void registerAfterTrigger(Trigger t) {
-		afterTriggers.add(t);
+	public void registerAfterTrigger(int priority, Trigger trigger) {
+		if (!afterTriggers.containsValue(trigger)) {
+			afterTriggers.put(priority, trigger);
+		}
 	}
 
-	public void unregisterAfterTrigger(Trigger t) {
-		afterTriggers.remove(t);
+	public void registerAfterTrigger(Trigger trigger) {
+		registerAfterTrigger(0, trigger);
+	}
+
+	public void unregisterAfterTrigger(Trigger trigger) {
+		Integer key = afterTriggers.entries().stream().filter(e -> e.getValue().equals(trigger)).findFirst()
+				.orElseThrow(() -> new GameElementNotFoundException("Could not find trigger")).getKey();
+		afterTriggers.remove(key, trigger);
 	}
 
 	public List<Play> getAfterTriggerActionables(Actionable triggeringActionable) {
-		return afterTriggers.stream().filter(t -> t.test(triggeringActionable))
+		return afterTriggers.values().stream().filter(t -> t.test(triggeringActionable))
 				.map(t -> playFactory.fromTrigger(triggeringActionable.getParent(), t)).toList();
 	}
 
+	public void registerBeforeTrigger(int priority, Trigger trigger) {
+		if (!beforeTriggers.containsValue(trigger)) {
+			beforeTriggers.put(priority, trigger);
+		}
+	}
+
 	public void registerBeforeTrigger(Trigger trigger) {
-		beforeTriggers.add(trigger);
+		registerBeforeTrigger(0, trigger);
 	}
 
 	public void unregisterBeforeTrigger(Trigger trigger) {
-		beforeTriggers.remove(trigger);
+		Integer key = beforeTriggers.entries().stream().filter(e -> e.getValue().equals(trigger)).findFirst()
+				.orElseThrow(() -> new GameElementNotFoundException("Could not find trigger")).getKey();
+		beforeTriggers.remove(key, trigger);
 	}
 
 	public List<Play> getBeforeTriggerActionables(Actionable triggeringActionable) {
-		return beforeTriggers.stream().filter(t -> t.test(triggeringActionable))
+		return beforeTriggers.values().stream().filter(t -> t.test(triggeringActionable))
 				.map(t -> playFactory.fromTrigger(triggeringActionable.getParent(), t)).toList();
 	}
 

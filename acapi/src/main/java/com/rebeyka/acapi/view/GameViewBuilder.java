@@ -64,7 +64,7 @@ public class GameViewBuilder {
 					player.getPlays().stream().map(Play::getName).toList()));
 		}
 
-		playerView.setPlayAreaView(player.getPlayAreaNames().stream().map(playArea -> player.getPlayArea(playArea))
+		playerView.setPlayAreaView(player.getPlayAreas()
 				.filter(playArea -> playArea.getVisibilityType() != VisibilityType.HIDDEN).map(playArea -> buildPlayAreaView(pov, playArea))
 				.toList());
 
@@ -79,31 +79,32 @@ public class GameViewBuilder {
 		playAreaAttributes.add(new AttributeView<Integer>("Size", playArea.getAll().size()));
 		playAreaView.setAttributesView(playAreaAttributes);
 
-		playAreaView.setCardView(playArea.getAllPlayables().filter(card -> isVisible(card, pov, playArea))
+		playAreaView.setCardView(playArea.getAllPlayables().filter(p -> isVisible(p, pov, playArea))
 				.map(this::buildPlayableView).toList());
 
 		return playAreaView;
 	}
 
-	public boolean isVisible(BasePlayable card, Player pov, PlayArea<? extends Collection<?>,? extends BasePlayable> playArea) {
-		return switch (card.getvisibilityForPlayer(pov)) {
+	public boolean isVisible(BasePlayable playable, Player pov, PlayArea<? extends Collection<?>,? extends BasePlayable> playArea) {
+		return switch (playable.getvisibilityForPlayer(pov)) {
 		case VisibilityType.HIDDEN -> false;
+		case VisibilityType.SECRET -> false;
 		case VisibilityType.INHERIT -> playArea.getVisibilityType().equals(VisibilityType.PUBLIC);
-		case VisibilityType.PRIVATE -> card.getOwner().equals(playArea.getOwner());
+		case VisibilityType.PRIVATE -> playable.getOwner().equals(playArea.getOwner());
 		case VisibilityType.PUBLIC -> true;
 		default -> false;
 		};
 	}
 
-	public PlayableView buildPlayableView(BasePlayable card) {
+	public PlayableView buildPlayableView(BasePlayable playable) {
 		PlayableView playableView = new PlayableView();
 		playableView.setAttributeView(new ArrayList<>());
-		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", card.getId()));
-		playableView.getAttributeView().addAll(card.getAttributes().stream()
-				.map(attr -> new AttributeView<Comparable<?>>(attr, card.getAttribute(attr).getValue())).toList());
-		if (card.getPlays().stream().anyMatch(Play::isPossible)) {
+		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", playable.getId()));
+		playableView.getAttributeView().addAll(playable.getAttributes().stream()
+				.map(attr -> new AttributeView<Comparable<?>>(attr, playable.getAttribute(attr).getValue())).toList());
+		if (playable.getPlays().stream().anyMatch(Play::isPossible)) {
 			playableView.getAttributeView().add(new AttributeView<List<String>>("Available Plays",
-					card.getPlays().stream().map(Play::getName).toList()));
+					playable.getPlays().stream().map(Play::getName).toList()));
 		}
 		return playableView;
 	}
