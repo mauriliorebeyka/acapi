@@ -61,6 +61,8 @@ public class Game {
 	private PlayFactory playFactory;
 
 	private List<Modifier<?>> modifiers;
+	
+	private GameEntityFinder finder;
 
 	public Game(String id, List<Player> players) {
 		this.id = id;
@@ -79,6 +81,7 @@ public class Game {
 		setRanking(new DisabledRanking());
 		this.playFactory = new DefaultPlayFactory(this);
 		this.modifiers = new ArrayList<>();
+		this.finder = new GameEntityFinder(this);
 	}
 
 	public void setTimeline(Timeline timeline) {
@@ -89,6 +92,14 @@ public class Game {
 		this.playFactory = playFactory;
 	}
 
+	public void setFinder(GameEntityFinder finder) {
+		this.finder = finder;
+	}
+	
+	public GameEntityFinder find() {
+		return finder;
+	}
+	
 	public String getId() {
 		return id;
 	}
@@ -113,45 +124,8 @@ public class Game {
 		return false;
 	}
 
-	public PlayArea<? extends Collection<?>, ? extends BasePlayable> findPlayArea(Playable playable) {
-		return Stream.concat(players.stream().flatMap(Player::getPlayAreas), playAreas.values().stream())
-				.filter(playArea -> playArea.getAllPlayables().anyMatch(p -> playable == p)).findFirst()
-				.orElseThrow(() -> new GameElementNotFoundException("Could not find Play Area %s".formatted(playable)));
-	}
-
-	public PlayArea<? extends Collection<?>, ? extends BasePlayable> findPlayArea(String playAreaName) {
-		return players.stream().flatMap(Player::getPlayAreas).filter(d -> d.getId().equals(playAreaName)).findFirst()
-				.orElseThrow(
-						() -> new GameElementNotFoundException("Could not find Play Area %s".formatted(playAreaName)));
-	}
-
-	public Play findPlay(Player owner, String playName) {
-		Stream<Play> playStream = owner.getAllPlayables().flatMap(c -> c.getPlays().stream());
-		return Stream.concat(playStream, owner.getPlays().stream()).filter(p -> p.getName().equals(playName))
-				.findFirst().orElseThrow(() -> new GameElementNotFoundException(
-						"Could not find playId %s for Player %s".formatted(playName, owner.getId())));
-	}
-
-	public Playable findPlayable(String playableName) {
-		Stream<BasePlayable> playables = players.stream().flatMap(Player::getAllPlayables);
-		return Stream.concat(playables, getAllPlayables()).filter(p -> p.getId().equals(playableName)).findFirst()
-				.orElseThrow(
-						() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableName)));
-	}
-
-	public boolean hasPlayable(String playableName) {
-		Stream<BasePlayable> playables = players.stream()
-				.flatMap(p -> p.getPlayAreas().flatMap(PlayArea::getAllPlayables));
-		return Stream.concat(playables, getAllPlayables()).anyMatch(p -> p.getId().equals(playableName));
-	}
-
-	public Player findPlayer(String playerName) {
-		return players.stream().filter(p -> p.getId().equals(playerName)).findFirst()
-				.orElseThrow(() -> new GameElementNotFoundException("Could not find player %s".formatted(playerName)));
-	}
-
 	public Card createCard(String id, Player owner) {
-		if (hasPlayable(id)) {
+		if (finder.hasPlayable(id)) {
 			throw new DuplicatedPlayableException("Card with id %s already exists".formatted(id));
 		}
 		Card card = new Card(id, owner);
@@ -181,11 +155,7 @@ public class Game {
 	public Map<String, PlayArea<? extends Collection<? extends BasePlayable>, ? extends BasePlayable>> getPlayAreas() {
 		return playAreas;
 	}
-
-	private Stream<BasePlayable> getAllPlayables() {
-		return playAreas.values().stream().flatMap(PlayArea::getAllPlayables);
-	}
-
+	
 	public GameFlow getGameFlow() {
 		return gameFlow.get(currentGameFlow);
 	}

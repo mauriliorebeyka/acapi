@@ -46,7 +46,11 @@ public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 	}
 	
 	public boolean contains(String playableId) {
-		return playables.stream().anyMatch(p -> p.getId().equals(playableId));
+		return getAllPlayables().anyMatch(p -> p.getId().equals(playableId));
+	}
+	
+	public boolean contains(BasePlayable playable) {
+		return playables.contains(playable);
 	}
 	
 	public String getId() {

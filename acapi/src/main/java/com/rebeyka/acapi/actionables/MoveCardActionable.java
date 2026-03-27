@@ -22,7 +22,7 @@ public class MoveCardActionable extends Actionable {
 	public void execute() {
 		//TODO add generic types
 		originPlayArea.getAll().removeAll(getParent().getTargets());
-		targetPlayArea.getAll().addAll(getParent().getTargets().stream().map(c -> c).toList());
+		targetPlayArea.getAll().addAll(getParent().getTargets());
 	}
 
 	@Override

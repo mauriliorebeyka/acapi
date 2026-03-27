@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
 public class Player extends Playable {
@@ -24,6 +25,10 @@ public class Player extends Playable {
 
 	public Stream<BasePlayable> getAllPlayables() {
 		return getPlayAreas().flatMap(PlayArea::getAllPlayables);
+	}
+	
+	public Stream<Play> getAllPlays() {
+		return Stream.concat(getPlays().stream(),getAllPlayables().flatMap(p -> p.getPlays().stream()));
 	}
 	
 	public Deck getDeck(String name) {
