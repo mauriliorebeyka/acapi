@@ -8,9 +8,9 @@ import com.rebeyka.acapi.entities.PlayArea;
 
 public class MoveCardActionable extends Actionable {
 
-	private PlayArea originPlayArea;
+	private PlayArea<? extends Collection<?>, ?  extends BasePlayable> originPlayArea;
 	
-	private PlayArea targetPlayArea;
+	private PlayArea<? extends Collection<?>, ? extends BasePlayable> targetPlayArea;
 	
 	public MoveCardActionable(String actionableId, PlayArea<? extends Collection<?>,? extends BasePlayable> originPlayArea, PlayArea<? extends Collection<?>,? extends BasePlayable> targetPlayArea) {
 		super(actionableId);
@@ -22,7 +22,7 @@ public class MoveCardActionable extends Actionable {
 	public void execute() {
 		//TODO add generic types
 		originPlayArea.getAll().removeAll(getParent().getTargets());
-		targetPlayArea.getAll().addAll(getParent().getTargets());
+		targetPlayArea.addAll(getParent().getTargets());
 	}
 
 	@Override

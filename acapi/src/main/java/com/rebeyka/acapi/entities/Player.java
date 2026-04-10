@@ -23,7 +23,7 @@ public class Player extends Playable {
 		return playAreas.values().stream();
 	}
 
-	public Stream<BasePlayable> getAllPlayables() {
+	public Stream<Playable> getAllPlayables() {
 		return getPlayAreas().flatMap(PlayArea::getAllPlayables);
 	}
 	
@@ -47,7 +47,7 @@ public class Player extends Playable {
 	}
 
 	public <T extends PlayArea<? extends Collection<?>,?>> T getPlayArea(String name, Class<T> type) {
-		PlayArea<? extends Collection<?>,?> playArea = getPlayArea(name);
+		PlayArea<? extends Collection<?>,? extends BasePlayable> playArea = getPlayArea(name);
 		if (!type.isInstance(playArea)) {
 			throw new IllegalStateException("Expected Play Area %s to be a %s, but it was %s instead".formatted(name,
 					type.getSimpleName(), playArea.getClass().getSimpleName()));

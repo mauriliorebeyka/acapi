@@ -8,6 +8,7 @@ import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.entities.BasePlayable;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.PlayArea;
+import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.gameflow.LogEntry;
 import com.rebeyka.acapi.entities.gameflow.Play;
@@ -79,7 +80,7 @@ public class GameViewBuilder {
 		playAreaAttributes.add(new AttributeView<Integer>("Size", playArea.getAll().size()));
 		playAreaView.setAttributesView(playAreaAttributes);
 
-		playAreaView.setCardView(playArea.getAllPlayables().filter(p -> isVisible(p, pov, playArea))
+		playAreaView.setCardView(playArea.getAllPlayables().map(p -> (BasePlayable)p).filter(p -> isVisible(p, pov, playArea))
 				.map(this::buildPlayableView).toList());
 
 		return playAreaView;
@@ -96,7 +97,7 @@ public class GameViewBuilder {
 		};
 	}
 
-	public PlayableView buildPlayableView(BasePlayable playable) {
+	public PlayableView buildPlayableView(Playable playable) {
 		PlayableView playableView = new PlayableView();
 		playableView.setAttributeView(new ArrayList<>());
 		playableView.getAttributeView().add(new AttributeView<Comparable<?>>("ID", playable.getId()));

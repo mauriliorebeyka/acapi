@@ -65,7 +65,7 @@ public class GameEntityFinder {
 	}
 
 	
-	private Stream<BasePlayable> getAllPlayables() {
+	private Stream<Playable> getAllPlayables() {
 		return Stream.concat(game.getPlayAreas().values().stream().flatMap(PlayArea::getAllPlayables),
 				game.getPlayers().stream().flatMap(Player::getAllPlayables));
 	}
