@@ -21,14 +21,6 @@ public class Seed {
 		instanceSeed = new Random(seed);
 	}
 	
-	public int nextInt() {
-		return instanceSeed.nextInt();
-	}
-	
-	public int nextInt(int bound) {
-		return instanceSeed.nextInt(bound);
-	}
-	
 	public double nextDouble() {
 		return instanceSeed.nextDouble();
 	}

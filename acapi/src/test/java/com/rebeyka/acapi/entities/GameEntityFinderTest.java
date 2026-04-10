@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 
+@SuppressWarnings({"rawtypes","unchecked"})
 public class GameEntityFinderTest {
 
 	private GameEntityFinder finder;

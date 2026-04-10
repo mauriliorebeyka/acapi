@@ -39,6 +39,7 @@ public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 		addAll(List.of(playable));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addAll(Collection<Playable> newPlayables) {
 		//TODO make a better check here if we're trying to sneakily add something that's not from the same type
 		playables.addAll(newPlayables.stream().map(p -> (T)p).toList());
@@ -52,6 +53,7 @@ public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 		return playables.contains(playable);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public T get(String playableId) {
 		return getAllPlayables().filter(p -> p.getId().equals(playableId)).map(p -> (T)p).findFirst().orElseThrow(() -> new GameElementNotFoundException("Could not find playable %s".formatted(playableId)));
 	}
