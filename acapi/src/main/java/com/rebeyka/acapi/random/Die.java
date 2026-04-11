@@ -17,9 +17,9 @@ public class Die<T> extends Playable {
 	private List<DieFace<T>> dieFaces;
 
 	private static int dieId = 0;
-	
+
 	public Die(List<DieFace<T>> dieFaces, Seed seed) {
-		super("Die"+dieId++);
+		super("Die" + dieId++);
 		this.dieFaces = dieFaces;
 		this.seed = seed;
 		this.rolledValue = null;
@@ -27,20 +27,19 @@ public class Die<T> extends Playable {
 	}
 
 	public Die<T> roll(boolean rerollAllowed) {
-		if (!rolled || rerollAllowed) {
-			rolled = true;
-			rolledValue = null;
-			double roll = seed.nextDouble();
-			double sum = 0;
-			double unweightedRatio = 1 / dieFaces.stream().mapToDouble(DieFace::getWeight).sum();
-			for (int i = 1; i <= dieFaces.size() && rolledValue == null; i++) {
-				sum += dieFaces.get(i - 1).getWeight() * unweightedRatio;
-				if (roll < sum) {
-					rolledValue = dieFaces.get(i - 1);
-				}
-			}
-		} else {
+		if (rolled && !rerollAllowed) {
 			throw new DieAlreadyRolledException();
+		}
+		rolled = true;
+		rolledValue = null;
+		double roll = seed.nextDouble();
+		double sum = 0;
+		double unweightedRatio = 1 / dieFaces.stream().mapToDouble(DieFace::getWeight).sum();
+		for (int i = 0; i < dieFaces.size() && rolledValue == null; i++) {
+			sum += dieFaces.get(i).getWeight() * unweightedRatio;
+			if (roll < sum) {
+				rolledValue = dieFaces.get(i);
+			}
 		}
 		return this;
 	};
@@ -75,7 +74,7 @@ public class Die<T> extends Playable {
 	public boolean isRolled() {
 		return rolled;
 	}
-	
+
 	@Override
 	public String toString() {
 		return rolled ? getValue().toString() : "NOT ROLLED";
