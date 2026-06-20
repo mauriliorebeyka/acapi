@@ -56,11 +56,14 @@ public class CustomOrderedGameFlowTest {
 
 		playerOrder = new CustomOrderedGameFlow(builder, "VP", true);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player2);
-		assertThat(playerOrder.nextTurn()).isEqualTo(false);
+		playerOrder.nextTurn();
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(false);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player1);
-		assertThat(playerOrder.nextTurn()).isEqualTo(false);
+		playerOrder.nextTurn();
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(false);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player3);
-		assertThat(playerOrder.nextTurn()).isEqualTo(true);
+		playerOrder.nextTurn();
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(true);
 	}
 
 	@Test
@@ -68,9 +71,7 @@ public class CustomOrderedGameFlowTest {
 		playerOrder = new CustomOrderedGameFlow(builder, "VP", false);
 		playerOrder.setOrder(players);
 		assertThat(playerOrder.getPlayersInOrder()).containsExactly(player3, player1, player2);
-		playerOrder.nextTurn();
-		playerOrder.nextTurn();
-		playerOrder.nextTurn();
+		playerOrder.nextRound();
 		assertThat(playerOrder.getPlayersInOrder()).containsExactly(player1, player2, player3);
 	}
 }

@@ -39,4 +39,10 @@ public class Types {
 	}
 	
 	public static final TypeToken<String> STRING = string();
+	
+	public static TypeToken<Boolean> bool() {
+		return TypeToken.of(Boolean.class);
+	}
+	
+	public static final TypeToken<Boolean> BOOLEAN = bool();
 }

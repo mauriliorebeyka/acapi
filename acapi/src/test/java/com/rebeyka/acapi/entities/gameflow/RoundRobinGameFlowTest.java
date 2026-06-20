@@ -59,7 +59,8 @@ public class RoundRobinGameFlowTest {
 
 	@Test
 	public void testNextPlayer() {
-		assertThat(playerOrder.nextTurn()).isEqualTo(false);
+		playerOrder.nextTurn(true);
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(false);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player2);
 		assertThat(playerOrder.isPlayerActive(player1)).isEqualTo(false);
 		assertThat(playerOrder.isPlayerActive(player2)).isEqualTo(true);
@@ -67,9 +68,13 @@ public class RoundRobinGameFlowTest {
 
 	@Test
 	public void testFullRound() {
-		assertThat(playerOrder.nextTurn()).isEqualTo(false);
-		assertThat(playerOrder.nextTurn()).isEqualTo(false);
-		assertThat(playerOrder.nextTurn()).isEqualTo(true);
+		playerOrder.nextTurn(true);
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(false);
+		playerOrder.nextTurn(true);
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(false);
+		playerOrder.nextTurn(true);
+		assertThat(playerOrder.allPlayersPassed()).isEqualTo(true);
+		playerOrder.nextRound();
 		assertThat(playerOrder.getRound()).isEqualTo(2);
 		assertThat(playerOrder.getCurrentPlayer()).isEqualTo(player1);
 		assertThat(playerOrder.isPlayerActive(player1)).isEqualTo(true);
@@ -96,24 +101,6 @@ public class RoundRobinGameFlowTest {
 			playerOrder.nextTurn();
 		}
 		assertThat(playerOrder.getCurrentPlayer()).isNull();
-	}
-
-	@Test
-	public void testNextNewRoundNotStaggered() {
-		builder.withStaggerNewRound(false).withFirstPlayerPolicy(new NextPlayerFirstPlayerPolicy());
-		playerOrder = new RoundRobinGameFlow(builder);
-		for (int i = 0; i < 3; i++) {
-			assertThat(playerOrder.getFirstPlayer()).isEqualTo(player1);
-			playerOrder.nextTurn();
-		}
-		for (int i = 0; i < 3; i++) {
-			assertThat(playerOrder.getFirstPlayer()).isEqualTo(player2);
-			playerOrder.nextTurn();
-		}
-		for (int i = 0; i < 3; i++) {
-			assertThat(playerOrder.getFirstPlayer()).isEqualTo(player3);
-			playerOrder.nextTurn();
-		}
 	}
 
 	@Test

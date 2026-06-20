@@ -31,6 +31,8 @@ import com.rebeyka.acapi.modifiers.Modifier;
 
 public class Game {
 
+	public final Player NOBODY = new Player("NOBODY");
+	
 	private static final Logger LOG = LogManager.getLogger();
 
 	private String id;
@@ -76,6 +78,7 @@ public class Game {
 		setCurrentGameFlow(0);
 		this.gameFlow = gameFlow;
 		this.players.stream().forEach(p -> p.setGame(this));
+		NOBODY.setGame(this);
 		this.selectedChoices = new ArrayList<>();
 		setRanking(new DisabledRanking());
 		this.playFactory = new DefaultPlayFactory(this);

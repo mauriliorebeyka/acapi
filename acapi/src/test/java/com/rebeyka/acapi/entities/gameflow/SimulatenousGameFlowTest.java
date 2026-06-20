@@ -59,6 +59,7 @@ public class SimulatenousGameFlowTest {
 		assertThat(playerOrder.isPlayerActive(player2)).isFalse();
 		assertThat(playerOrder.isPlayerActive(player3)).isTrue();
 		assertThat(playerOrder.endTurn(player3)).isTrue();
+		playerOrder.nextRound();
 		assertThat(playerOrder.getRound()).isEqualTo(2);
 		assertThat(playerOrder.isPlayerActive(player1)).isTrue();
 		assertThat(playerOrder.isPlayerActive(player2)).isTrue();

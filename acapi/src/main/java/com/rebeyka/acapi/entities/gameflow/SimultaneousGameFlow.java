@@ -9,16 +9,8 @@ import com.rebeyka.acapi.entities.Player;
 
 public class SimultaneousGameFlow extends GameFlow {
 
-	private boolean[] endedTurnPlayers;
-
 	public SimultaneousGameFlow(GameFlowBuilder builder) {
 		super(builder);
-
-		endedTurnPlayers = new boolean[players.size()];
-	}
-
-	private void reset() {
-		Arrays.fill(endedTurnPlayers, false);
 	}
 
 	@Override
@@ -28,8 +20,8 @@ public class SimultaneousGameFlow extends GameFlow {
 
 	@Override
 	public Player getCurrentPlayer() {
-		if (allPlayersFinished()) {
-			return null;
+		if (allPlayersPassed()) {
+			return game.NOBODY;
 		} else {
 			return players.get(firstPlayer);
 		}
@@ -37,28 +29,18 @@ public class SimultaneousGameFlow extends GameFlow {
 
 	@Override
 	public boolean isPlayerActive(Player player) {
-		return !endedTurnPlayers[players.indexOf(player)];
+		return !isPlayerPassed(player);
 	}
 
 	@Override
-	public boolean nextTurn() {
-		if (allPlayersFinished()) {
-			if (!staggerNewRound) {
-				reset();
-				nextRound();
-			}
-			return true;
-		} else {
-			return false;
-		}
+	public void nextTurn(boolean pass) {
+			
 	}
 
 	public boolean endTurn(Player player) {
-		endedTurnPlayers[players.indexOf(player)] = true;
-		return nextTurn();
+		passedPlayers.add(player);
+		return allPlayersPassed();
 	}
 
-	private boolean allPlayersFinished() {
-		return IntStream.range(0, endedTurnPlayers.length).mapToObj(b -> endedTurnPlayers[b]).allMatch(b -> b == true);
-	}
+
 }

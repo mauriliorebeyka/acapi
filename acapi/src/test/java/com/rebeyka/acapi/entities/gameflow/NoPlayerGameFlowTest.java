@@ -26,6 +26,5 @@ public class NoPlayerGameFlowTest {
 		assertThat(playerOrder.getPlayersInOrder()).isEqualTo(players);
 		assertThat(playerOrder.getFirstPlayer()).isEqualTo(players.get(0));
 		assertThat(playerOrder.getCurrentPlayer()).isNull();
-		assertThat(playerOrder.nextTurn()).isTrue();
 	}
 }

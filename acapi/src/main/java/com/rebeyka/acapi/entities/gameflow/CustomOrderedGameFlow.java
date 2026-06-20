@@ -48,11 +48,13 @@ public class CustomOrderedGameFlow extends RoundRobinGameFlow {
 	}
 
 	@Override
-	public boolean nextTurn() {
-		boolean endRound = super.nextTurn();
-		if (endRound) {
-			playerOrder = Arrays.copyOf(newOrder, newOrder.length);
-		}
-		return endRound;
+	public void nextRound() {
+		playerOrder = Arrays.copyOf(newOrder, newOrder.length);
+		super.nextRound();
+	}
+	
+	@Override
+	public void nextTurn() {
+		super.nextTurn();
 	}
 }

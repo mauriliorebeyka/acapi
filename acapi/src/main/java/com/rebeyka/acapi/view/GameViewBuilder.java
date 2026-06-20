@@ -29,11 +29,11 @@ public class GameViewBuilder {
 
 		gameAttributes.add(new AttributeView<String>("ID", game.getId()));
 		gameAttributes.add(new AttributeView<Integer>("Round", game.getGameFlow().getRound()));
-		if (game.getGameFlow().getCurrentPlayer() != null) {
+		if (game.getGameFlow().getCurrentPlayer() != game.NOBODY) {
 			gameAttributes
 					.add(new AttributeView<Player>("Current Player", game.getGameFlow().getCurrentPlayer()));
 		}
-		if (game.getGameFlow().getFirstPlayer() != null) {
+		if (game.getGameFlow().getFirstPlayer() != game.NOBODY) {
 			gameAttributes.add(new AttributeView<Player>("First Player", game.getGameFlow().getFirstPlayer()));
 		}
 		gameAttributes.add(new AttributeView<List<Player>>("Active Players",

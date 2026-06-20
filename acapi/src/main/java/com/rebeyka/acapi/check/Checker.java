@@ -15,5 +15,7 @@ public class Checker{
 	public static PlayableCheck<Playable> whenPlayable() {
 		return new PlayableCheck<>(new ArrayList<TestResult<Playable>>(), Function.identity());
 	}
+	
+	
 }
 

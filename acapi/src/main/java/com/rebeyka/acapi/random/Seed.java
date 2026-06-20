@@ -28,6 +28,10 @@ public class Seed {
 		instanceSeed = new Random(seed);
 	}
 	
+	public long nextLong() {
+		return nextValue();
+	}
+	
 	public double nextDouble() {
 		return Double.longBitsToDouble(nextValue());
 	}

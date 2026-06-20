@@ -18,7 +18,7 @@ public class NoPlayerGameFlow extends GameFlow {
 
 	@Override
 	public Player getCurrentPlayer() {
-		return null;
+		return game.NOBODY;
 	}
 
 	@Override
@@ -27,8 +27,8 @@ public class NoPlayerGameFlow extends GameFlow {
 	}
 
 	@Override
-	public boolean nextTurn() {
-		return true;
+	public void nextTurn(boolean pass) {
+		//EMPTY
 	}
 
 }

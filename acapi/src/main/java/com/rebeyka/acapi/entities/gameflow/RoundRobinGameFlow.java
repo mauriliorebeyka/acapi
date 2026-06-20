@@ -25,8 +25,8 @@ public class RoundRobinGameFlow extends GameFlow {
 
 	@Override
 	public Player getCurrentPlayer() {
-		if (currentPlayer == -1) {
-			return null;
+		if (allPlayersPassed()) {
+			return game.NOBODY;
 		} else {
 			return players.get(currentPlayer);
 		}
@@ -38,18 +38,16 @@ public class RoundRobinGameFlow extends GameFlow {
 	}
 
 	@Override
-	public boolean nextTurn() {
-		currentPlayer = (currentPlayer + 1) % players.size();
-		if (getFirstPlayer() == getCurrentPlayer()) {
-			if (staggerNewRound) {
-				currentPlayer = -1;
-			} else {
-				nextRound();
-			}
-			return true;
-		} else {
-			return false;
+	public void nextTurn(boolean pass) {
+		if (pass) {
+			passedPlayers.add(getCurrentPlayer());
 		}
+		if (allPlayersPassed()) {
+			return;
+		}
+		do {
+			currentPlayer = (currentPlayer + 1) % players.size();
+		} while (isPlayerPassed(getCurrentPlayer()));
 	}
 
 	@Override

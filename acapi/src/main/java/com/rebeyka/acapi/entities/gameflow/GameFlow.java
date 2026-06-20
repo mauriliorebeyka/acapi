@@ -1,6 +1,8 @@
 package com.rebeyka.acapi.entities.gameflow;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.rebeyka.acapi.builders.GameFlowBuilder;
 import com.rebeyka.acapi.entities.Game;
@@ -15,12 +17,12 @@ public abstract class GameFlow {
 	protected Game game;
 
 	protected List<Player> players;
+	
+	protected Set<Player> passedPlayers;
 
 	protected List<String> gamePhases;
 
 	protected FirstPlayerPolicy firstPlayerPolicy;
-
-	boolean staggerNewRound;
 
 	private int round;
 
@@ -39,8 +41,8 @@ public abstract class GameFlow {
 		this.gamePhases = builder.getGamePhases();
 		this.firstPlayerPolicy = builder.getFirstPlayerPolicy();
 		this.firstPlayerPolicy.setPlayers(players);
-		this.staggerNewRound = builder.isStaggerNewRound();
-
+		
+		this.passedPlayers = new HashSet<>();
 		this.round = builder.getInitialRound();
 	}
 
@@ -50,6 +52,7 @@ public abstract class GameFlow {
 
 	public void nextRound() {
 		round++;
+		passedPlayers.clear();
 		firstPlayer = firstPlayerPolicy.getNewFirstPlayer();
 	}
 
@@ -71,6 +74,14 @@ public abstract class GameFlow {
 		return players.stream().filter(this::isPlayerActive).toList();
 	}
 	
+	public boolean isPlayerPassed(Player player) {
+		return passedPlayers.contains(player);
+	}
+	
+	public boolean allPlayersPassed() {
+		return passedPlayers.containsAll(players);
+	}
+	
 	public boolean isCurrentPlayer(Player p) {
 		return p.equals(getCurrentPlayer());
 	}
@@ -78,13 +89,18 @@ public abstract class GameFlow {
 	public boolean nextPhase() {
 		if (this.currentGamePhase == this.gamePhases.size() - 1) {
 			this.currentGamePhase = 0;
-			return nextTurn();
+			nextTurn();
+			return true;
 		} else {
 			this.currentGamePhase++;
 			return false;
 		}
 	}
 
-	public abstract boolean nextTurn();
+	public void nextTurn() {
+		nextTurn(true);
+	}
+	
+	public abstract void nextTurn(boolean pass);
 
 }
