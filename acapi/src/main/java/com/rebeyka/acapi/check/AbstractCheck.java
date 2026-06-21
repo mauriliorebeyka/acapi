@@ -83,12 +83,10 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 			LOG.warn("No checks configured, failing check for {}",testedValue);
 			return false;
 		}
-		LOG.debug("Beginning checks for {}, total of {} checks", testedValue, testResults.size());
 		if (LOG.isTraceEnabled()) {
 			testResults.stream().forEach(t -> LOG.trace(t.getMessage(testedValue)));
 		}
 		long passedTests = testResults.stream().map(p -> p.test(testedValue)).filter(b -> b == true).count();
-		LOG.debug("Ending checks for {}, {}/{} checks passed", testedValue, passedTests,testResults.size());
 		return passedTests == testResults.size();
 	}
 

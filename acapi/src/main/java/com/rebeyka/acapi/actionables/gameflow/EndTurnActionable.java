@@ -6,13 +6,20 @@ import com.rebeyka.acapi.actionables.Actionable;
 
 public class EndTurnActionable extends Actionable {
 
+	private boolean pass;
+	
 	public EndTurnActionable() {
-		super("EndTurn");
+		this(true);
 	}
 
+	public EndTurnActionable(boolean pass) {
+		super("EndTurn");
+		this.pass = pass;
+	}
+	
 	@Override
 	public void execute() {
-		getParent().getGame().getGameFlow().nextTurn();
+		getParent().getGame().getGameFlow().nextTurn(pass);
 	}
 
 	@Override
@@ -28,6 +35,6 @@ public class EndTurnActionable extends Actionable {
 
 	@Override
 	public Supplier<Actionable> supply() {
-		return  () -> new EndTurnActionable();
+		return  () -> new EndTurnActionable(pass);
 	}
 }

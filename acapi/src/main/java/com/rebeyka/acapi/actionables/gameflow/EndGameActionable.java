@@ -9,15 +9,13 @@ import com.rebeyka.acapi.entities.gameflow.NoPlayerGameFlow;
 
 public class EndGameActionable extends Actionable {
 
-	private Game game;
-
-	public EndGameActionable(Game game) {
+	public EndGameActionable() {
 		super("END_GAME");
-		this.game = game;
 	}
 
 	@Override
 	public void execute() {
+		Game game = getParent().getGame();
 		game.setGameFlow(
 				new NoPlayerGameFlow(new GameFlowBuilder(game).withInitialRound(game.getGameFlow().getRound())));
 		game.end();
@@ -36,6 +34,6 @@ public class EndGameActionable extends Actionable {
 
 	@Override
 	public Supplier<Actionable> supply() {
-		return () -> new EndGameActionable(game);
+		return () -> new EndGameActionable();
 	}
 }
