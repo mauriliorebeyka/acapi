@@ -32,12 +32,16 @@ public abstract class Actionable implements Cloneable {
 		return condition.check(this);
 	}
 	
+	protected Actionable doClone() throws CloneNotSupportedException {
+		return (Actionable)this.clone();
+	}
+	
 	public Actionable copy(Play newParent) {
 		try {
-			Actionable copy = (Actionable) this.clone();
+			Actionable copy = (Actionable) doClone();
 			copy.parent = newParent;
 			return copy;
-		} catch (SecurityException | CloneNotSupportedException e) {
+		} catch (CloneNotSupportedException e) {
 			throw new ActionableCopyException(e);
 		}
 	}

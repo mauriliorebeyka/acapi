@@ -1,11 +1,15 @@
 package com.rebeyka.acapi.actionables;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.entities.gameflow.Play;
+import com.rebeyka.acapi.exceptions.ActionableCopyException;
 
 public class ActionableTest {
 
@@ -52,5 +56,12 @@ public class ActionableTest {
 		assertThat(actionable.getParent()).isNull();
 		assertThat(copy).extracting("field1","field2").containsExactly("TEST", "MODIFIED");
 		assertThat(copy.getParent()).isEqualTo(play);
+	}
+	
+	@Test
+	public void testUnableToCopy() throws CloneNotSupportedException {
+		TestActionable actionable = spy(new TestActionable());
+		doThrow(new CloneNotSupportedException()).when(actionable).doClone();
+		assertThrows(ActionableCopyException.class, () -> actionable.copy(null));
 	}
 }
