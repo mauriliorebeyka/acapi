@@ -23,7 +23,7 @@ public class TriggerTest {
 		assertThat(trigger.test(mockActionable)).isTrue();
 		Play triggeredPlay = trigger.getTriggeredPlay();
 		when(mockActionable.getParent()).thenReturn(triggeredPlay);
-		when(mockActionable.supply()).thenReturn(() -> mockActionable);
+		when(mockActionable.copy(play)).thenReturn(mockActionable);
 		when(triggeredPlay.getTriggeredBy()).thenReturn(trigger);
 		assertThat(trigger.test(triggeredPlay.getActionables().get(0))).isFalse();
 		assertThat(play).isSameAs(triggeredPlay);

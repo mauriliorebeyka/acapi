@@ -3,7 +3,6 @@ package com.rebeyka.acapi.actionables;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +47,7 @@ public abstract class CostActionable extends ConditionalActionable {
 		Play.Builder template = new Play.Builder().name("cost of " + getParent().getName()).cost(null)
 				.origin(getParent().getOrigin()).game(getParent().getGame());
 		costPlays = selectedChoices.reversed().stream()//.filter(p -> generatePlay(p) != null)
-				.map(p -> template.actionable(getActionable(p).get()).target(p).build()).toList();
+				.map(p -> template.actionable(getActionable(p)).target(p).build()).toList();
 		getParent().getGame().setSelectedChoices(Collections.emptyList());
 	}
 
@@ -57,6 +56,6 @@ public abstract class CostActionable extends ConditionalActionable {
 //		costPlays.reversed().forEach(p -> p);
 	}
 
-	public abstract Supplier<Actionable> getActionable(Playable playable);
+	public abstract Actionable getActionable(Playable playable);
 
 }

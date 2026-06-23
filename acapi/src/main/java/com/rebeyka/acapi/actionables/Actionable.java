@@ -1,11 +1,10 @@
 package com.rebeyka.acapi.actionables;
 
-import java.util.function.Supplier;
-
 import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.entities.gameflow.Play;
+import com.rebeyka.acapi.exceptions.ActionableCopyException;
 
-public abstract class Actionable {
+public abstract class Actionable implements Cloneable {
 
 	private String actionableId;
 
@@ -21,8 +20,6 @@ public abstract class Actionable {
 
 	public abstract String getMessage();
 
-	public abstract Supplier<Actionable> supply();
-	
 	public String getActionableId() {
 		return actionableId;
 	}
@@ -31,12 +28,18 @@ public abstract class Actionable {
 		return parent;
 	}
 
-	public void setParent(Play parent) {
-		this.parent = parent;
-	}
-
 	public boolean check(Checkable<Actionable> condition) {
 		return condition.check(this);
+	}
+	
+	public Actionable copy(Play newParent) {
+		try {
+			Actionable copy = (Actionable) this.clone();
+			copy.parent = newParent;
+			return copy;
+		} catch (SecurityException | CloneNotSupportedException e) {
+			throw new ActionableCopyException(e);
+		}
 	}
 	
 }

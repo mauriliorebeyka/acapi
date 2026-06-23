@@ -1,7 +1,5 @@
 package com.rebeyka.acapi.actionables.gameflow;
 
-import java.util.function.Supplier;
-
 import com.rebeyka.acapi.actionables.Actionable;
 
 public class EndRoundActionable extends Actionable{
@@ -27,9 +25,5 @@ public class EndRoundActionable extends Actionable{
 		return "Ending round";
 	}
 
-	@Override
-	public Supplier<Actionable> supply() {
-		return () -> new EndRoundActionable();
-	}
 
 }

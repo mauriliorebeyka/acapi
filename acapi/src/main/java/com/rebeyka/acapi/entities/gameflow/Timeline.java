@@ -46,8 +46,7 @@ public class Timeline {
 		LOG.info("Declaring play {} from {} against {}", newPlay.getName(), newPlay.getOrigin(), newPlay.getTargets());
 		int position = skipCurrentQueue ? currentPosition : actionables.size();
 		if (newPlay.getCost() != null) {
-			CostActionable costActionable = newPlay.getCost().getCostActionable();
-			costActionable.setParent(newPlay);
+			Actionable costActionable = newPlay.getCost().getCostActionable().copy(newPlay);
 			actionables.add(position++,costActionable);
 		}
 		actionables.addAll(position,newPlay.getActionables());

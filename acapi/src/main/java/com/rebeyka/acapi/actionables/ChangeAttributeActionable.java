@@ -2,7 +2,6 @@ package com.rebeyka.acapi.actionables;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
@@ -51,10 +50,5 @@ public class ChangeAttributeActionable<T extends Comparable<? super T>> extends 
 		return "Changing attribute %s on %s to %s".formatted(attribute.getName(), getParent().getOrigin(),
 				attribute.getValue());
 	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public Supplier<Actionable> supply() {
-		return () -> new ChangeAttributeActionable(getActionableId(), origin, attribute, function);
-	}
+	
 }

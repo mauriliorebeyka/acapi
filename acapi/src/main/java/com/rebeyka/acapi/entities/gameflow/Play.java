@@ -3,7 +3,6 @@ package com.rebeyka.acapi.entities.gameflow;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,9 +41,6 @@ public class Play {
 		this.actionables = builder.actionables;
 		this.triggeredBy = builder.triggeredBy;
 
-		if (this.cost != null) {
-			this.cost.getCostActionable().setParent(this);
-		}
 	}
 
 	public String getName() {
@@ -71,14 +67,9 @@ public class Play {
 	}
 
 	public List<Actionable> getActionables() {
-		return actionables.stream().map(Actionable::supply).map(this::enrich).collect(Collectors.toList());
+		return actionables.stream().map(actionable -> actionable.copy(this)).collect(Collectors.toList());
 	}
 
-	private Actionable enrich(Supplier<Actionable> supplier) {
-		Actionable actionable = supplier.get();
-		actionable.setParent(this);
-		return actionable;
-	}
 	
 	public List<Actionable> getActionableTemplates() {
 		return actionables;

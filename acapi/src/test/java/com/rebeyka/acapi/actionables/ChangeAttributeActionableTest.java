@@ -30,6 +30,7 @@ public class ChangeAttributeActionableTest {
 		assertThat(attribute.getValue()).isEqualTo(0);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testValue() {
 		Playable playable = mock(Playable.class);
@@ -38,9 +39,8 @@ public class ChangeAttributeActionableTest {
 		Attribute<Integer> attribute = new Attribute<Integer>("ATTR", 20, Types.integer(), playable);
 		when(game.getModifiedAttribute(playable, attribute)).thenReturn(attribute);
 		when(playable.getRawAttribute("ATTR", Types.integer())).thenReturn(attribute);
-		ChangeAttributeActionable<Integer> actionable = new ChangeAttributeActionable<Integer>("", playable, attribute, 33);
 		Play play = mock(Play.class);
-		actionable.setParent(play);
+		ChangeAttributeActionable<Integer> actionable = (ChangeAttributeActionable<Integer>)new ChangeAttributeActionable<Integer>("", playable, attribute, 33).copy(play);
 		when(playable.toString()).thenReturn("DUMMY PLAYABLE");
 		when(play.getOrigin()).thenReturn(playable);
 		actionable.execute();

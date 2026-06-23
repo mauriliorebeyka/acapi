@@ -1,7 +1,5 @@
 package com.rebeyka.acapi.actionables.gameflow;
 
-import java.util.function.Supplier;
-
 import com.rebeyka.acapi.actionables.Actionable;
 
 public class EndTurnActionable extends Actionable {
@@ -32,9 +30,5 @@ public class EndTurnActionable extends Actionable {
 	public String getMessage() {
 		return "%s ended their turn. Currently on round %s".formatted(getParent().getOrigin(),getParent().getOrigin().getGame().getGameFlow().getRound());
 	}
-
-	@Override
-	public Supplier<Actionable> supply() {
-		return  () -> new EndTurnActionable(pass);
-	}
+	
 }
