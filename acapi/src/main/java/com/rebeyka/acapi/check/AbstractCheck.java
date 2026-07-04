@@ -34,8 +34,10 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	protected SELF me(boolean newInstance) {
 		if (newInstance) {
 			try {
-				return (SELF) this.getClass().getDeclaredConstructor(List.class, Function.class)
+				SELF instance = (SELF) this.getClass().getDeclaredConstructor(List.class, Function.class)
 						.newInstance(testResults, this.function);
+				instance.gameAcessor = this.gameAcessor;
+				return instance;
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
 				LOG.atWarn().withThrowable(e).log("Failed to create new instance of {}", this.getClass());
