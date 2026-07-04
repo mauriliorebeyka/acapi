@@ -9,6 +9,8 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.rebeyka.acapi.entities.Game;
+
 public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, BASE, T> implements Checkable<BASE> {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -19,10 +21,13 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	
 	private boolean negate;
 	
-	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
+	protected Function<BASE, Game> gameAcessor;
+	
+	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function, Function<BASE, Game> gameAcessor) {
 		this.testResults = testResults == null ? new ArrayList<>() : testResults;
 		this.function = function;
 		this.negate = false;
+		this.gameAcessor = gameAcessor;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -70,7 +75,7 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 			finalPredicate = finalPredicate.negate();
 			description = "not "+description;
 		}
-		Function<BASE, Object> finalValue = t -> valueExtractor.apply(function.apply(t));
+		Function<BASE, ?> finalValue = t -> valueExtractor.apply(function.apply(t));
 		testResults.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
 	}
 
@@ -90,4 +95,15 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return passedTests == testResults.size();
 	}
 
+	@SuppressWarnings("unchecked")
+	public SELF anyOf(AbstractCheck<SELF,BASE,T>... checks) {
+		Predicate<BASE> any = _ -> false;
+		for (AbstractCheck<SELF,BASE,T> check : List.of(checks)) {
+			Predicate<BASE> or = base -> check.check(base);
+			any = any.or(or);
+		}
+		testResults.add(new TestResult<BASE>(any,f -> f,"any of",""));
+		return me();
+	}
+	
 }

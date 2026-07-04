@@ -2,6 +2,7 @@ package com.rebeyka.acapi.entities;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -106,6 +107,10 @@ public class Game {
 		return id;
 	}
 
+	public boolean declarePlay(Play play) {
+		return declarePlay(play, Collections.emptyList(), false);
+	}
+	
 	public boolean declarePlay(Play play, Playable target) {
 		return declarePlay(play, List.of(target), false);
 	}
@@ -299,6 +304,21 @@ public class Game {
 		return count;
 	}
 
+	public int countActionables(String actionableId, int stepsBack) {
+		List<Actionable> actionables = timeline.getExecutedActionables();
+		int count = 0;
+		for (int i = actionables.size() - 1; i >=0 && i - stepsBack + 1 >= 0; i--) {
+			if (actionables.get(i).getActionableId().equals(actionableId)) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public int countActionables() {
+		return timeline.getExecutedActionables().size();
+	}
+	
 	public List<Actionable> getQueuedActionables() {
 		return timeline.getQueuedActionables();
 	}

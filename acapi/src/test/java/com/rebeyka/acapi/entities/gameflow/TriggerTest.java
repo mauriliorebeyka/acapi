@@ -6,17 +6,36 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.check.Checker;
+import com.rebeyka.acapi.check.PlayableCheck;
+import com.rebeyka.acapi.entities.Playable;
 
 public class TriggerTest {
 
+	@Mock
+	private Play play;
+	
+	@Mock
+	private Playable playable;
+	
+	@BeforeEach
+	public void setup() {
+		MockitoAnnotations.openMocks(this);
+		
+		when(play.getOrigin()).thenReturn(playable);
+		when(play.getCondition()).thenReturn(Checker.whenPlayable().always());
+		when(playable.getId()).thenReturn("PLAYABLE_ID");
+	}
+	
 	@Test
 	public void testTriggeredPlay() {
 		Actionable mockActionable = mock(Actionable.class);
-		Play play = mock(Play.class);
 		when(play.getActionables()).thenReturn(List.of(mockActionable));
 		when(mockActionable.getParent()).thenReturn(play);
 		Trigger trigger = new Trigger(play);
@@ -31,14 +50,14 @@ public class TriggerTest {
 	
 	@Test
 	public void testTriggerByActionableId() {
-		Trigger trigger = new Trigger(mock(Play.class), "RIGHT");
+		Trigger trigger = new Trigger(play, "RIGHT");
 		
 		Actionable rightActionable = mock(Actionable.class);
 		when(rightActionable.getActionableId()).thenReturn("RIGHT");
-		when(rightActionable.getParent()).thenReturn(mock(Play.class));
+		when(rightActionable.getParent()).thenReturn(play);
 		Actionable wrongActionable = mock(Actionable.class);
 		when(wrongActionable.getActionableId()).thenReturn("WRONG");
-		when(wrongActionable.getParent()).thenReturn(mock(Play.class));
+		when(wrongActionable.getParent()).thenReturn(play);
 		
 		assertThat(trigger.test(rightActionable)).isTrue();
 		assertThat(trigger.test(wrongActionable)).isFalse();
@@ -47,10 +66,10 @@ public class TriggerTest {
 	@Test
 	public void testTriggerByCondition() {
 		Actionable mockActionable = mock(Actionable.class);
-		when(mockActionable.getParent()).thenReturn(mock(Play.class));
+		when(mockActionable.getParent()).thenReturn(play);
 		Actionable wrongActionable = mock(Actionable.class);
-		when(wrongActionable.getParent()).thenReturn(mock(Play.class));
-		Trigger trigger = new Trigger(Checker.whenActionable().is(mockActionable),mock(Play.class),"ALL");
+		when(wrongActionable.getParent()).thenReturn(play);
+		Trigger trigger = new Trigger(Checker.whenActionable().is(mockActionable),play,"ALL");
 		
 		assertThat(trigger.test(mockActionable)).isTrue();
 		assertThat(trigger.test(wrongActionable)).isFalse();

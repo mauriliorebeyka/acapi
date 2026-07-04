@@ -5,7 +5,7 @@ import com.rebeyka.acapi.actionables.Actionable;
 public class EndTurnActionable extends Actionable {
 
 	private boolean pass;
-	
+
 	public EndTurnActionable() {
 		this(true);
 	}
@@ -14,7 +14,7 @@ public class EndTurnActionable extends Actionable {
 		super("EndTurn");
 		this.pass = pass;
 	}
-	
+
 	@Override
 	public void execute() {
 		getParent().getGame().getGameFlow().nextTurn(pass);
@@ -28,7 +28,9 @@ public class EndTurnActionable extends Actionable {
 
 	@Override
 	public String getMessage() {
-		return "%s ended their turn. Currently on round %s".formatted(getParent().getOrigin(),getParent().getOrigin().getGame().getGameFlow().getRound());
+		return "%s ended their turn, active player is now %s. Currently on round %s".formatted(getParent().getOrigin(),
+				getParent().getOrigin().getGame().getGameFlow().getActivePlayers(),
+				getParent().getOrigin().getGame().getGameFlow().getRound());
 	}
-	
+
 }

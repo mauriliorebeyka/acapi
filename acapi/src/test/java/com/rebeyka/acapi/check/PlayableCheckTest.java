@@ -25,9 +25,20 @@ public class PlayableCheckTest {
 		when(gameflow.isPlayerActive(player)).thenReturn(true);
 		player.setGame(game);
 		player.getRawAttribute("title", Types.string()).setValue("A TITLE");
-		when(game.getModifiedAttribute(player, player.getRawAttribute("title", Types.string()))).thenReturn(player.getRawAttribute("title", Types.string()));
+		when(game.getModifiedAttribute(player, player.getRawAttribute("title", Types.string())))
+				.thenReturn(player.getRawAttribute("title", Types.string()));
 		PlayableCheck<Playable> checker = Checker.whenPlayable();
 		checker.not().is(another).attribute("title").is("A TITLE").not().sameValue("TITLE").isActivePlayer();
 		assertThat(checker.check(player)).isTrue();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testAnyOf() {
+		PlayableCheck<Playable> always = Checker.whenPlayable().always();
+		PlayableCheck<Playable> never = Checker.whenPlayable().not().always();
+		assertThat(Checker.whenPlayable().anyOf(always).check(null)).isTrue();
+		assertThat(Checker.whenPlayable().anyOf(never).check(null)).isFalse();
+		assertThat(Checker.whenPlayable().anyOf(always,never).check(null)).isTrue();
 	}
 }

@@ -2,10 +2,13 @@ package com.rebeyka.acapi.check;
 
 import java.util.function.Function;
 
+import com.rebeyka.acapi.entities.Game;
+
 public class IntegerCheck<BASE, T, ROOT extends AbstractCheck<? extends AbstractCheck<?,BASE,T>,BASE,T>>
 		extends ValueCheck<IntegerCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
-	protected IntegerCheck(ROOT root, Function<BASE, Integer> function, String testedField) {
-		super(root, function, testedField);
+	
+	protected IntegerCheck(ROOT root, Function<BASE, Integer> function, String testedField, Function<BASE, Game> gameAcessor) {
+		super(root, function, testedField, gameAcessor);
 	}
 
 	public ROOT biggerThan(int value) {

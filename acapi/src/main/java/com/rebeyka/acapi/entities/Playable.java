@@ -34,10 +34,14 @@ public abstract class Playable {
 		return plays;
 	}
 
+	public Play getPlay(String name) {
+		return plays.stream().filter(p -> p.getName().equals(name)).findFirst().get();
+	}
+	
 	public void setPlays(List<Play> plays) {
 		this.plays = plays;
 	}
-
+	
 	public Set<String> getAttributes() {
 		return attributes.keySet();
 	}

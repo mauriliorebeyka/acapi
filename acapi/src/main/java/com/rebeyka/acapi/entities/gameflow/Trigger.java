@@ -35,12 +35,12 @@ public class Trigger {
 		if (this.equals(triggeringActionable.getParent().getTriggeredBy())) {
 			return false;
 		}
-		LOG.info("Testing trigger %s against %s".formatted(triggerOnActionableId,
-				triggeringActionable.getActionableId()));
+		LOG.info("Testing trigger {} against actionableId {} from {}",triggerOnActionableId,
+				triggeringActionable.getActionableId(),triggeringActionable.getParent().getOrigin().getId());
 		boolean matchingId = triggerOnActionableId.equals("ALL")
 				|| triggerOnActionableId.equals(triggeringActionable.getActionableId());
-		if (matchingId && condition.check(triggeringActionable)) {
-			LOG.debug("Test passed, triggering play {}", playToTrigger.getName());
+		if (matchingId && condition.check(triggeringActionable) && playToTrigger.getCondition().check(playToTrigger.getOrigin())) {
+			LOG.debug("Test passed, triggering play {} from {} ", playToTrigger.getName(), playToTrigger.getOrigin());
 			return true;
 		} else {
 			return false;

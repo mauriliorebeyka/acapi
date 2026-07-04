@@ -10,11 +10,11 @@ import com.rebeyka.acapi.entities.Types;
 public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE, Playable> {
 
 	protected PlayableCheck(List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
-		super(testResults, function);
+		super(testResults, function, g -> function.apply(g).getGame());
 	}
 	
 	public StringCheck<BASE, Playable, PlayableCheck<BASE>> id() {
-		return new StringCheck<>(this, p -> function.apply(p).getId(), "Playable ID");
+		return new StringCheck<>(this, p -> function.apply(p).getId(), "Playable ID", p -> function.apply(p).getGame());
 	}
 	
 	public PlayableCheck<BASE> isPlayer() {
@@ -33,10 +33,19 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 	}
 	
 	public StringCheck<BASE, Playable, PlayableCheck<BASE>> attribute(String attribute) {
-		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, Types.string()).getValue(), "string attribute %s".formatted(attribute));
+		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, Types.string()).getValue(), "string attribute %s".formatted(attribute), p -> function.apply(p).getGame());
 	}
 	
 	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {
-		return new IntegerCheck<>(this, p -> (function.apply(p).getAttribute(attribute, Types.integer())).getValue(),"integer attribute %s".formatted(attribute));
+		return new IntegerCheck<>(this, p -> (function.apply(p).getAttribute(attribute, Types.integer())).getValue(),"integer attribute %s".formatted(attribute), p -> function.apply(p).getGame());
+	}
+	
+	public TimelineCheck<BASE, Playable, PlayableCheck<BASE>> happened(String actionableId) {
+		return new TimelineCheck<>(this, g -> function.apply(g).getGame(), actionableId);
+	}
+	
+	public PlayableCheck<BASE> gameStart() {
+		addTest(p -> p.getGame().countActionables() == 0, "no actionable", "has executed");
+		return me();
 	}
 }

@@ -31,7 +31,7 @@ public class DefaultPlayFactory implements PlayFactory {
 	@Override
 	public Play fromTrigger(Play triggeringPlay, Trigger trigger) {
 		return new Play.Builder(trigger.getTriggeredPlay()).targets(triggeringPlay.getTargets()).game(game).triggeredBy(trigger)
-				.origin(triggeringPlay.getOrigin()).build();
+				.origin(trigger.getTriggeredPlay().getOrigin()).build();
 	}
 	
 }

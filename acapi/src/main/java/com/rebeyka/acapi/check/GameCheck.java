@@ -8,7 +8,7 @@ import com.rebeyka.acapi.entities.Game;
 public class GameCheck<BASE> extends AbstractCheck<GameCheck<BASE>, BASE, Game> {
 
 	protected GameCheck(List<TestResult<BASE>> testResults, Function<BASE, Game> function) {
-		super(testResults, function);
+		super(testResults, function, game -> (Game)game);
 	}
 
 	public GameCheck<BASE> allPlayersPassed() {

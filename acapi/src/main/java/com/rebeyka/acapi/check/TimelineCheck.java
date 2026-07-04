@@ -17,9 +17,12 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 
 	private String predicateDescription;
 
-	protected TimelineCheck(ROOT root, Function<BASE, Game> gameAcessor, String testedField) {
-		super(root, null, testedField);
+	private Function<BASE, Game> gameAcessor;
+	
+	protected TimelineCheck(ROOT root, Function<BASE, Game> gameAcessor, String actionableId) {
+		super(root, null, actionableId, gameAcessor);
 		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
+		this.gameAcessor = gameAcessor;
 		times = 1;
 		timesPredicate = i -> i == times;
 		predicateDescription = "happened %s times since %s";
@@ -38,6 +41,16 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 		return root();
 	}
 
+	public ROOT last(int x) {
+		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), x);
+		addValueTest(predicateDescription.formatted(times, x), timesPredicate);
+		return root();
+	}
+	
+	public ROOT last() {
+		return last(1);
+	}
+	
 	private String getSearchedActionableId(Object value) {
 		if (testedField.equals("this actionable") && value instanceof Actionable actionable) {
 			return actionable.getActionableId();

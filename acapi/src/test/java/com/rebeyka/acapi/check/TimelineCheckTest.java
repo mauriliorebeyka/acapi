@@ -26,4 +26,9 @@ public class TimelineCheckTest {
 		when(actionable2.getActionableId()).thenReturn("test");
 		assertThat(whenActionable().id().sameValue("actionable").happened().sinceStart().check(actionable)).isTrue();
 	}
+	
+	@Test
+	public void testLast() {
+		
+	}
 }

@@ -7,11 +7,11 @@ import com.rebeyka.acapi.actionables.Actionable;
 public class ActionableCheck<BASE> extends AbstractCheck<ActionableCheck<BASE>, BASE, Actionable> {
 
 	protected ActionableCheck(List<TestResult<BASE>> testResults, Function<BASE, Actionable> function) {
-		super(testResults, function);
+		super(testResults, function, a -> function.apply(a).getParent().getGame());
 	}
 	
 	public StringCheck<BASE, Actionable, ActionableCheck<BASE>> id() {
-		return new StringCheck<>(this, a -> function.apply(a).getActionableId(), "Actionable ID");
+		return new StringCheck<>(this, a -> function.apply(a).getActionableId(), "Actionable ID", a -> function.apply(a).getParent().getGame());
 	}
 	
 	public PlayableCheck<BASE> origin() {
