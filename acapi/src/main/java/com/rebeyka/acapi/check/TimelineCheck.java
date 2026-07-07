@@ -4,6 +4,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.rebeyka.acapi.actionables.Actionable;
+import com.rebeyka.acapi.actionables.gameflow.EndRoundActionable;
+import com.rebeyka.acapi.actionables.gameflow.EndTurnActionable;
 import com.rebeyka.acapi.entities.Game;
 
 public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?,BASE,T>>
@@ -23,9 +25,7 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 		super(root, null, actionableId, gameAcessor);
 		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
 		this.gameAcessor = gameAcessor;
-		times = 1;
-		timesPredicate = i -> i == times;
-		predicateDescription = "happened %s times since %s";
+		atLeast(1);
 	}
 
 	public TimelineCheck<BASE, T, ROOT> atLeast(int number) {
@@ -35,10 +35,36 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 		return this;
 	}
 
+	public TimelineCheck<BASE, T, ROOT> atMost(int number) {
+		times = number;
+		timesPredicate = i -> i <= number;
+		predicateDescription = "happened at most %s times since %s";
+		return this;
+	}
+	
+	public TimelineCheck<BASE, T, ROOT> exactly(int number) {
+		times = number;
+		timesPredicate = i -> i <= number;
+		predicateDescription = "happened exactly %s times since %s";
+		return this;
+	}
+	
 	public ROOT since(String bound) {
 		this.bound = bound;
 		addValueTest(predicateDescription.formatted(times, bound.equals("") ? "start" : bound), timesPredicate);
 		return root();
+	}
+	
+	public ROOT sinceStart() {
+		return since("");
+	}
+	
+	public ROOT thisTurn() {
+		return since(EndTurnActionable.ID);
+	}
+	
+	public ROOT thisRound() {
+		return since(EndRoundActionable.ID);
 	}
 
 	public ROOT last(int x) {
@@ -52,15 +78,11 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 	}
 	
 	private String getSearchedActionableId(Object value) {
-		if (testedField.equals("this actionable") && value instanceof Actionable actionable) {
+		if (testedField.isBlank() && value instanceof Actionable actionable) {
 			return actionable.getActionableId();
 		} else {
 			return testedField;
 		}
 	}
-
-	public ROOT sinceStart() {
-		return since("");
-	}
-
+	
 }

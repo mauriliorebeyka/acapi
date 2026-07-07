@@ -65,6 +65,27 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return me(false);
 	}
 
+	@SuppressWarnings("unchecked")
+	public SELF anyOf(AbstractCheck<SELF,BASE,T>... checks) {
+		Predicate<BASE> any = _ -> false;
+		for (AbstractCheck<SELF,BASE,T> check : List.of(checks)) {
+			Predicate<BASE> or = base -> check.check(base);
+			any = any.or(or);
+		}
+		testResults.add(new TestResult<BASE>(any,f -> f,"any of",""));
+		return me();
+	}
+	
+	public SELF allOf(AbstractCheck<SELF,BASE,T>... checks) {
+		Predicate<BASE> all = _ -> true;
+		for (AbstractCheck<SELF,BASE,T> check : List.of(checks)) {
+			Predicate<BASE> and = base -> check.check(base);
+			all = all.and(and);
+		}
+		testResults.add(new TestResult<BASE>(all, f -> f,"all of",""));
+		return me();
+	}
+	
 	public SELF custom(Predicate<T> custom) {
 		addTest(custom, "", "passes custom check");
 		return me();
@@ -97,15 +118,17 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return passedTests == testResults.size();
 	}
 
-	@SuppressWarnings("unchecked")
-	public SELF anyOf(AbstractCheck<SELF,BASE,T>... checks) {
-		Predicate<BASE> any = _ -> false;
-		for (AbstractCheck<SELF,BASE,T> check : List.of(checks)) {
-			Predicate<BASE> or = base -> check.check(base);
-			any = any.or(or);
-		}
-		testResults.add(new TestResult<BASE>(any,f -> f,"any of",""));
-		return me();
+	public GameCheck<BASE> game() {
+		return new GameCheck<BASE>(testResults, gameAcessor);
 	}
+	
+	public TimelineCheck<BASE, T, ? extends AbstractCheck<?,BASE,T>> happened() {
+		return happened("");
+	}
+	
+	public TimelineCheck<BASE, T, ? extends AbstractCheck<?,BASE,T>> happened(String actionableId) {
+		return new TimelineCheck<>(this, gameAcessor, actionableId);
+	}
+	
 	
 }

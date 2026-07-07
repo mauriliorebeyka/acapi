@@ -6,12 +6,14 @@ public class EndTurnActionable extends Actionable {
 
 	private boolean pass;
 
+	public static final String ID = "EndTurn";
+	
 	public EndTurnActionable() {
 		this(true);
 	}
 
 	public EndTurnActionable(boolean pass) {
-		super("EndTurn");
+		super(ID);
 		this.pass = pass;
 	}
 

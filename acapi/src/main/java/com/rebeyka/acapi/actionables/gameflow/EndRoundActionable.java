@@ -4,9 +4,10 @@ import com.rebeyka.acapi.actionables.Actionable;
 
 public class EndRoundActionable extends Actionable{
 
+	public static final String ID = "EndRound";
+	
 	public EndRoundActionable() {
-		super("End round");
-		// TODO Auto-generated constructor stub
+		super(ID);
 	}
 
 	@Override

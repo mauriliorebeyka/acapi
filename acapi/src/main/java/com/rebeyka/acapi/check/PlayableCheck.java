@@ -39,13 +39,4 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {
 		return new IntegerCheck<>(this, p -> (function.apply(p).getAttribute(attribute, Types.integer())).getValue(),"integer attribute %s".formatted(attribute), p -> function.apply(p).getGame());
 	}
-	
-	public TimelineCheck<BASE, Playable, PlayableCheck<BASE>> happened(String actionableId) {
-		return new TimelineCheck<>(this, g -> function.apply(g).getGame(), actionableId);
-	}
-	
-	public PlayableCheck<BASE> gameStart() {
-		addTest(p -> p.getGame().countActionables() == 0, "no actionable", "has executed");
-		return me();
-	}
 }
