@@ -39,7 +39,7 @@ abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T,
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected SELF me(boolean newInstance) {
+	protected SELF self(boolean newInstance) {
 		if (newInstance) {
 			try {
 				return (SELF) this.getClass().getDeclaredConstructor(AbstractCheck.class, Function.class, String.class)
@@ -55,7 +55,7 @@ abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T,
 	protected void addValueTest(String name, Predicate<T> predicate) {
 		addTest(predicate, testedField, name);
 	}
-
+	
 	public ROOT sameValue(T value) {
 		addValueTest("is %s".formatted(value), s -> s.equals(value));
 		return root();

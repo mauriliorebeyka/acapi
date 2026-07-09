@@ -10,12 +10,12 @@ public class ActionableCheck<BASE> extends AbstractCheck<ActionableCheck<BASE>, 
 		super(testResults, function, a -> function.apply(a).getParent().getGame());
 	}
 	
-	public StringCheck<BASE, Actionable, ActionableCheck<BASE>> id() {
+	public StringCheck<BASE, Actionable, ActionableCheck<BASE>> hasId() {
 		return new StringCheck<>(this, a -> function.apply(a).getActionableId(), "Actionable ID", a -> function.apply(a).getParent().getGame());
 	}
 	
 	public PlayableCheck<BASE> origin() {
 		return new PlayableCheck<>(testResults, t -> function.apply(t).getParent().getOrigin());
 	}
-	
+    
 }

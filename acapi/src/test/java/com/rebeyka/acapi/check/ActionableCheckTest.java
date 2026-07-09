@@ -20,7 +20,7 @@ public class ActionableCheckTest {
 	@Test
 	public void test() {
 		ActionableCheck<Actionable> a = Checker.whenActionable();
-		a.id().sameValue("ID").origin().id().sameValue("PLAYER ID");
+		a.hasId().sameValue("ID").origin().hasId().sameValue("PLAYER ID");
 		Actionable actionable = mock(Actionable.class);
 		Play play = mock(Play.class);
 		Player player = mock(Player.class);
@@ -33,11 +33,11 @@ public class ActionableCheckTest {
 		when(player.getAttribute("HP", Types.string())).thenReturn(attribute);
 		when(player.getId()).thenReturn("PLAYER ID");
 		when(player.getAttribute("int", Types.integer())).thenReturn((Attribute<Integer>)intAttribute);
-		assertThat(whenActionable().id().sameValue("ID").not().origin().attributeAsInt("int").biggerThan(5).attribute("HP")
+		assertThat(whenActionable().hasId().sameValue("ID").not().origin().attributeAsInt("int").biggerThan(5).attribute("HP")
 				.sameValue("55").attribute("HP").is("55").contains("5").isPlayer().check(actionable)).isTrue();
-		assertThat(whenPlayable().id().sameValue("PLAYER ID").check(player)).isTrue();
+		assertThat(whenPlayable().hasId().sameValue("PLAYER ID").check(player)).isTrue();
 		assertThat(a.check(actionable)).isTrue();
-		assertThat(actionable.check(whenActionable().id().is("ID"))).isTrue();
+		assertThat(actionable.check(whenActionable().hasId().is("ID"))).isTrue();
 	}
 	
 	@Test

@@ -13,23 +13,23 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 		super(testResults, function, g -> function.apply(g).getGame());
 	}
 	
-	public StringCheck<BASE, Playable, PlayableCheck<BASE>> id() {
+	public StringCheck<BASE, Playable, PlayableCheck<BASE>> hasId() {
 		return new StringCheck<>(this, p -> function.apply(p).getId(), "Playable ID", p -> function.apply(p).getGame());
 	}
 	
 	public PlayableCheck<BASE> isPlayer() {
 		addTest(p -> p instanceof Player, f -> f.getClass(), "Playable type", "is Player");
-		return me();
+		return self();
 	}
 	
 	public PlayableCheck<BASE> isCurrentPlayer() {
 		addTest(p -> p.equals(p.getGame().getGameFlow().getCurrentPlayer()), f -> f.getGame().getGameFlow().getCurrentPlayer(), "Player", "is current player");
-		return me();
+		return self();
 	}
 	
 	public PlayableCheck<BASE> isActivePlayer() {
 		addTest(p -> p instanceof Player player && p.getGame().getGameFlow().isPlayerActive(player), "Player", "is active player");
-		return me();
+		return self();
 	}
 	
 	public StringCheck<BASE, Playable, PlayableCheck<BASE>> attribute(String attribute) {

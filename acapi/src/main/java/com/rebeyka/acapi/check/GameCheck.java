@@ -13,6 +13,6 @@ public class GameCheck<BASE> extends AbstractCheck<GameCheck<BASE>, BASE, Game> 
 
 	public GameCheck<BASE> allPlayersPassed() {
 		addTest(g -> g.getGameFlow().allPlayersPassed(),"all players passed","passed");
-		return me();
+		return self();
 	}
 }

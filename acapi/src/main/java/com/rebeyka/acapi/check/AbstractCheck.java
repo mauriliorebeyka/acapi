@@ -31,7 +31,7 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	}
 
 	@SuppressWarnings("unchecked")
-	protected SELF me(boolean newInstance) {
+	protected SELF self(boolean newInstance) {
 		if (newInstance) {
 			try {
 				SELF instance = (SELF) this.getClass().getDeclaredConstructor(List.class, Function.class)
@@ -46,23 +46,23 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return (SELF) this;
 	}
 
-	protected SELF me() {
-		return me(true);
+	protected SELF self() {
+		return self(true);
 	}
 
 	public SELF always() {
 		addTest(_ -> true, "always", "always");
-		return me();
+		return self();
 	}
 	
 	public SELF is(T other) {
 		addTest(p -> p == other, "value %s".formatted(other.toString()), "is the same object");
-		return me();
+		return self();
 	}
 
 	public SELF not() {
 		negate = true;
-		return me(false);
+		return self(false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,7 +73,7 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 			any = any.or(or);
 		}
 		testResults.add(new TestResult<BASE>(any,f -> f,"any of",""));
-		return me();
+		return self();
 	}
 	
 	public SELF allOf(AbstractCheck<SELF,BASE,T>... checks) {
@@ -83,12 +83,12 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 			all = all.and(and);
 		}
 		testResults.add(new TestResult<BASE>(all, f -> f,"all of",""));
-		return me();
+		return self();
 	}
 	
 	public SELF custom(Predicate<T> custom) {
 		addTest(custom, "", "passes custom check");
-		return me();
+		return self();
 	}
 	
 	protected void addTest(Predicate<T> predicate, Function<T, Object> valueExtractor, String field,

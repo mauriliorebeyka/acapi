@@ -34,7 +34,11 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 		predicateDescription = "happened at least %s times since %s";
 		return this;
 	}
-
+	
+	public TimelineCheck<BASE, T, ROOT> atLeastOnce() {
+		return atLeast(1);
+	}
+	
 	public TimelineCheck<BASE, T, ROOT> atMost(int number) {
 		times = number;
 		timesPredicate = i -> i <= number;
@@ -42,11 +46,19 @@ extends ValueCheck<TimelineCheck<BASE,T,ROOT>, BASE, Integer, ROOT> {
 		return this;
 	}
 	
+	public TimelineCheck<BASE, T, ROOT> atMostOnce() {
+		return atMost(1);
+	}
+	
 	public TimelineCheck<BASE, T, ROOT> exactly(int number) {
 		times = number;
-		timesPredicate = i -> i <= number;
+		timesPredicate = i -> i == number;
 		predicateDescription = "happened exactly %s times since %s";
 		return this;
+	}
+	
+	public TimelineCheck<BASE, T, ROOT> once() {
+		return exactly(1);
 	}
 	
 	public ROOT since(String bound) {
