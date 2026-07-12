@@ -9,6 +9,14 @@ public class ActionableCheck<BASE> extends AbstractCheck<ActionableCheck<BASE>, 
 	protected ActionableCheck(List<TestResult<BASE>> testResults, Function<BASE, Actionable> function) {
 		super(testResults, function, a -> function.apply(a).getParent().getGame());
 	}
+
+	@Override
+	protected ActionableCheck<BASE> self(boolean newInstance) {
+		if (newInstance) {
+			return new ActionableCheck<>(testResults, this.function);
+		}
+		return this;
+	}
 	
 	public StringCheck<BASE, ActionableCheck<BASE>> hasId() {
 		return new StringCheck<>(this, a -> function.apply(a).getActionableId(), "Actionable ID", a -> function.apply(a).getParent().getGame());

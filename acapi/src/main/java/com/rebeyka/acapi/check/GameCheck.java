@@ -11,6 +11,14 @@ public class GameCheck<BASE> extends AbstractCheck<GameCheck<BASE>, BASE, Game> 
 		super(testResults, function, game -> (Game)game);
 	}
 
+	@Override
+	protected GameCheck<BASE> self(boolean newInstance) {
+		if (newInstance) {
+			return new GameCheck<>(testResults, this.function);
+		}
+		return this;
+	}
+
 	public GameCheck<BASE> allPlayersPassed() {
 		addTest(g -> g.getGameFlow().allPlayersPassed(),"all players passed","passed");
 		return self();

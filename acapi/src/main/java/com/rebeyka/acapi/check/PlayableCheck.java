@@ -5,12 +5,19 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
-import com.rebeyka.acapi.entities.Types;
 
 public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE, Playable> {
 
 	protected PlayableCheck(List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
 		super(testResults, function, g -> function.apply(g).getGame());
+	}
+    
+	@Override
+	protected PlayableCheck<BASE> self(boolean newInstance) {
+		if (newInstance) {
+			return new PlayableCheck<>(testResults, this.function);
+		}
+		return this;
 	}
 	
 	public StringCheck<BASE, PlayableCheck<BASE>> hasId() {
@@ -32,15 +39,8 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 		return self();
 	}
 	
-//	public StringCheck<BASE, PlayableCheck<BASE>> attribute(String attribute) {
-//		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, Types.string()).getValue(), "string attribute %s".formatted(attribute), p -> function.apply(p).getGame());
-//	}
-	
 	public AttributeCheck<BASE,PlayableCheck<BASE>> attribute(String attributeName) {
 		return new AttributeCheck<>(this, testResults, function, attributeName);
 	}
 	
-	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {
-		return new IntegerCheck<>(this, p -> (function.apply(p).getAttribute(attribute, Types.integer())).getValue(),"integer attribute %s".formatted(attribute), p -> function.apply(p).getGame());
-	}
 }

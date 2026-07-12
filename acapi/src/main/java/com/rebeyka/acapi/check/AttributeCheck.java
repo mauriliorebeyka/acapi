@@ -25,11 +25,23 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, BASE, ?>>
 
 	public AttributeCheck<BASE, ROOT> self(Function<Playable, Attribute<?>> attributeAcessor,
 			Function<Attribute<?>, ?> valueAcessor) {
-		AttributeCheck<BASE, ROOT> newInstance = new AttributeCheck<BASE, ROOT>(root(), testResults, function,
+		AttributeCheck<BASE, ROOT> newInstance = new AttributeCheck<BASE, ROOT>(root, testResults, function,
 				attributeName);
 		newInstance.attributeAcessor = attributeAcessor;
 		newInstance.valueAcessor = valueAcessor;
 		return newInstance;
+	}
+
+	@Override
+	protected AttributeCheck<BASE, ROOT> self(boolean newInstance) {
+		if (newInstance) {
+			AttributeCheck<BASE, ROOT> newInstanceCheck = new AttributeCheck<>(root, testResults, function,
+					attributeName);
+			newInstanceCheck.attributeAcessor = this.attributeAcessor;
+			newInstanceCheck.valueAcessor = this.valueAcessor;
+			return newInstanceCheck;
+		}
+		return this;
 	}
 
 	public AttributeCheck<BASE, ROOT> raw() {
@@ -50,23 +62,23 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, BASE, ?>>
 
 	public ROOT exists() {
 		addTest(p -> attributeAcessor.apply(p) != null, attributeName, "exists");
-		return root();
+		return root;
 	}
 
 	public ROOT sameValueAs(Object value) {
 		addTest(p -> valueAcessor.apply(attributeAcessor.apply(p)).equals(value),
 				p -> valueAcessor.apply(attributeAcessor.apply(p)), attributeName, "has the same value as");
-		return root();
+		return root;
 	}
 
-	public IntegerCheck<BASE, Playable, ROOT> asInt() {
-		return new IntegerCheck<BASE, Playable, ROOT>(root(),
+	public IntegerCheck<BASE, ROOT> asInt() {
+		return new IntegerCheck<>(root,
 				p -> (int) valueAcessor.apply(attributeAcessor.apply(function.apply(p))),
 				"integer attribute %s".formatted(attributeName), gameAcessor);
 	}
 
 	public StringCheck<BASE, ROOT> asString() {
-		return new StringCheck<BASE, ROOT>(root(),
+		return new StringCheck<BASE, ROOT>(root,
 				p -> (String) valueAcessor.apply(attributeAcessor.apply(function.apply(p))),
 				"String attribute %s".formatted(attributeName), gameAcessor);
 	}

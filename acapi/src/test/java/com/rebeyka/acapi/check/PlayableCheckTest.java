@@ -11,6 +11,7 @@ import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.entities.Types;
 import com.rebeyka.acapi.entities.gameflow.GameFlow;
+import java.util.List;
 
 public class PlayableCheckTest {
 
@@ -32,13 +33,12 @@ public class PlayableCheckTest {
 		assertThat(checker.check(player)).isTrue();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testAnyOf() {
 		PlayableCheck<Playable> always = Checker.whenPlayable().always();
 		PlayableCheck<Playable> never = Checker.whenPlayable().not().always();
-		assertThat(Checker.whenPlayable().anyOf(always).check(null)).isTrue();
-		assertThat(Checker.whenPlayable().anyOf(never).check(null)).isFalse();
-		assertThat(Checker.whenPlayable().anyOf(always,never).check(null)).isTrue();
+		assertThat(Checker.whenPlayable().anyOf(List.of(always)).check(null)).isTrue();
+		assertThat(Checker.whenPlayable().anyOf(List.of(never)).check(null)).isFalse();
+		assertThat(Checker.whenPlayable().anyOf(List.of(always, never)).check(null)).isTrue();
 	}
 }

@@ -1,6 +1,5 @@
 package com.rebeyka.acapi.check;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -30,21 +29,7 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		this.gameAcessor = gameAcessor;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected SELF self(boolean newInstance) {
-		if (newInstance) {
-			try {
-				SELF instance = (SELF) this.getClass().getDeclaredConstructor(List.class, Function.class)
-						.newInstance(testResults, this.function);
-				instance.gameAcessor = this.gameAcessor;
-				return instance;
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				LOG.atWarn().withThrowable(e).log("Failed to create new instance of {}", this.getClass());
-			}
-		}
-		return (SELF) this;
-	}
+	protected abstract SELF self(boolean newInstance);
 
 	protected SELF self() {
 		return self(true);
@@ -65,10 +50,9 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return self(false);
 	}
 
-	@SuppressWarnings("unchecked")
-	public SELF anyOf(AbstractCheck<SELF,BASE,T>... checks) {
+	public SELF anyOf(List<AbstractCheck<SELF,BASE,T>> checks) {
 		Predicate<BASE> any = _ -> false;
-		for (AbstractCheck<SELF,BASE,T> check : List.of(checks)) {
+		for (AbstractCheck<SELF,BASE,T> check : checks) {
 			Predicate<BASE> or = base -> check.check(base);
 			any = any.or(or);
 		}
@@ -76,9 +60,9 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return self();
 	}
 	
-	public SELF allOf(AbstractCheck<SELF,BASE,T>... checks) {
+	public SELF allOf(List<AbstractCheck<SELF,BASE,T>> checks) {
 		Predicate<BASE> all = _ -> true;
-		for (AbstractCheck<SELF,BASE,T> check : List.of(checks)) {
+		for (AbstractCheck<SELF,BASE,T> check : checks) {
 			Predicate<BASE> and = base -> check.check(base);
 			all = all.and(and);
 		}

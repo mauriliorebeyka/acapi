@@ -11,9 +11,17 @@ extends ValueCheck<StringCheck<BASE, ROOT>, BASE, String, ROOT> {
 		super(root, function, testedField, gameAcessor);
 	}
 
+	@Override
+	protected StringCheck<BASE, ROOT> self(boolean newInstance) {
+		if (newInstance) {
+			return new StringCheck<>(root, function, testedField, gameAcessor);
+		}
+		return this;
+	}
+
 	public ROOT contains(String value) {
 		addValueTest("contains %s".formatted(value), s -> s.contains(value));
-		return root();
+		return root;
 	}
 
 }

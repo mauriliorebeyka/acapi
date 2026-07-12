@@ -1,7 +1,5 @@
 package com.rebeyka.acapi.check;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -15,7 +13,7 @@ public abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, B
 
 	private static final Logger LOG = LogManager.getLogger();
 
-	private ROOT root;
+	protected ROOT root;
 
 	protected String testedField;
 
@@ -25,39 +23,12 @@ public abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, B
 		this.testedField = testedField;
 	}
 
-	@SuppressWarnings("unchecked")
-	protected ROOT root() {
-		try {
-			return (ROOT) root.getClass().getDeclaredConstructor(List.class, Function.class).newInstance(testResults,
-					root.function);
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			LOG.warn("Class {} failed to create a new instance: {}", root.getClass(), e.getMessage());
-			return root;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	protected SELF self(boolean newInstance) {
-		if (newInstance) {
-			try {
-				return (SELF) this.getClass().getDeclaredConstructor(AbstractCheck.class, Function.class, String.class)
-						.newInstance(this.root, this.function, this.testedField);
-			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-					| InvocationTargetException | NoSuchMethodException | SecurityException e) {
-				LOG.warn("Failed to create new instance of %s".formatted(this.getClass()), e);
-			}
-		}
-		return (SELF) this;
-	}
-
 	protected void addValueTest(String name, Predicate<T> predicate) {
 		addTest(predicate, testedField, name);
 	}
 	
 	public ROOT isEqualsTo(T value) {
 		addValueTest("is %s".formatted(value), s -> s.equals(value));
-		return root();
+		return root;
 	}
 }
