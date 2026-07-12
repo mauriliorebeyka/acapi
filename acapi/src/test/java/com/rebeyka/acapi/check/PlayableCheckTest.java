@@ -28,7 +28,7 @@ public class PlayableCheckTest {
 		when(game.getModifiedAttribute(player, player.getRawAttribute("title", Types.string())))
 				.thenReturn(player.getRawAttribute("title", Types.string()));
 		PlayableCheck<Playable> checker = Checker.whenPlayable();
-		checker.not().is(another).attribute("title").is("A TITLE").not().sameValue("TITLE").isActivePlayer();
+		checker.not().is(another).attribute("title").sameValueAs("A TITLE").attribute("title").not().sameValueAs("TITLE").isActivePlayer();
 		assertThat(checker.check(player)).isTrue();
 	}
 

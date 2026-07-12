@@ -13,7 +13,7 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 		super(testResults, function, g -> function.apply(g).getGame());
 	}
 	
-	public StringCheck<BASE, Playable, PlayableCheck<BASE>> hasId() {
+	public StringCheck<BASE, PlayableCheck<BASE>> hasId() {
 		return new StringCheck<>(this, p -> function.apply(p).getId(), "Playable ID", p -> function.apply(p).getGame());
 	}
 	
@@ -32,8 +32,12 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 		return self();
 	}
 	
-	public StringCheck<BASE, Playable, PlayableCheck<BASE>> attribute(String attribute) {
-		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, Types.string()).getValue(), "string attribute %s".formatted(attribute), p -> function.apply(p).getGame());
+//	public StringCheck<BASE, PlayableCheck<BASE>> attribute(String attribute) {
+//		return new StringCheck<>(this, p -> function.apply(p).getAttribute(attribute, Types.string()).getValue(), "string attribute %s".formatted(attribute), p -> function.apply(p).getGame());
+//	}
+	
+	public AttributeCheck<BASE,PlayableCheck<BASE>> attribute(String attributeName) {
+		return new AttributeCheck<>(this, testResults, function, attributeName);
 	}
 	
 	public IntegerCheck<BASE, Playable, PlayableCheck<BASE>> attributeAsInt(String attribute) {

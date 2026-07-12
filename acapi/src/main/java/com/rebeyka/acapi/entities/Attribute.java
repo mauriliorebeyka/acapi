@@ -36,7 +36,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	public Playable getOrigin() {
 		return origin;
 	}
-	
+
 	public T getValue() {
 		return value;
 	}
@@ -58,7 +58,7 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 	public T getInitialValue() {
 		return initialValue;
 	}
-	
+
 	public T getMinValue() {
 		return minValue;
 	}
@@ -81,6 +81,21 @@ public class Attribute<T extends Comparable<? super T>> implements Comparable<At
 
 	public String get() {
 		return value == null ? "null" : value.toString();
+	}
+
+	@Override
+	public boolean equals(Object another) {
+		if (this == another) {
+			return true;
+		}
+		return (another instanceof Attribute a 
+				&& type.equals(a.type)
+				&& origin.equals(a.origin)
+				&& name.equals(a.name)
+				&& value.equals(a.value)
+				&& initialValue.equals(a.initialValue)
+				&& maxValue.equals(a.maxValue) 
+				&& minValue.equals(a.minValue));
 	}
 
 	@Override

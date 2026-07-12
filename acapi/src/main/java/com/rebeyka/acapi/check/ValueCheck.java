@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.entities.Game;
 
-abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T, ROOT extends AbstractCheck<?, BASE, ?>>
+public abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T, ROOT extends AbstractCheck<?, BASE, ?>>
 		extends AbstractCheck<SELF, BASE, T> {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -56,7 +56,7 @@ abstract class ValueCheck<SELF extends ValueCheck<SELF, BASE, T, ROOT>, BASE, T,
 		addTest(predicate, testedField, name);
 	}
 	
-	public ROOT sameValue(T value) {
+	public ROOT isEqualsTo(T value) {
 		addValueTest("is %s".formatted(value), s -> s.equals(value));
 		return root();
 	}
