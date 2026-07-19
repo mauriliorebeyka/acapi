@@ -23,6 +23,7 @@ public abstract class RootCheck<SELF extends RootCheck<SELF, BASE, T, ROOT>, BAS
 		this.testedField = testedField;
 	}
 
+	//TODO should return a new instance of ROOT instead of the same, to keep the list of tests independent and allow the same checker to be used for different cases.
 	protected ROOT addValueTest(Predicate<T> predicate, String name) {
 		addTest(predicate, testedField, name);
 		return root;
