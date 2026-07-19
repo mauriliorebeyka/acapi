@@ -8,19 +8,15 @@ import com.rebeyka.acapi.entities.Game;
 public class GameCheck<BASE> extends AbstractCheck<GameCheck<BASE>, BASE, Game> {
 
 	protected GameCheck(List<TestResult<BASE>> testResults, Function<BASE, Game> function) {
-		super(testResults, function, game -> (Game)game);
+		super(testResults, function, game -> (Game) game);
 	}
 
 	@Override
-	protected GameCheck<BASE> self(boolean newInstance) {
-		if (newInstance) {
-			return new GameCheck<>(testResults, this.function);
-		}
-		return this;
+	protected GameCheck<BASE> self() {
+		return new GameCheck<>(testResults, this.function);
 	}
 
 	public GameCheck<BASE> allPlayersPassed() {
-		addTest(g -> g.getGameFlow().allPlayersPassed(),"all players passed","passed");
-		return self();
+		return addTest(g -> g.getGameFlow().allPlayersPassed(), "all players passed", "passed");
 	}
 }

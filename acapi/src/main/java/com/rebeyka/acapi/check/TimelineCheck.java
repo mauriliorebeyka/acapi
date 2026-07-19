@@ -9,7 +9,7 @@ import com.rebeyka.acapi.actionables.gameflow.EndTurnActionable;
 import com.rebeyka.acapi.entities.Game;
 
 public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?, BASE, T>>
-		extends ValueCheck<TimelineCheck<BASE, T, ROOT>, BASE, Integer, ROOT> {
+		extends RootCheck<TimelineCheck<BASE, T, ROOT>, BASE, Integer, ROOT> {
 
 	private int times;
 
@@ -29,18 +29,15 @@ public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?, BASE, T>>
 	}
 
 	@Override
-	protected TimelineCheck<BASE, T, ROOT> self(boolean newInstance) {
-		if (newInstance) {
-			return new TimelineCheck<>(root, gameAcessor, testedField);
-		}
-		return this;
+	protected TimelineCheck<BASE, T, ROOT> self() {
+		return new TimelineCheck<>(root, gameAcessor, testedField);
 	}
 
 	public TimelineCheck<BASE, T, ROOT> atLeast(int number) {
 		times = number;
 		timesPredicate = i -> i >= number;
 		predicateDescription = "happened at least %s times since %s";
-		return self();
+		return this;
 	}
 
 	public TimelineCheck<BASE, T, ROOT> atLeastOnce() {
@@ -51,7 +48,7 @@ public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?, BASE, T>>
 		times = number;
 		timesPredicate = i -> i <= number;
 		predicateDescription = "happened at most %s times since %s";
-		return self();
+		return this;
 	}
 
 	public TimelineCheck<BASE, T, ROOT> atMostOnce() {
@@ -62,7 +59,7 @@ public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?, BASE, T>>
 		times = number;
 		timesPredicate = i -> i == number;
 		predicateDescription = "happened exactly %s times since %s";
-		return self();
+		return this;
 	}
 
 	public TimelineCheck<BASE, T, ROOT> once() {
@@ -71,8 +68,7 @@ public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?, BASE, T>>
 
 	public ROOT since(String bound) {
 		this.bound = bound;
-		addValueTest(predicateDescription.formatted(times, bound.equals("") ? "start" : bound), timesPredicate);
-		return root;
+		return addValueTest(timesPredicate, predicateDescription.formatted(times, bound.equals("") ? "start" : bound));
 	}
 
 	public ROOT sinceStart() {
@@ -89,8 +85,7 @@ public class TimelineCheck<BASE, T, ROOT extends AbstractCheck<?, BASE, T>>
 
 	public ROOT last(int x) {
 		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), x);
-		addValueTest(predicateDescription.formatted(times, x), timesPredicate);
-		return root;
+		return addValueTest(timesPredicate, predicateDescription.formatted(times, x));
 	}
 
 	public ROOT last() {

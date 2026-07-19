@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 
+@SuppressWarnings("rawtypes")
 public class AttributeCheckTest {
 
 	@Mock
@@ -35,14 +36,14 @@ public class AttributeCheckTest {
 		when(rawAttribute.getValue()).thenReturn("2");
 		when(rawAttribute.getMaxValue()).thenReturn("3");
 		
-		assertThat(Checker.whenPlayable().attribute("attribute").sameValueAs(1).check(playable)).isFalse();
-		assertThat(Checker.whenPlayable().attribute("attribute").min().sameValueAs(0).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").initial().sameValueAs(1).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").sameValueAs(2).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").max().sameValueAs(3).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().min().sameValueAs("0").check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().initial().sameValueAs("1").check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().sameValueAs("2").check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().max().sameValueAs("3").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").asInt().sameValueAs(1).check(playable)).isFalse();
+		assertThat(Checker.whenPlayable().attribute("attribute").min().asInt().sameValueAs(0).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").initial().asInt().sameValueAs(1).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").asInt().sameValueAs(2).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").max().asInt().sameValueAs(3).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().min().asString().sameValueAs("0").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().initial().asString().sameValueAs("1").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().asString().sameValueAs("2").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().max().asString().sameValueAs("3").check(playable)).isTrue();
 	}
 }

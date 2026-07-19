@@ -11,11 +11,8 @@ public class ActionableCheck<BASE> extends AbstractCheck<ActionableCheck<BASE>, 
 	}
 
 	@Override
-	protected ActionableCheck<BASE> self(boolean newInstance) {
-		if (newInstance) {
+	protected ActionableCheck<BASE> self() {
 			return new ActionableCheck<>(testResults, this.function);
-		}
-		return this;
 	}
 	
 	public StringCheck<BASE, ActionableCheck<BASE>> hasId() {

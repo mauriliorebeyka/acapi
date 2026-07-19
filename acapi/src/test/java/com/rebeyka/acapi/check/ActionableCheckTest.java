@@ -20,7 +20,7 @@ public class ActionableCheckTest {
 	@Test
 	public void test() {
 		ActionableCheck<Actionable> a = Checker.whenActionable();
-		a.hasId().isEqualsTo("ID").origin().hasId().isEqualsTo("PLAYER ID");
+		a.hasId().sameValueAs("ID").origin().hasId().isEqualsTo("PLAYER ID");
 		Actionable actionable = mock(Actionable.class);
 		Play play = mock(Play.class);
 		Player player = mock(Player.class);

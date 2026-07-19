@@ -23,17 +23,13 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	protected Function<BASE, Game> gameAcessor;
 	
 	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function, Function<BASE, Game> gameAcessor) {
-		this.testResults = testResults == null ? new ArrayList<>() : testResults;
+		this.testResults = testResults;
 		this.function = function;
 		this.negate = false;
 		this.gameAcessor = gameAcessor;
 	}
 
-	protected abstract SELF self(boolean newInstance);
-
-	protected SELF self() {
-		return self(true);
-	}
+	protected abstract SELF self();
 
 	public SELF always() {
 		addTest(_ -> true, "always", "always");
@@ -45,9 +41,14 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return self();
 	}
 
+	public SELF isEqualsTo(T other) {
+		addTest(p -> p.equals(other), "value %s".formatted(other.toString()), "is equal to");
+		return self();
+	}
+	
 	public SELF not() {
 		negate = true;
-		return self(false);
+		return (SELF)this;
 	}
 
 	public SELF anyOf(List<AbstractCheck<SELF,BASE,T>> checks) {
@@ -71,12 +72,10 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	}
 	
 	public SELF custom(Predicate<T> custom) {
-		addTest(custom, "", "passes custom check");
-		return self();
+		return addTest(custom, "", "passes custom check");
 	}
-	
-	protected void addTest(Predicate<T> predicate, Function<T, Object> valueExtractor, String field,
-			String description) {
+
+	protected SELF addTest(Predicate<T> predicate, Function<T, Object> valueExtractor, String field, String description) {
 		Predicate<BASE> finalPredicate = t -> predicate.test(function.apply(t));
 		if (negate) {
 			finalPredicate = finalPredicate.negate();
@@ -84,10 +83,11 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		}
 		Function<BASE, ?> finalValue = t -> valueExtractor.apply(function.apply(t));
 		testResults.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
+		return self();
 	}
-
-	protected void addTest(Predicate<T> predicate, String field, String description) {
-		addTest(predicate, t -> t, field, description);
+	
+	protected SELF addTest(Predicate<T> predicate, String field, String description) {
+		return addTest(predicate, v -> v, field, description);
 	}
 	
 	public final boolean check(BASE testedValue) {
