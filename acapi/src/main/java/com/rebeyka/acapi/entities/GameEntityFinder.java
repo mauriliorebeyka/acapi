@@ -20,7 +20,7 @@ public class GameEntityFinder {
 		this.game = game;
 	}
 	
-	public PlayArea<?, ? extends BasePlayable> playArea(BasePlayable playable) {
+	public PlayArea<?, ? extends BasePlayable> playArea(Playable playable) {
 		return getAllPlayAreas().filter(playArea -> playArea.contains(playable)).findFirst()
 				.orElseThrow(() -> new GameElementNotFoundException("Could not find Play Area %s".formatted(playable.getId())));
 	}
@@ -59,11 +59,10 @@ public class GameEntityFinder {
 		return getAllPlayables().anyMatch(p -> p.getId().equals(playableName));
 	}
 
-	public Player player(String playerName) {
-		return game.getPlayers().stream().filter(p -> p.getId().equals(playerName)).findFirst()
-				.orElseThrow(() -> new GameElementNotFoundException("Could not find player %s".formatted(playerName)));
+	public Player player(String playerId) {
+		return game.getPlayers().stream().filter(p -> p.getId().equals(playerId)).findFirst()
+				.orElseThrow(() -> new GameElementNotFoundException("Could not find player %s".formatted(playerId)));
 	}
-
 	
 	private Stream<Playable> getAllPlayables() {
 		return Stream.concat(game.getPlayAreas().values().stream().flatMap(PlayArea::getAllPlayables),
@@ -73,5 +72,5 @@ public class GameEntityFinder {
 	private Stream<PlayArea<?, ? extends BasePlayable>> getAllPlayAreas() {
 		return Stream.concat(game.getPlayAreas().values().stream(), game.getPlayers().stream().flatMap(Player::getPlayAreas));
 	}
-
+	
 }

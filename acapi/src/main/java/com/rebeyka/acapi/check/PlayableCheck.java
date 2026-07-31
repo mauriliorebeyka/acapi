@@ -26,7 +26,15 @@ public class PlayableCheck<BASE> extends AbstractCheck<PlayableCheck<BASE>, BASE
 	public PlayableCheck<BASE> isPlayer() {
 		return addTest(p -> p instanceof Player, f -> f.getClass(), "Playable type", "is Player");
 	}
-
+	
+	public PlayerCheck<BASE> controller() {
+		return new PlayerCheck<BASE>(testResults, p -> function.apply(p).getGame().find().playArea(function.apply(p)).getOwner(), gameAcessor, function);
+	}
+	
+	public PlayerCheck<BASE> owner() {
+		return new PlayerCheck<BASE>(testResults, p -> function.apply(p) instanceof BasePlayable bp ? bp.getOwner() : (Player)function.apply(p), gameAcessor, function);
+	}
+	
 	public PlayableCheck<BASE> isCurrentPlayer() {
 		return addTest(p -> p.equals(p.getGame().getGameFlow().getCurrentPlayer()),
 				f -> f.getGame().getGameFlow().getCurrentPlayer(), "Player", "is current player");
