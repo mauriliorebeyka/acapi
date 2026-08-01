@@ -6,8 +6,8 @@ import java.util.function.Function;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 
-public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, BASE, ?>>
-		extends ValueCheck<AttributeCheck<BASE, ROOT>, BASE, Playable, ROOT> {
+public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
+		extends ValueCheck<BASE, ROOT, Playable> {
 
 	private String attributeName;
 
@@ -17,7 +17,7 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, BASE, ?>>
 
 	protected AttributeCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function,
 			String attributeName) {
-		super(root, a -> function.apply(a), attributeName, g -> function.apply(g).getGame());
+		super(root, function, g -> function.apply(g).getGame());
 		this.attributeName = attributeName;
 		this.prepareFunctions(p -> p.getAttribute(attributeName), v -> v.getValue());
 	}

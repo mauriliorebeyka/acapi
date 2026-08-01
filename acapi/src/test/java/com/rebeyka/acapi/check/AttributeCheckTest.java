@@ -36,14 +36,14 @@ public class AttributeCheckTest {
 		when(rawAttribute.getValue()).thenReturn("2");
 		when(rawAttribute.getMaxValue()).thenReturn("3");
 		
-		assertThat(Checker.whenPlayable().attribute("attribute").asInt().sameValueAs(1).check(playable)).isFalse();
-		assertThat(Checker.whenPlayable().attribute("attribute").min().asInt().sameValueAs(0).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").initial().asInt().sameValueAs(1).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").asInt().sameValueAs(2).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").max().asInt().sameValueAs(3).check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().min().asString().sameValueAs("0").check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().initial().asString().sameValueAs("1").check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().asString().sameValueAs("2").check(playable)).isTrue();
-		assertThat(Checker.whenPlayable().attribute("attribute").raw().max().asString().sameValueAs("3").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").asInt().isEqualsTo(1).check(playable)).isFalse();
+		assertThat(Checker.whenPlayable().attribute("attribute").min().asInt().isEqualsTo(0).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").initial().asInt().isEqualsTo(1).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").asInt().isEqualsTo(2).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").max().asInt().isEqualsTo(3).check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().min().asString().isEqualsTo("0").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().initial().asString().isEqualsTo("1").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().asString().isEqualsTo("2").check(playable)).isTrue();
+		assertThat(Checker.whenPlayable().attribute("attribute").raw().max().asString().isEqualsTo("3").check(playable)).isTrue();
 	}
 }

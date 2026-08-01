@@ -28,15 +28,15 @@ public class PlayableCheckTest {
 		player.getRawAttribute("title", Types.string()).setValue("A TITLE");
 		when(game.getModifiedAttribute(player, player.getRawAttribute("title", Types.string())))
 				.thenReturn(player.getRawAttribute("title", Types.string()));
-		PlayableCheck<Playable> checker = Checker.whenPlayable();
-		checker.not().is(another).attribute("title").asString().sameValueAs("A TITLE").attribute("title").asString().not().sameValueAs("TITLE").isActivePlayer();
+		PlayableCheck<Playable, PlayableCheck<Playable,?>> checker = Checker.whenPlayable();
+		checker.not().isExactly(another).attribute("title").asString().isEqualsTo("A TITLE").attribute("title").asString().not().isEqualsTo("TITLE").isActivePlayer();
 		assertThat(checker.check(player)).isTrue();
 	}
 
 	@Test
 	public void testAnyOf() {
-		PlayableCheck<Playable> always = Checker.whenPlayable().always();
-		PlayableCheck<Playable> never = Checker.whenPlayable().not().always();
+		PlayableCheck<Playable,PlayableCheck<Playable,?>> always = Checker.whenPlayable().always();
+		PlayableCheck<Playable,PlayableCheck<Playable,?>> never = Checker.whenPlayable().not().always();
 		assertThat(Checker.whenPlayable().anyOf(List.of(always)).check(null)).isTrue();
 		assertThat(Checker.whenPlayable().anyOf(List.of(never)).check(null)).isFalse();
 		assertThat(Checker.whenPlayable().anyOf(List.of(always, never)).check(null)).isTrue();

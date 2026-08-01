@@ -4,23 +4,27 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.actionables.Actionable;
-public class ActionableCheck<BASE> extends AbstractCheck<ActionableCheck<BASE>, BASE, Actionable> {
+public class ActionableCheck<BASE,ROOT extends AbstractCheck<?, ?, BASE, ?>> extends AbstractCheck<ActionableCheck<BASE,ROOT>, ROOT, BASE, Actionable> {
 
 	protected ActionableCheck(List<TestResult<BASE>> testResults, Function<BASE, Actionable> function) {
 		super(testResults, function, a -> function.apply(a).getParent().getGame());
 	}
 
+	protected ActionableCheck(ROOT root, Function<BASE, Actionable> function) {
+		super(root, function, a -> function.apply(a).getParent().getGame());
+	}
+	
 	@Override
-	protected ActionableCheck<BASE> self() {
-			return new ActionableCheck<>(testResults, this.function);
+	protected ActionableCheck<BASE,ROOT> self() {
+			return new ActionableCheck<>(root, this.function);
 	}
 	
-	public StringCheck<BASE, ActionableCheck<BASE>> hasId() {
-		return new StringCheck<>(this, a -> function.apply(a).getActionableId(), "Actionable ID", a -> function.apply(a).getParent().getGame());
+	public StringCheck<BASE, ROOT> hasId() {
+		return new StringCheck<BASE, ROOT>(root, a -> function.apply(a).getActionableId(), gameAcessor);
 	}
 	
-	public PlayableCheck<BASE> origin() {
-		return new PlayableCheck<>(testResults, t -> function.apply(t).getParent().getOrigin());
+	public PlayableCheck<BASE,ROOT> origin() {
+		return new PlayableCheck<>(root, t -> function.apply(t).getParent().getOrigin());
 	}
     
 }

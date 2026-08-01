@@ -26,8 +26,8 @@ public class PlayerCheckTest {
 		
 		
 		PlayerCheck<Player,PlayerCheck<Player,?>> checker = Checker.whenPlayer();
-		assertThat(checker.is(player1).check(player1)).isTrue();
-		assertThat(checker.id().sameValueAs("ID").check(player1)).isTrue();
+		assertThat(checker.isExactly(player1).check(player1)).isTrue();
+		assertThat(checker.id().isEqualsTo("ID").check(player1)).isTrue();
 		assertThat(checker.isCurrentPlayer().check(player1)).isTrue();
 		assertThat(checker.isActivePlayer().check(player1)).isTrue();
 	}

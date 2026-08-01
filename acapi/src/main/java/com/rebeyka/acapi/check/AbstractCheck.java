@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.entities.Game;
 
-public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, BASE, T> implements Checkable<BASE> {
+public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE, T>, ROOT extends AbstractCheck<?,?,BASE,?>, BASE, T> implements Checkable<BASE> {
 
 	private static final Logger LOG = LogManager.getLogger();
 
@@ -22,6 +22,8 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 	
 	protected Function<BASE, Game> gameAcessor;
 	
+	protected ROOT root;
+	
 	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function, Function<BASE, Game> gameAcessor) {
 		this.testResults = testResults;
 		this.function = function;
@@ -29,6 +31,15 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		this.gameAcessor = gameAcessor;
 	}
 
+	protected AbstractCheck(ROOT root, Function<BASE, T> function, Function<BASE, Game> gameAcessor) {
+		this(root.testResults, function, gameAcessor);
+		this.root = root;
+	}
+	
+	protected AbstractCheck() {
+		this(new ArrayList<>(), b -> (T) b, null);
+	}
+	
 	protected abstract SELF self();
 
 	public SELF always() {
@@ -36,14 +47,14 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return self();
 	}
 	
-	public SELF is(T other) {
+	public ROOT isExactly(T other) {
 		addTest(p -> p == other, "value %s".formatted(other.toString()), "is the same object");
-		return self();
+		return (ROOT)root.self();
 	}
 
-	public SELF isEqualsTo(T other) {
+	public ROOT isEqualsTo(T other) {
 		addTest(p -> p.equals(other), "value %s".formatted(other.toString()), "is equal to");
-		return self();
+		return (ROOT)root.self();
 	}
 	
 	public SELF not() {
@@ -51,31 +62,31 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return (SELF)this;
 	}
 
-	public SELF anyOf(List<AbstractCheck<SELF,BASE,T>> checks) {
+	public ROOT anyOf(List<AbstractCheck<SELF,ROOT,BASE,T>> checks) {
 		Predicate<BASE> any = _ -> false;
-		for (AbstractCheck<SELF,BASE,T> check : checks) {
+		for (AbstractCheck<SELF,ROOT,BASE,T> check : checks) {
 			Predicate<BASE> or = base -> check.check(base);
 			any = any.or(or);
 		}
 		testResults.add(new TestResult<BASE>(any,f -> f,"any of",""));
-		return self();
+		return (ROOT)root.self();
 	}
 	
-	public SELF allOf(List<AbstractCheck<SELF,BASE,T>> checks) {
+	public ROOT allOf(List<AbstractCheck<SELF,ROOT,BASE,T>> checks) {
 		Predicate<BASE> all = _ -> true;
-		for (AbstractCheck<SELF,BASE,T> check : checks) {
+		for (AbstractCheck<SELF,ROOT,BASE,T> check : checks) {
 			Predicate<BASE> and = base -> check.check(base);
 			all = all.and(and);
 		}
 		testResults.add(new TestResult<BASE>(all, f -> f,"all of",""));
-		return self();
+		return (ROOT)root.self();
 	}
 	
-	public SELF custom(Predicate<T> custom) {
+	public ROOT custom(Predicate<T> custom) {
 		return addTest(custom, "", "passes custom check");
 	}
 
-	protected SELF addTest(Predicate<T> predicate, Function<T, Object> valueExtractor, String field, String description) {
+	protected ROOT addTest(Predicate<T> predicate, Function<T, Object> valueExtractor, String field, String description) {
 		Predicate<BASE> finalPredicate = t -> predicate.test(function.apply(t));
 		if (negate) {
 			finalPredicate = finalPredicate.negate();
@@ -83,10 +94,10 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		}
 		Function<BASE, ?> finalValue = t -> valueExtractor.apply(function.apply(t));
 		testResults.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
-		return self();
+		return (ROOT)root.self();
 	}
 	
-	protected SELF addTest(Predicate<T> predicate, String field, String description) {
+	protected ROOT addTest(Predicate<T> predicate, String field, String description) {
 		return addTest(predicate, v -> v, field, description);
 	}
 	
@@ -102,15 +113,15 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, BASE, T>, B
 		return passedTests == testResults.size();
 	}
 
-	public GameCheck<BASE> game() {
-		return new GameCheck<BASE>(testResults, gameAcessor);
+	public GameCheck<BASE,ROOT> game() {
+		return new GameCheck<BASE,ROOT>(root, gameAcessor);
 	}
 	
-	public TimelineCheck<BASE, T, ? extends AbstractCheck<?,BASE,T>> happened() {
+	public TimelineCheck<BASE, ? extends AbstractCheck<?,?,BASE,T>, T> happened() {
 		return happened("");
 	}
 	
-	public TimelineCheck<BASE, T, ? extends AbstractCheck<?,BASE,T>> happened(String actionableId) {
+	public TimelineCheck<BASE, ? extends AbstractCheck<?,?,BASE,T>, T> happened(String actionableId) {
 		return new TimelineCheck<>(this, gameAcessor, actionableId);
 	}
 	

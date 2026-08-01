@@ -69,7 +69,7 @@ public class TriggerTest {
 		when(mockActionable.getParent()).thenReturn(play);
 		Actionable wrongActionable = mock(Actionable.class);
 		when(wrongActionable.getParent()).thenReturn(play);
-		Trigger trigger = new Trigger(Checker.whenActionable().is(mockActionable),play,"ALL");
+		Trigger trigger = new Trigger(Checker.whenActionable().isExactly(mockActionable),play,"ALL");
 		
 		assertThat(trigger.test(mockActionable)).isTrue();
 		assertThat(trigger.test(wrongActionable)).isFalse();
