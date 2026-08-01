@@ -1,5 +1,6 @@
 package com.rebeyka.acapi.check;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -17,12 +18,18 @@ public abstract class RootCheck<SELF extends RootCheck<SELF, BASE, T, ROOT>, BAS
 
 	protected String testedField;
 
-	protected RootCheck(ROOT root, Function<BASE, T> function, String testedField, Function<BASE, Game> gameAcessor) {
-		super(root.testResults, function, gameAcessor);
+	protected RootCheck(ROOT root, Function<BASE, T> function, String testedField, Function<BASE,Game> gameAcessor) {
+		super(root.testResults, function,gameAcessor);
 		this.root = root;
 		this.testedField = testedField;
 	}
 
+	protected RootCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function, String testedField, Function<BASE, Game> gameAcessor) {
+		super(testResults, function,gameAcessor);
+		this.testedField = testedField;
+		// root will be set by subclass via self-rooting pattern
+	}
+	
 	//TODO should return a new instance of ROOT instead of the same, to keep the list of tests independent and allow the same checker to be used for different cases.
 	protected ROOT addValueTest(Predicate<T> predicate, String name) {
 		addTest(predicate, testedField, name);

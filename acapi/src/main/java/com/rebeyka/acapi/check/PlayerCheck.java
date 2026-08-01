@@ -2,42 +2,43 @@ package com.rebeyka.acapi.check;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 
-public class PlayerCheck<BASE> extends AbstractCheck<PlayerCheck<BASE>, BASE, Player> {
+public class PlayerCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>> extends RootCheck<PlayerCheck<BASE,ROOT>, BASE, Player, ROOT> {
 
 	private Function<BASE, Playable> originalFunction;
 	
+		public PlayerCheck(List<TestResult<BASE>> testResults, Function<BASE, Player> function, Function<BASE, Game> gameAcessor,
+				Function<BASE, Playable> originalFunction, ROOT root) {
+		super(root, function, "", gameAcessor);
+		this.originalFunction = originalFunction;
+	}
+	
 	protected PlayerCheck(List<TestResult<BASE>> testResults, Function<BASE, Player> function,
 			Function<BASE, Game> gameAcessor, Function<BASE, Playable> originalFunction) {
-		super(testResults, function, gameAcessor);
+		super(testResults, function, "", gameAcessor);
 		this.originalFunction = originalFunction;
 	}
 
+
 	@Override
-	protected PlayerCheck<BASE> self() {
-		return new PlayerCheck<BASE>(testResults, function, gameAcessor, originalFunction);
+	protected PlayerCheck<BASE,ROOT> self() {
+		return new PlayerCheck<BASE,ROOT>(testResults, function, gameAcessor, originalFunction);
 	}
 
-	protected PlayableCheck<BASE> addTestPlayable(Predicate<Player> p, String field, String description) {
-		addTest(p, field, description);
-		return new PlayableCheck<BASE>(testResults, originalFunction);
+	public StringCheck<BASE, ROOT> id() {
+		return new StringCheck<BASE, ROOT>(root, f -> function.apply(f).getId(), "ID", gameAcessor);
 	}
 
-	public StringCheck<BASE, PlayableCheck<BASE>> id() {
-		return new StringCheck<BASE, PlayableCheck<BASE>>(new PlayableCheck<BASE>(testResults, originalFunction), f -> function.apply(f).getId(), "ID", gameAcessor);
-	}
-
-	public PlayableCheck<BASE> isCurrentPlayer() {
-		return addTestPlayable(p -> p.getGame().getGameFlow().isCurrentPlayer(p), "is", "current player");
+	public ROOT isCurrentPlayer() {
+		return addValueTest(p -> p.getGame().getGameFlow().isCurrentPlayer(p), "current player");
 	}
 	
-	public PlayableCheck<BASE> isActivePlayer() {
-		return addTestPlayable(p -> p.getGame().getGameFlow().isPlayerActive(p), "is", "active player");
+	public ROOT isActivePlayer() {
+		return addValueTest(p -> p.getGame().getGameFlow().isPlayerActive(p), "active player");
 	}
 	
 }
