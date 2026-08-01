@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.BasePlayable;
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.view.VisibilityType;

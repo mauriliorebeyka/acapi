@@ -1,6 +1,5 @@
 package com.rebeyka.acapi.check;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 

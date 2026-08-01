@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.rebeyka.acapi.entities.Game;
 
+@SuppressWarnings("unchecked")
 public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE, T>, ROOT extends AbstractCheck<?,?,BASE,?>, BASE, T> implements Checkable<BASE> {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -29,15 +30,12 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		this.function = function;
 		this.negate = false;
 		this.gameAcessor = gameAcessor;
+		this.root = (ROOT)this;
 	}
 
 	protected AbstractCheck(ROOT root, Function<BASE, T> function, Function<BASE, Game> gameAcessor) {
 		this(root.testResults, function, gameAcessor);
 		this.root = root;
-	}
-	
-	protected AbstractCheck() {
-		this(new ArrayList<>(), b -> (T) b, null);
 	}
 	
 	protected abstract SELF self();
@@ -48,12 +46,12 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 	}
 	
 	public ROOT isExactly(T other) {
-		addTest(p -> p == other, "value %s".formatted(other.toString()), "is the same object");
+		addTest(p -> p == other, other.toString(), "is the same object");
 		return (ROOT)root.self();
 	}
 
 	public ROOT isEqualsTo(T other) {
-		addTest(p -> p.equals(other), "value %s".formatted(other.toString()), "is equal to");
+		addTest(p -> p.equals(other), other.toString(), "is equal to");
 		return (ROOT)root.self();
 	}
 	
@@ -62,9 +60,9 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		return (SELF)this;
 	}
 
-	public ROOT anyOf(List<AbstractCheck<SELF,ROOT,BASE,T>> checks) {
+	public ROOT anyOf(List<SELF> checks) {
 		Predicate<BASE> any = _ -> false;
-		for (AbstractCheck<SELF,ROOT,BASE,T> check : checks) {
+		for (SELF check : checks) {
 			Predicate<BASE> or = base -> check.check(base);
 			any = any.or(or);
 		}
@@ -72,9 +70,9 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		return (ROOT)root.self();
 	}
 	
-	public ROOT allOf(List<AbstractCheck<SELF,ROOT,BASE,T>> checks) {
+	public ROOT allOf(List<SELF> checks) {
 		Predicate<BASE> all = _ -> true;
-		for (AbstractCheck<SELF,ROOT,BASE,T> check : checks) {
+		for (SELF check : checks) {
 			Predicate<BASE> and = base -> check.check(base);
 			all = all.and(and);
 		}

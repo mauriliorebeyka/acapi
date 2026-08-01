@@ -26,7 +26,7 @@ public class TestResult<BASE> {
 	}
 
 	public String getMessage(BASE testedValue) {
-		return "Checking that '%s' %s - currently '%s' (%s)".formatted(testedField,
+		return "Checking that '%s' %s '%s' (%s)".formatted(testedField,
 				description, function.apply(testedValue), test(testedValue));
 	}
 }
