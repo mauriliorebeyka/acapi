@@ -13,12 +13,15 @@ public class TestResult<BASE> {
 
 	private String description;
 
-	public TestResult(Predicate<BASE> predicate, Function<BASE, ?> function, String testedField, 
-			String description) {
+	public TestResult(Predicate<BASE> predicate, Function<BASE, ?> function, String testedField, String description) {
 		this.predicate = predicate;
 		this.function = function;
 		this.testedField = testedField;
 		this.description = description;
+	}
+
+	public Predicate<BASE> getPredicate() {
+		return predicate;
 	}
 
 	public boolean test(BASE testedValue) {
@@ -26,7 +29,11 @@ public class TestResult<BASE> {
 	}
 
 	public String getMessage(BASE testedValue) {
-		return "Checking that '%s' %s '%s' (%s)".formatted(testedField,
-				description, function.apply(testedValue), test(testedValue));
+		return "Checking that '%s' is %s '%s' (%s)".formatted(function.apply(testedValue), description, testedField,
+				test(testedValue));
+	}
+
+	public String getBaseMessage() {
+		return "'%s' %s".formatted(testedField, description);
 	}
 }

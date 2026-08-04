@@ -17,7 +17,7 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 
 	protected AttributeCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function,
 			String attributeName) {
-		super(root, function, g -> function.apply(g).getGame());
+		super(root, testResults, function, g -> function.apply(g).getGame());
 		this.attributeName = attributeName;
 		this.prepareFunctions(p -> p.getAttribute(attributeName), v -> v.getValue());
 	}
@@ -31,7 +31,7 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 	}
 
 	@Override
-	protected AttributeCheck<BASE, ROOT> self() {
+	protected AttributeCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
 		AttributeCheck<BASE, ROOT> newInstanceCheck = new AttributeCheck<>(root, testResults, function, attributeName);
 		newInstanceCheck.attributeAcessor = this.attributeAcessor;
 		newInstanceCheck.attributeValueAcessor = this.attributeValueAcessor;

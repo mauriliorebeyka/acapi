@@ -1,5 +1,6 @@
 package com.rebeyka.acapi.check;
 
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -23,8 +24,8 @@ public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, T>, T>
 	
 	private Function<BASE, Game> gameAcessor;
 
-	protected TimelineCheck(ROOT root, Function<BASE, Game> gameAcessor, String searchedActionable) {
-		super(root, null, gameAcessor);
+	protected TimelineCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Game> gameAcessor, String searchedActionable) {
+		super(root, testResults, null, gameAcessor);
 		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
 		this.gameAcessor = gameAcessor;
 		this.searchedActionable = searchedActionable;
@@ -32,8 +33,8 @@ public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, T>, T>
 	}
 
 	@Override
-	protected TimelineCheck<BASE, ROOT, T> self() {
-		return new TimelineCheck<>(root, gameAcessor, searchedActionable);
+	protected TimelineCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
+		return new TimelineCheck<>(root, testResults, gameAcessor, searchedActionable);
 	}
 
 	public TimelineCheck<BASE, ROOT, T> atLeast(int number) {

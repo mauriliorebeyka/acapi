@@ -18,7 +18,7 @@ public class PlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T exten
 	}
 
 	@Override
-	protected PlayAreaCheck<BASE, ROOT, T> self() {
+	protected PlayAreaCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
 		return new PlayAreaCheck<BASE, ROOT, T>(testResults, function, gameAcessor);
 	}
 
@@ -27,7 +27,7 @@ public class PlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T exten
 	}
 
 	public IntegerCheck<BASE, ROOT> size() {
-		return new IntegerCheck<>(root, p -> function.apply(p).getAll().size(), gameAcessor);
+		return new IntegerCheck<>(root, testResults, p -> function.apply(p).getAll().size(), gameAcessor);
 	}
 
 	public ROOT constains(String id) {

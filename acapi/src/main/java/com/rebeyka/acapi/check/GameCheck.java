@@ -1,18 +1,19 @@
 package com.rebeyka.acapi.check;
 
+import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Game;
 
 public class GameCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>> extends AbstractCheck<GameCheck<BASE,ROOT>, ROOT, BASE, Game> {
 
-	protected GameCheck(ROOT root, Function<BASE, Game> function) {
-		super(root, function, game -> (Game) game);
+	protected GameCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Game> function) {
+		super(root, testResults, function, game -> (Game) game);
 	}
 	
 	@Override
-	protected GameCheck<BASE,ROOT> self() {
-		return new GameCheck<>(root, this.function);
+	protected GameCheck<BASE,ROOT> self(List<TestResult<BASE>> testResults) {
+		return new GameCheck<>(root, testResults, function);
 	}
 
 	public ROOT allPlayersPassed() {

@@ -12,7 +12,7 @@ public class PlayerCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 
 	public PlayerCheck(List<TestResult<BASE>> testResults, Function<BASE, Player> function,
 			Function<BASE, Game> gameAcessor, ROOT root) {
-		super(root, function, gameAcessor);
+		super(root, testResults, function, gameAcessor);
 	}
 
 	protected PlayerCheck(List<TestResult<BASE>> testResults, Function<BASE, Player> function,
@@ -21,12 +21,12 @@ public class PlayerCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 	}
 
 	@Override
-	protected PlayerCheck<BASE, ROOT> self() {
-		return new PlayerCheck<BASE, ROOT>(testResults, function, gameAcessor);
+	protected PlayerCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
+		return new PlayerCheck<BASE, ROOT>(testResults, function, gameAcessor, root);
 	}
 
 	public StringCheck<BASE, ROOT> id() {
-		return new StringCheck<>(root, f -> function.apply(f).getId(), gameAcessor);
+		return new StringCheck<>(root, testResults, f -> function.apply(f).getId(), gameAcessor);
 	}
 
 	public ROOT isCurrentPlayer() {

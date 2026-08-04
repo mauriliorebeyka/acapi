@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import com.rebeyka.acapi.actionables.Actionable;
@@ -43,4 +45,5 @@ public class ActionableCheckTest {
 		Actionable actionable = mock(Actionable.class);
 		assertThat(whenActionable().custom(_ -> true).check(actionable)).isTrue();
 	}
+	
 }

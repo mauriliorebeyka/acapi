@@ -8,22 +8,18 @@ import com.rebeyka.acapi.entities.Game;
 public class IntegerCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 		extends AbstractCheck<IntegerCheck<BASE, ROOT>, ROOT, BASE, Integer> {
 
-	protected IntegerCheck(ROOT root, Function<BASE, Integer> function, Function<BASE, Game> gameAcessor) {
-		super(root, function, gameAcessor);
+	protected IntegerCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Integer> function, Function<BASE, Game> gameAcessor) {
+		super(root, testResults, function, gameAcessor);
 	}
 
-	/**
-	 * Constructor for self-rooting mode (standalone checker). Pass testResults and
-	 * the self-rooting will be set up.
-	 */
 	protected IntegerCheck(List<TestResult<BASE>> testResults, Function<BASE, Integer> function,
 			Function<BASE, Game> gameAcessor) {
 		super(testResults, function, gameAcessor);
 	}
 
 	@Override
-	protected IntegerCheck<BASE, ROOT> self() {
-		return new IntegerCheck<>(root, function, gameAcessor);
+	protected IntegerCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
+		return new IntegerCheck<>(root, testResults, function, gameAcessor);
 	}
 
 	public ROOT biggerThan(int value) {

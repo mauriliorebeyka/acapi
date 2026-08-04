@@ -11,8 +11,8 @@ import com.rebeyka.acapi.view.VisibilityType;
 public class PlayableCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 		extends AbstractCheck<PlayableCheck<BASE, ROOT>, ROOT, BASE, Playable> {
 
-	protected PlayableCheck(ROOT root, Function<BASE, Playable> function) {
-		super(root, function, g -> function.apply(g).getGame());
+	protected PlayableCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
+		super(root, testResults, function, g -> function.apply(g).getGame());
 	}
 
 	protected PlayableCheck(List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
@@ -20,12 +20,12 @@ public class PlayableCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 	}
 
 	@Override
-	protected PlayableCheck<BASE, ROOT> self() {
-		return new PlayableCheck<>(root, this.function);
+	protected PlayableCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
+		return new PlayableCheck<>(root, testResults, this.function);
 	}
 
 	public StringCheck<BASE, ROOT> hasId() {
-		return new StringCheck<>(root, p -> function.apply(p).getId(), gameAcessor);
+		return new StringCheck<>(root, testResults,  p -> function.apply(p).getId(), gameAcessor);
 	}
 
 	public ROOT isPlayer() {

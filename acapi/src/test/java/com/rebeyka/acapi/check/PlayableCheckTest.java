@@ -35,10 +35,11 @@ public class PlayableCheckTest {
 
 	@Test
 	public void testAnyOf() {
-		PlayableCheck<Playable,PlayableCheck<Playable,?>> always = Checker.whenPlayable().always();
-		PlayableCheck<Playable,PlayableCheck<Playable,?>> never = Checker.whenPlayable().not().always();
-		assertThat(Checker.whenPlayable().anyOf(List.of(always)).check(null)).isTrue();
-		assertThat(Checker.whenPlayable().anyOf(List.of(never)).check(null)).isFalse();
-		assertThat(Checker.whenPlayable().anyOf(List.of(always, never)).check(null)).isTrue();
+		PlayableCheck<Playable,?> always = Checker.whenPlayable().always();
+		PlayableCheck<Playable,?> never = Checker.whenPlayable().not().always();
+		assertThat(Checker.whenPlayable().anyOf(always).check(mock(Playable.class))).isTrue();
+		assertThat(Checker.whenPlayable().anyOf(never).check(null)).isFalse();
+//		Checker.whenPlayable().attribute("").asString().anyOf(Checker.whenString().contains(""));
+		assertThat(Checker.whenPlayable().anyOf(always, never).check(null)).isTrue();
 	}
 }
