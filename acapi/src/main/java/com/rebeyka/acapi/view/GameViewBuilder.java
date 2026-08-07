@@ -41,7 +41,7 @@ public class GameViewBuilder {
 		gameAttributes.add(new AttributeView<List<RankingPosition>>("Ranking",game.getRanking().getRankingPosition()));
 		
 		gameAttributes.add(new AttributeView<List<LogEntry>>("Log", game.getLog(10)));
-		gameAttributes.add(new AttributeView<List<String>>("Queue", game.getQueuedActionables().stream().map(Actionable::getActionableId).toList()));
+		gameAttributes.add(new AttributeView<List<String>>("Queue", game.getQueuedActionables().stream().map(Actionable::getId).toList()));
 
 		gameView.setAttributeView(gameAttributes);
 
@@ -62,7 +62,7 @@ public class GameViewBuilder {
 						.toList());
 		if (player.getPlays().stream().anyMatch(Play::isPossible)) {
 			playerView.getAttributeView().add(new AttributeView<List<String>>("Available Plays",
-					player.getPlays().stream().map(Play::getName).toList()));
+					player.getPlays().stream().map(Play::getId).toList()));
 		}
 
 		playerView.setPlayAreaView(player.getPlayAreas()
@@ -105,7 +105,7 @@ public class GameViewBuilder {
 				.map(attr -> new AttributeView<Comparable<?>>(attr, playable.getAttribute(attr).getValue())).toList());
 		if (playable.getPlays().stream().anyMatch(Play::isPossible)) {
 			playableView.getAttributeView().add(new AttributeView<List<String>>("Available Plays",
-					playable.getPlays().stream().map(Play::getName).toList()));
+					playable.getPlays().stream().map(Play::getId).toList()));
 		}
 		return playableView;
 	}

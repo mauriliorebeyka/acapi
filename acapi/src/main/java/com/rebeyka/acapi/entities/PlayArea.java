@@ -7,9 +7,7 @@ import java.util.stream.Stream;
 import com.rebeyka.acapi.exceptions.GameElementNotFoundException;
 import com.rebeyka.acapi.view.VisibilityType;
 
-public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
-
-	private String id;
+public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> extends GameEntity {
 
 	protected C playables;
 
@@ -18,7 +16,8 @@ public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 	private Player owner;
 	
 	public PlayArea(String id, Player owner) {
-		this.id = id;
+		super(id);
+		setGame(owner.getGame());
 		visibilityType = VisibilityType.PUBLIC;
 		this.owner = owner;
 	}
@@ -70,10 +69,6 @@ public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 		}
 	}
 	
-	public String getId() {
-		return id;
-	}
-	
 	public VisibilityType getVisibilityType() {
 		return visibilityType;
 	}
@@ -91,6 +86,6 @@ public abstract class PlayArea<C extends Collection<T>,T extends BasePlayable> {
 	
 	@Override
 	public String toString() {
-		return "Play Area: %s".formatted(id);
+		return "Play Area: %s".formatted(getId());
 	}
 }

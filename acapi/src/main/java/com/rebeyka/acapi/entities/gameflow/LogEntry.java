@@ -36,6 +36,6 @@ public class LogEntry implements Serializable {
 
 	@Override
 	public String toString() {
-		return "%s: %s - %s".formatted(date.toString(), parent.getName(), message);
+		return "%s: %s - %s".formatted(date.toString(), parent.getId(), message);
 	}
 }

@@ -25,7 +25,7 @@ public class ActionableCheckTest {
 		Player player = mock(Player.class);
 		Attribute<String> attribute = new Attribute<String>("", "55", Types.string(), null);
 		Attribute<Integer> intAttribute = new Attribute<Integer>("", 10, Types.integer(), null);
-		when(actionable.getActionableId()).thenReturn("ID");
+		when(actionable.getId()).thenReturn("ID");
 		when(actionable.getParent()).thenReturn(play);
 		when(actionable.check(any())).thenCallRealMethod();
 		when(play.getOrigin()).thenReturn(player);

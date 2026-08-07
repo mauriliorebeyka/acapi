@@ -87,7 +87,7 @@ public class GameEntityFinderTest {
 		Play play = mock(Play.class);
 
 		when(mockPlayer.getAllPlays()).thenReturn(Stream.of(play));
-		when(play.getName()).thenReturn("PLAY");
+		when(play.getId()).thenReturn("PLAY");
 
 		assertThat(finder.play(mockPlayer, "PLAY")).isSameAs(play);
 	}

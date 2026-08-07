@@ -46,7 +46,7 @@ public class TimelineTest {
 		when(mockCostActionable.copy(any(Play.class))).thenReturn(mockCostActionable);
 
 		timeline = new Timeline(game);
-		builder = new Play.Builder().name("id").origin(mock(Playable.class)).cost(mockCost);
+		builder = new Play.Builder().id("id").origin(mock(Playable.class)).cost(mockCost);
 	}
 
 	@Test
@@ -143,12 +143,12 @@ public class TimelineTest {
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
 		verify(mockActionable1).getParent();
-		verify(mockActionable1).getActionableId();
+		verify(mockActionable1).getId();
 		verify(mockActionable1).copy(play1);
 		
 		verify(mockActionable2).execute();
 		verify(mockActionable2).getMessage();
-		verify(mockActionable2).getActionableId();
+		verify(mockActionable2).getId();
 		verify(mockActionable2, times(3)).getParent();
 		verify(mockActionable2).rollback();
 		verify(mockActionable2).copy(play2);
@@ -163,7 +163,7 @@ public class TimelineTest {
 		verify(mockActionable5).execute();
 		verify(mockActionable5).getMessage();
 		verify(mockActionable5).getParent();
-		verify(mockActionable5).getActionableId();
+		verify(mockActionable5).getId();
 		verify(mockActionable5).copy(play3);
 		verify(mockActionable6).copy(play3);
 		verifyNoMoreInteractions(mockActionable1, mockActionable2, mockActionable3, mockActionable4, mockActionable5,
@@ -188,7 +188,7 @@ public class TimelineTest {
 		verify(mockActionable1).copy(play1);
 		verify(mockActionable1).getMessage();
 		verify(mockActionable1).getParent();
-		verify(mockActionable1).getActionableId();
+		verify(mockActionable1).getId();
 		verifyNoMoreInteractions(mockActionable1);
 		assertThat(timeline.getCurrent()).isNull();
 	}
@@ -211,7 +211,7 @@ public class TimelineTest {
 
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
-		verify(mockActionable1).getActionableId();
+		verify(mockActionable1).getId();
 		verify(mockActionable1).rollback();
 		verify(mockActionable1, times(3)).getParent();
 		verify(mockActionable1).copy(play1);
@@ -243,14 +243,14 @@ public class TimelineTest {
 		verify(mockCostActionable).execute();
 		verify(mockCostActionable).getMessage();
 		verify(mockCostActionable).getParent();
-		verify(mockCostActionable).getActionableId();
+		verify(mockCostActionable).getId();
 		verify(mockCostActionable).isSet();
 		verify(mockCostActionable).getCostPlays();
 		verify(mockCostActionable).copy(play1);
 		verify(mockActionable1).execute();
 		verify(mockActionable1).getMessage();
 		verify(mockActionable1).getParent();
-		verify(mockActionable1).getActionableId();
+		verify(mockActionable1).getId();
 		verify(mockActionable1).copy(play1);
 		verify(mockPayingCostActionable).execute();
 		verifyNoMoreInteractions(mockCostActionable, mockActionable1);
@@ -272,7 +272,7 @@ public class TimelineTest {
 		timeline.executeNext();
 		verify(mockCostActionable).isSet();
 		verify(mockCostActionable, times(2)).getParent();
-		verify(mockCostActionable).getActionableId();
+		verify(mockCostActionable).getId();
 		verify(mockCostActionable).copy(play1);
 		verify(mockActionable1).getParent();
 		verify(mockActionable1).copy(play1);
@@ -295,11 +295,11 @@ public class TimelineTest {
 		verify(mockActionable1).isSet();
 		verify(mockActionable1).copy(play1);
 		verify(mockActionable1).execute();
-		verify(mockActionable1).getActionableId();
+		verify(mockActionable1).getId();
 		verify(mockActionable1).getMessage();
 		verify(mockActionable1).getParent();
 		verify(mockActionable2).isSet();
-		verify(mockActionable2).getActionableId();
+		verify(mockActionable2).getId();
 		verify(mockActionable2).copy(play1);
 		verifyNoMoreInteractions(mockActionable1, mockActionable2);
 	}
@@ -310,17 +310,17 @@ public class TimelineTest {
 		Actionable mockActionable2 = mock(Actionable.class);
 		Play play1 = builder.cost(null).actionables(Arrays.asList(mockActionable1, mockActionable2))
 				.build();
-		when(mockActionable1.getActionableId()).thenReturn("mockActionable1");
+		when(mockActionable1.getId()).thenReturn("mockActionable1");
 		when(mockActionable1.copy(play1)).thenReturn(mockActionable1);
-		when(mockActionable2.getActionableId()).thenReturn("mockActionable2");
+		when(mockActionable2.getId()).thenReturn("mockActionable2");
 		when(mockActionable2.copy(play1)).thenReturn(mockActionable2);
 		Actionable beforeActionable2 = mock(Actionable.class);
 		Play play2 = builder.actionable(beforeActionable2).build();
-		when(beforeActionable2.getActionableId()).thenReturn("beforeActionable2");
+		when(beforeActionable2.getId()).thenReturn("beforeActionable2");
 		when(beforeActionable2.copy(play2)).thenReturn(beforeActionable2);
 		Actionable afterActionable1 = mock(Actionable.class);
 		Play play3 = builder.actionable(afterActionable1).build();
-		when(afterActionable1.getActionableId()).thenReturn("afterActionable1");
+		when(afterActionable1.getId()).thenReturn("afterActionable1");
 		when(afterActionable1.copy(play3)).thenReturn(afterActionable1);
 		when(game.getBeforeTriggerActionables(mockActionable2)).thenReturn(List.of(play2)).thenReturn(Collections.emptyList());
 		when(game.getAfterTriggerActionables(mockActionable1)).thenReturn(List.of(play3));

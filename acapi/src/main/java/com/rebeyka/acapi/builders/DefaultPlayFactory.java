@@ -24,7 +24,7 @@ public class DefaultPlayFactory implements PlayFactory {
 
 	@Override
 	public Play createGameEndPlay(Actionable gameEndActionable) {
-		return new Play.Builder().game(game).condition(Checker.whenPlayable().always()).cost(null).name("GAME END")
+		return new Play.Builder().game(game).condition(Checker.whenPlayable().always()).cost(null).id("GAME END")
 				.actionable(gameEndActionable).build();
 	}
 

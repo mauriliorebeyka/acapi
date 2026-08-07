@@ -116,7 +116,7 @@ public class Game {
 	}
 
 	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
-		LOG.info("{} declaring play {} with skipQueue {}", play.getOrigin(), play.getName(), skipQueue);
+		LOG.info("{} declaring play {} with skipQueue {}", play.getOrigin(), play.getId(), skipQueue);
 		Play newPlay = playFactory.copyOf(play, targets);
 		if (!timeline.hasNext() || skipQueue) {
 			if (play.isPossible()) {
@@ -296,8 +296,8 @@ public class Game {
 		List<Actionable> actionables = timeline.getExecutedActionables();
 		int count = 0;
 		for (int i = actionables.size() - 1; i >= 0
-				&& !actionables.get(i).getActionableId().equals(actionableIdBound); i--) {
-			if (actionables.get(i).getActionableId().equals(actionableId)) {
+				&& !actionables.get(i).getId().equals(actionableIdBound); i--) {
+			if (actionables.get(i).getId().equals(actionableId)) {
 				count++;
 			}
 		}
@@ -308,7 +308,7 @@ public class Game {
 		List<Actionable> actionables = timeline.getExecutedActionables();
 		int count = 0;
 		for (int i = actionables.size() - 1; i >=0 && i - stepsBack + 1 >= 0; i--) {
-			if (actionables.get(i).getActionableId().equals(actionableId)) {
+			if (actionables.get(i).getId().equals(actionableId)) {
 				count++;
 			}
 		}

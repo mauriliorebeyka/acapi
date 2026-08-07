@@ -52,10 +52,10 @@ public class TriggerTest {
 		Trigger trigger = new Trigger(play, "RIGHT");
 		
 		Actionable rightActionable = mock(Actionable.class);
-		when(rightActionable.getActionableId()).thenReturn("RIGHT");
+		when(rightActionable.getId()).thenReturn("RIGHT");
 		when(rightActionable.getParent()).thenReturn(play);
 		Actionable wrongActionable = mock(Actionable.class);
-		when(wrongActionable.getActionableId()).thenReturn("WRONG");
+		when(wrongActionable.getId()).thenReturn("WRONG");
 		when(wrongActionable.getParent()).thenReturn(play);
 		
 		assertThat(trigger.test(rightActionable)).isTrue();

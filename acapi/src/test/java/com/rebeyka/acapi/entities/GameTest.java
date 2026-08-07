@@ -65,7 +65,7 @@ public class GameTest {
 		verify(mockTimeline).queue(play, false);
 		verify(play).isPossible();
 		verify(play).getOrigin();
-		verify(play).getName();
+		verify(play).getId();
 		verifyNoMoreInteractions(mockTimeline);
 		verifyNoMoreInteractions(play);
 		assertThat(game.getQueuedPlays()).isEmpty();
@@ -80,7 +80,7 @@ public class GameTest {
 		assertThat(game.declarePlay(play, mockPlayer)).isTrue();
 		verify(mockTimeline).hasNext();
 		verify(play).getOrigin();
-		verify(play).getName();
+		verify(play).getId();
 		verifyNoMoreInteractions(mockTimeline);
 		verifyNoMoreInteractions(play);
 		assertThat(game.getQueuedPlays()).containsExactly(play);
@@ -96,7 +96,7 @@ public class GameTest {
 		assertThat(game.declarePlay(play, mockPlayer)).isFalse();
 		verify(mockTimeline).hasNext();
 		verify(play).getOrigin();
-		verify(play).getName();
+		verify(play).getId();
 		verify(play).isPossible();
 		verifyNoMoreInteractions(mockTimeline);
 		verifyNoMoreInteractions(play);
@@ -115,7 +115,7 @@ public class GameTest {
 		verify(mockTimeline).queue(play, true);
 		verify(play).isPossible();
 		verify(play).getOrigin();
-		verify(play).getName();
+		verify(play).getId();
 		verifyNoMoreInteractions(mockTimeline);
 		verifyNoMoreInteractions(play);
 		assertThat(game.getQueuedPlays()).isEmpty();

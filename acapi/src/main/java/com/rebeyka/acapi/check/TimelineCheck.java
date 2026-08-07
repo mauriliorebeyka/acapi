@@ -98,7 +98,7 @@ public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 
 	private String getSearchedActionableId(Object value) {
 		if (searchedActionable.isBlank() && value instanceof Actionable actionable) {
-			return actionable.getActionableId();
+			return actionable.getId();
 		} else {
 			return searchedActionable;
 		}

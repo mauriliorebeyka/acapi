@@ -10,24 +10,16 @@ import com.google.common.reflect.TypeToken;
 import com.rebeyka.acapi.entities.gameflow.Play;
 import com.rebeyka.acapi.exceptions.InvalidAttributeTypeException;
 
-public abstract class Playable {
-
-	private String id;
+public abstract class Playable extends GameEntity {
 
 	private List<Play> plays;
 
 	private Map<String, Attribute<?>> attributes;
 
-	private Game game;
-	
 	public Playable(String id) {
-		this.id = id;
+		super(id);
 		plays = new ArrayList<>();
 		attributes = new HashMap<>();
-	}
-
-	public String getId() {
-		return id;
 	}
 
 	public List<Play> getPlays() {
@@ -35,7 +27,7 @@ public abstract class Playable {
 	}
 
 	public Play getPlay(String name) {
-		return plays.stream().filter(p -> p.getName().equals(name)).findFirst().get();
+		return plays.stream().filter(p -> p.getId().equals(name)).findFirst().get();
 	}
 	
 	public void setPlays(List<Play> plays) {
@@ -72,21 +64,12 @@ public abstract class Playable {
 	}
 	
 	public <T extends Comparable<? super T>> Attribute<T> getAttribute(String name, TypeToken<T> type) {
-		return game.getModifiedAttribute(this, getRawAttribute(name, type));
+		return getGame().getModifiedAttribute(this, getRawAttribute(name, type));
 	}
 
 	public <T extends Comparable<? super T>> void setAttribute(String name, TypeToken<T> type, T value) {
 		getRawAttribute(name, type).setValue(value);
 	}
-	
-	public Game getGame() {
-		return game;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
 	
 	@Override
 	public String toString() {

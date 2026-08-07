@@ -44,7 +44,7 @@ public abstract class CostActionable extends ConditionalActionable {
 	@Override
 	public void execute() {
 		selectedChoices = getParent().getGame().getSelectedChoices();
-		Play.Builder template = new Play.Builder().name("cost of " + getParent().getName()).cost(null)
+		Play.Builder template = new Play.Builder().id("cost of " + getParent().getId()).cost(null)
 				.origin(getParent().getOrigin()).game(getParent().getGame());
 		costPlays = selectedChoices.reversed().stream()//.filter(p -> generatePlay(p) != null)
 				.map(p -> template.actionable(getActionable(p)).target(p).build()).toList();

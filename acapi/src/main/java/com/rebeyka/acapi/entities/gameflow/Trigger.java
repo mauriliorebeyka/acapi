@@ -36,11 +36,11 @@ public class Trigger {
 			return false;
 		}
 		LOG.info("Testing trigger {} against actionableId {} from {}",triggerOnActionableId,
-				triggeringActionable.getActionableId(),triggeringActionable.getParent().getOrigin().getId());
+				triggeringActionable.getId(),triggeringActionable.getParent().getOrigin().getId());
 		boolean matchingId = triggerOnActionableId.equals("ALL")
-				|| triggerOnActionableId.equals(triggeringActionable.getActionableId());
+				|| triggerOnActionableId.equals(triggeringActionable.getId());
 		if (matchingId && condition.check(triggeringActionable) && playToTrigger.getCondition().check(playToTrigger.getOrigin())) {
-			LOG.debug("Test passed, triggering play {} from {} ", playToTrigger.getName(), playToTrigger.getOrigin());
+			LOG.debug("Test passed, triggering play {} from {} ", playToTrigger.getId(), playToTrigger.getOrigin());
 			return true;
 		} else {
 			return false;

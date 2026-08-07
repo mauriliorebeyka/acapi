@@ -31,7 +31,7 @@ public class GameEntityFinder {
 	}
 
 	public Play play(Player owner, String playName) {
-		return owner.getAllPlays().filter(p -> p.getName().equals(playName))
+		return owner.getAllPlays().filter(p -> p.getId().equals(playName))
 				.findFirst().orElseThrow(() -> new GameElementNotFoundException(
 						"Could not find playId %s for Player %s".formatted(playName, owner.getId())));
 	}

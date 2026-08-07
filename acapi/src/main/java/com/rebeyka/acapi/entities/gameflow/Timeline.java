@@ -43,7 +43,7 @@ public class Timeline {
 	}
 
 	public void queue(Play newPlay, boolean skipCurrentQueue) {
-		LOG.info("Declaring play {} from {} against {}", newPlay.getName(), newPlay.getOrigin(), newPlay.getTargets());
+		LOG.info("Declaring play {} from {} against {}", newPlay.getId(), newPlay.getOrigin(), newPlay.getTargets());
 		int position = skipCurrentQueue ? currentPosition : actionables.size();
 		if (newPlay.getCost() != null) {
 			Actionable costActionable = newPlay.getCost().getCostActionable().copy(newPlay);
@@ -67,7 +67,7 @@ public class Timeline {
 	public boolean executeNext() {
 		if (hasNext()) {
 			Actionable actionable = actionables.get(currentPosition);
-			LOG.debug("Executing {}. Still {} actionables in the list ", actionable.getActionableId(),
+			LOG.debug("Executing {}. Still {} actionables in the list ", actionable.getId(),
 					actionables.size() - currentPosition);
 			if (actionable instanceof ConditionalActionable conditionalActionable && !conditionalActionable.isSet()) {
 				if (conditionalActionable instanceof CostActionable) {

@@ -20,7 +20,7 @@ public class BacktrackingActionableCheck<BASE,ROOT extends AbstractCheck<?, ?, B
 	}
 	
 	public BacktrackingStringCheck<BASE, ROOT> hasId() {
-		return new BacktrackingStringCheck<BASE, ROOT>(root, testResults, a -> function.apply(a).getActionableId(), gameAcessor);
+		return new BacktrackingStringCheck<BASE, ROOT>(root, testResults, a -> function.apply(a).getId(), gameAcessor);
 	}
 	
 	public BacktrackingPlayableCheck<BASE,ROOT> origin() {

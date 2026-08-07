@@ -44,7 +44,7 @@ public class SimpleCostActionableTest {
 	@Test
 	public void testIsSet() {
 		SimpleCostActionable actionable = (SimpleCostActionable)new SimpleCostActionable("test", mockCost, mockActionable).copy(mockPlay);
-		assertThat(actionable.getActionableId()).isEqualTo("test");
+		assertThat(actionable.getId()).isEqualTo("test");
 		assertThat(actionable.isSet()).isTrue();
 	}
 

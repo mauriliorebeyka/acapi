@@ -30,7 +30,7 @@ public class TimelineCheckTest {
 		
 		when(actionable.getParent()).thenReturn(play);
 		when(play.getGame()).thenReturn(game);
-		when(actionable.getActionableId()).thenReturn("actionable");
+		when(actionable.getId()).thenReturn("actionable");
 	}
 
 	@Test
@@ -86,7 +86,7 @@ public class TimelineCheckTest {
 	@Test
 	public void testExplicitActionableIdOverridesActionableInstanceId() {
 		when(game.countActionables("explicitId", "")).thenReturn(5);
-		when(actionable.getActionableId()).thenReturn("differentId");
+		when(actionable.getId()).thenReturn("differentId");
 
 		assertThat(whenActionable().happened("explicitId").exactly(5).sinceStart().check(actionable)).isTrue();
 	}

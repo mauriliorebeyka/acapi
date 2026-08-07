@@ -11,17 +11,14 @@ import com.rebeyka.acapi.check.Checkable;
 import com.rebeyka.acapi.check.Checker;
 import com.rebeyka.acapi.entities.Cost;
 import com.rebeyka.acapi.entities.Game;
+import com.rebeyka.acapi.entities.GameEntity;
 import com.rebeyka.acapi.entities.Playable;
 
-public class Play {
-
-	private String name;
+public class Play extends GameEntity {
 
 	private Playable origin;
 
 	private List<Playable> targets;
-
-	private Game game;
 
 	private Cost cost;
 
@@ -32,19 +29,15 @@ public class Play {
 	private Trigger triggeredBy;
 	
 	private Play(Builder builder) {
-		this.name = builder.name;
+		super(builder.id);
 		this.origin = builder.origin;
 		this.targets = builder.targets;
-		this.game = builder.game;
 		this.cost = builder.cost;
 		this.condition = builder.condition;
 		this.actionables = builder.actionables;
 		this.triggeredBy = builder.triggeredBy;
+		setGame(builder.game);
 
-	}
-
-	public String getName() {
-		return name;
 	}
 
 	public Playable getOrigin() {
@@ -54,11 +47,7 @@ public class Play {
 	public List<Playable> getTargets() {
 		return targets;
 	}
-
-	public Game getGame() {
-		return game;
-	}
-
+	
 	public Cost getCost() {
 		return cost;
 	}
@@ -89,7 +78,7 @@ public class Play {
 	
 	public static class Builder {
 		
-		private String name;
+		private String id;
 
 		private Playable origin;
 
@@ -112,7 +101,7 @@ public class Play {
 		}
 
 		public Builder(Play copy) {
-			this.name = copy.getName();
+			this.id = copy.getId();
 			this.origin = copy.getOrigin();
 			this.targets = copy.getTargets();
 			this.cost = copy.getCost();
@@ -122,8 +111,8 @@ public class Play {
 			this.game = copy.getGame();
 		}
 		
-		public Builder name(String id) {
-			this.name = id;
+		public Builder id(String id) {
+			this.id = id;
 			return this;
 		}
 		
@@ -176,7 +165,7 @@ public class Play {
 		}
 		
 		public Play build() {
-			if (name == null) {
+			if (id == null) {
 				throw new InvalidParameterException("name cannot be null");
 			}
 			return new Play(this);
