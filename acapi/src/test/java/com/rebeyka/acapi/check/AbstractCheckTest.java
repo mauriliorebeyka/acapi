@@ -11,15 +11,19 @@ public class AbstractCheckTest {
 
 	@Test
 	public void testDifferentInstances() {
-		ActionableCheck<Actionable, ?> root = Checker.whenActionable();
-		ActionableCheck<Actionable, ?> always = (ActionableCheck<Actionable, ?>) root.always();
-		System.out.println(always);
+		ActionableCheck root = Checker.whenActionable();
+		ActionableCheck always = root.always();
 		boolean result = always.not().always().check(mock(Actionable.class));
-		System.out.println("assertions");
-//		assertThat(Checker.whenActionable().not().always().check(null)).isFalse();
-		assertThat(Checker.whenString().always().always().always().always().check("")).isTrue();
 		assertThat(result).isFalse();
 		assertThat(root.check(null)).isFalse();
-//		assertThat(always.check(null)).isTrue();
 	}
+	
+	@Test
+	public void testChainedCalls() {
+		StringCheck check = Checker.whenString().always().always().always().always();
+		assertThat(check.check("")).isTrue();
+		assertThat(check.testResults.size()).isEqualTo(4);
+		
+	}
+	
 }

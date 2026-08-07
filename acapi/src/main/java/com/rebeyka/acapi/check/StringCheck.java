@@ -5,25 +5,20 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Game;
 
-public class StringCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
-		extends AbstractCheck<StringCheck<BASE, ROOT>, ROOT, BASE, String> {
+public class StringCheck extends BacktrackingStringCheck<String, StringCheck> {
 
-	protected StringCheck(ROOT root, List<TestResult<BASE>> testResults,  Function<BASE, String> function, Function<BASE, Game> gameAcessor) {
+	protected StringCheck(StringCheck root, List<TestResult<String>> testResults,
+			Function<String, String> function, Function<String, Game> gameAcessor) {
 		super(root, testResults, function, gameAcessor);
 	}
 
-	protected StringCheck(List<TestResult<BASE>> testResults, Function<BASE, String> function,
-			Function<BASE, Game> gameAcessor) {
+	protected StringCheck(List<TestResult<String>> testResults, Function<String, String> function,
+			Function<String, Game> gameAcessor) {
 		super(testResults, function, gameAcessor);
 	}
-
+	
 	@Override
-	protected StringCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		return new StringCheck<>(root, testResults, function, gameAcessor);
+	protected StringCheck self(List<TestResult<String>> testResults) {
+		return new StringCheck(root, testResults, function, gameAcessor);
 	}
-
-	public ROOT contains(String value) {
-		return addTest(s -> s.contains(value), value, "contains");
-	}
-
 }

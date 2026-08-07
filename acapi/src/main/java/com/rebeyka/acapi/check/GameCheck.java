@@ -5,18 +5,19 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Game;
 
-public class GameCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>> extends AbstractCheck<GameCheck<BASE,ROOT>, ROOT, BASE, Game> {
+public class GameCheck extends BacktrackingGameCheck<Game, GameCheck>{
 
-	protected GameCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Game> function) {
-		super(root, testResults, function, game -> (Game) game);
+	protected GameCheck(GameCheck root, List<TestResult<Game>> testResults, Function<Game, Game> function) {
+		super(root, testResults, function);
+	}
+
+	protected GameCheck(List<TestResult<Game>> testResults, Function<Game, Game> function) {
+		super(testResults, function);
 	}
 	
 	@Override
-	protected GameCheck<BASE,ROOT> self(List<TestResult<BASE>> testResults) {
-		return new GameCheck<>(root, testResults, function);
+	protected GameCheck self(List<TestResult<Game>> testResults) {
+		return new GameCheck(root,testResults,function);
 	}
 
-	public ROOT allPlayersPassed() {
-		return addTest(g -> g.getGameFlow().allPlayersPassed(), "all players passed", "passed");
-	}
 }

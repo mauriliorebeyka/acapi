@@ -14,11 +14,11 @@ public abstract class ValueCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>
 		super(root, testResults, function, gameAcessor);
 	}
 
-	public IntegerCheck<BASE, ROOT> asInt() {
-		return new IntegerCheck<>(root, testResults, p -> (int) valueAcessor.apply(function.apply(p)), gameAcessor);
+	public BacktrackingIntegerCheck<BASE, ROOT> asInt() {
+		return new BacktrackingIntegerCheck<>(root, testResults, p -> (int) valueAcessor.apply(function.apply(p)), gameAcessor);
 	}
 
-	public StringCheck<BASE, ROOT> asString() {
-		return new StringCheck<BASE, ROOT>(root, testResults, p -> (String) valueAcessor.apply(function.apply(p)),gameAcessor);
+	public BacktrackingStringCheck<BASE, ROOT> asString() {
+		return new BacktrackingStringCheck<BASE, ROOT>(root, testResults, p -> (String) valueAcessor.apply(function.apply(p)),gameAcessor);
 	}
 }

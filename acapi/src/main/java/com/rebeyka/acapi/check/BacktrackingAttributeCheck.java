@@ -6,7 +6,7 @@ import java.util.function.Function;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 
-public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
+public class BacktrackingAttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 		extends ValueCheck<BASE, ROOT, Playable> {
 
 	private String attributeName;
@@ -15,24 +15,24 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 
 	protected Function<Attribute<?>, ?> attributeValueAcessor;
 
-	protected AttributeCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function,
+	protected BacktrackingAttributeCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function,
 			String attributeName) {
 		super(root, testResults, function, g -> function.apply(g).getGame());
 		this.attributeName = attributeName;
 		this.prepareFunctions(p -> p.getAttribute(attributeName), v -> v.getValue());
 	}
 
-	protected AttributeCheck<BASE, ROOT> self(Function<Playable, Attribute<?>> attributeAcessor,
+	protected BacktrackingAttributeCheck<BASE, ROOT> self(Function<Playable, Attribute<?>> attributeAcessor,
 			Function<Attribute<?>, ?> valueAcessor) {
-		AttributeCheck<BASE, ROOT> newInstance = new AttributeCheck<>(root, testResults, function, attributeName);
+		BacktrackingAttributeCheck<BASE, ROOT> newInstance = new BacktrackingAttributeCheck<>(root, testResults, function, attributeName);
 		newInstance.prepareFunctions(attributeAcessor, valueAcessor);
 		;
 		return newInstance;
 	}
 
 	@Override
-	protected AttributeCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		AttributeCheck<BASE, ROOT> newInstanceCheck = new AttributeCheck<>(root, testResults, function, attributeName);
+	protected BacktrackingAttributeCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
+		BacktrackingAttributeCheck<BASE, ROOT> newInstanceCheck = new BacktrackingAttributeCheck<>(root, testResults, function, attributeName);
 		newInstanceCheck.attributeAcessor = this.attributeAcessor;
 		newInstanceCheck.attributeValueAcessor = this.attributeValueAcessor;
 		newInstanceCheck.prepareFunctions(this.attributeAcessor, this.attributeValueAcessor);
@@ -46,19 +46,19 @@ public class AttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 		this.valueAcessor = attributeAcessor.andThen(attributeValueAcessor);
 	}
 
-	public AttributeCheck<BASE, ROOT> raw() {
+	public BacktrackingAttributeCheck<BASE, ROOT> raw() {
 		return self(p -> p.getRawAttribute(attributeName), attributeValueAcessor);
 	}
 
-	public AttributeCheck<BASE, ROOT> initial() {
+	public BacktrackingAttributeCheck<BASE, ROOT> initial() {
 		return self(attributeAcessor, v -> v.getInitialValue());
 	}
 
-	public AttributeCheck<BASE, ROOT> min() {
+	public BacktrackingAttributeCheck<BASE, ROOT> min() {
 		return self(attributeAcessor, v -> v.getMinValue());
 	}
 
-	public AttributeCheck<BASE, ROOT> max() {
+	public BacktrackingAttributeCheck<BASE, ROOT> max() {
 		return self(attributeAcessor, v -> v.getMaxValue());
 	}
 

@@ -9,25 +9,25 @@ import com.rebeyka.acapi.entities.PlayArea;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.view.VisibilityType;
 
-public class PlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T extends PlayArea<Collection<?>, ?>>
-		extends AbstractCheck<PlayAreaCheck<BASE, ROOT, T>, ROOT, BASE, T> {
+public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T extends PlayArea<Collection<?>, ?>>
+		extends AbstractCheck<BacktrackingPlayAreaCheck<BASE, ROOT, T>, ROOT, BASE, T> {
 
-	protected PlayAreaCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function,
+	protected BacktrackingPlayAreaCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function,
 			Function<BASE, Game> gameAcessor) {
 		super(testResults, function, gameAcessor);
 	}
 
 	@Override
-	protected PlayAreaCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
-		return new PlayAreaCheck<BASE, ROOT, T>(testResults, function, gameAcessor);
+	protected BacktrackingPlayAreaCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
+		return new BacktrackingPlayAreaCheck<BASE, ROOT, T>(testResults, function, gameAcessor);
 	}
 
 	public ROOT empty() {
 		return addTest(p -> p.getAll().isEmpty(), "", "is empty");
 	}
 
-	public IntegerCheck<BASE, ROOT> size() {
-		return new IntegerCheck<>(root, testResults, p -> function.apply(p).getAll().size(), gameAcessor);
+	public BacktrackingIntegerCheck<BASE, ROOT> size() {
+		return new BacktrackingIntegerCheck<>(root, testResults, p -> function.apply(p).getAll().size(), gameAcessor);
 	}
 
 	public ROOT constains(String id) {
@@ -40,7 +40,7 @@ public class PlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T exten
 	
 	//TODO Needs method to check for occurrence group by a specific attribute.
 	
-	public PlayableCheck<BASE,ROOT> playable(String id) {
-		return new PlayableCheck<BASE,ROOT>(testResults, p -> function.apply(p).get(id));
+	public BacktrackingPlayableCheck<BASE,ROOT> playable(String id) {
+		return new BacktrackingPlayableCheck<BASE,ROOT>(testResults, p -> function.apply(p).get(id));
 	}
 }

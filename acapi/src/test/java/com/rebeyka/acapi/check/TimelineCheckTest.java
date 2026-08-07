@@ -37,7 +37,9 @@ public class TimelineCheckTest {
 	public void testSinceStartAndIdExtraction() {
 		when(game.countActionables("actionable", "")).thenReturn(1);
 
-		assertThat(whenActionable().hasId().isEqualsTo("actionable").happened().sinceStart().check(actionable)).isTrue();
+		ActionableCheck check = whenActionable().hasId().isEqualsTo("actionable").happened().sinceStart();
+		
+		assertThat(check.check(actionable)).isTrue();
 	}
 
 	@Test

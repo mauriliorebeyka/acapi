@@ -13,7 +13,6 @@ import org.mockito.MockitoAnnotations;
 
 import com.rebeyka.acapi.actionables.Actionable;
 import com.rebeyka.acapi.check.Checker;
-import com.rebeyka.acapi.check.PlayableCheck;
 import com.rebeyka.acapi.entities.Playable;
 
 public class TriggerTest {

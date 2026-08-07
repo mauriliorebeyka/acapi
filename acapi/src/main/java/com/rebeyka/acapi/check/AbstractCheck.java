@@ -61,7 +61,8 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		return (SELF) this;
 	}
 
-	public ROOT anyOf(AbstractCheck<?, ?, T, ?>... checks) {
+	@SafeVarargs
+	public final ROOT anyOf(AbstractCheck<?, ?, T, ?>... checks) {
 		Predicate<T> any = _ -> false;
 		String message = "any of (";
 		for (AbstractCheck<?, ?, T, ?> check : checks) {
@@ -73,7 +74,8 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		return addTest(any, "", message);
 	}
 
-	public ROOT allOf(AbstractCheck<?, ?, T, ?>... checks) {
+	@SafeVarargs
+	public final ROOT allOf(AbstractCheck<?, ?, T, ?>... checks) {
 		Predicate<T> all = _ -> true;
 		String message = "all of (";
 		for (AbstractCheck<?, ?, T, ?> check : checks) {
@@ -120,16 +122,16 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		return passedTests == testResults.size();
 	}
 
-	public GameCheck<BASE, ROOT> game() {
-		return new GameCheck<BASE, ROOT>(root, testResults, gameAcessor);
+	public BacktrackingGameCheck<BASE,ROOT> game() {
+		return new BacktrackingGameCheck<>(root, testResults, gameAcessor);
 	}
 
-	public TimelineCheck<BASE, ? extends AbstractCheck<?, ?, BASE, T>, T> happened() {
+	public TimelineCheck<BASE, ROOT> happened() {
 		return happened("");
 	}
 
-	public TimelineCheck<BASE, ? extends AbstractCheck<?, ?, BASE, T>, T> happened(String actionableId) {
-		return new TimelineCheck<>(this, testResults, gameAcessor, actionableId);
+	public TimelineCheck<BASE, ROOT> happened(String actionableId) {
+		return new TimelineCheck<>(root, testResults, gameAcessor, actionableId);
 	}
 
 }

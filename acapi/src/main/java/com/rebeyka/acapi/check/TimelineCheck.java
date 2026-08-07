@@ -9,8 +9,8 @@ import com.rebeyka.acapi.actionables.gameflow.EndRoundActionable;
 import com.rebeyka.acapi.actionables.gameflow.EndTurnActionable;
 import com.rebeyka.acapi.entities.Game;
 
-public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, T>, T>
-		extends AbstractCheck<TimelineCheck<BASE, ROOT, T>, ROOT, BASE, Integer> {
+public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
+		extends AbstractCheck<TimelineCheck<BASE, ROOT>, ROOT, BASE, Integer> {
 
 	private int times;
 
@@ -33,40 +33,40 @@ public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, T>, T>
 	}
 
 	@Override
-	protected TimelineCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
+	protected TimelineCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
 		return new TimelineCheck<>(root, testResults, gameAcessor, searchedActionable);
 	}
 
-	public TimelineCheck<BASE, ROOT, T> atLeast(int number) {
+	public TimelineCheck<BASE, ROOT> atLeast(int number) {
 		times = number;
 		timesPredicate = i -> i >= number;
 		predicateDescription = "happened at least %s times since %s";
 		return this;
 	}
 
-	public TimelineCheck<BASE, ROOT, T> atLeastOnce() {
+	public TimelineCheck<BASE, ROOT> atLeastOnce() {
 		return atLeast(1);
 	}
 
-	public TimelineCheck<BASE, ROOT, T> atMost(int number) {
+	public TimelineCheck<BASE, ROOT> atMost(int number) {
 		times = number;
 		timesPredicate = i -> i <= number;
 		predicateDescription = "happened at most %s times since %s";
 		return this;
 	}
 
-	public TimelineCheck<BASE, ROOT, T> atMostOnce() {
+	public TimelineCheck<BASE, ROOT> atMostOnce() {
 		return atMost(1);
 	}
 
-	public TimelineCheck<BASE, ROOT, T> exactly(int number) {
+	public TimelineCheck<BASE, ROOT> exactly(int number) {
 		times = number;
 		timesPredicate = i -> i == number;
 		predicateDescription = "happened exactly %s times since %s";
 		return this;
 	}
 
-	public TimelineCheck<BASE, ROOT, T> once() {
+	public TimelineCheck<BASE, ROOT> once() {
 		return exactly(1);
 	}
 
