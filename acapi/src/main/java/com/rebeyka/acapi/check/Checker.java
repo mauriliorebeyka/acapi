@@ -18,15 +18,15 @@ public class Checker{
 	}	
 	
 	public static StringCheck whenString() {
-		return new StringCheck(new ArrayList<>(), Function.identity(), null);
+		return new StringCheck(new ArrayList<>(), Function.identity());
 	}
 	
 	public static IntegerCheck whenInteger() {
-		return new IntegerCheck(new ArrayList<>(), Function.identity(), null);
+		return new IntegerCheck(new ArrayList<>(), Function.identity());
 	}
 	
 	public static PlayerCheck whenPlayer() {
-		return new PlayerCheck(new ArrayList<>(), Function.identity(), p -> p.getGame());
+		return new PlayerCheck(new ArrayList<>(), Function.identity());
 	}
 }
 

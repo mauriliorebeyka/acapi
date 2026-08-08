@@ -3,23 +3,20 @@ package com.rebeyka.acapi.check;
 import java.util.List;
 import java.util.function.Function;
 
-import com.rebeyka.acapi.entities.Game;
-
 public class BacktrackingIntegerCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 		extends AbstractCheck<BacktrackingIntegerCheck<BASE, ROOT>, ROOT, BASE, Integer> {
 
-	protected BacktrackingIntegerCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Integer> function, Function<BASE, Game> gameAcessor) {
-		super(root, testResults, function, gameAcessor);
+	protected BacktrackingIntegerCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Integer> function) {
+		super(root, testResults, function);
 	}
 
-	protected BacktrackingIntegerCheck(List<TestResult<BASE>> testResults, Function<BASE, Integer> function,
-			Function<BASE, Game> gameAcessor) {
-		super(testResults, function, gameAcessor);
+	protected BacktrackingIntegerCheck(List<TestResult<BASE>> testResults, Function<BASE, Integer> function) {
+		super(testResults, function);
 	}
 
 	@Override
 	protected BacktrackingIntegerCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		return new BacktrackingIntegerCheck<>(root, testResults, function, gameAcessor);
+		return new BacktrackingIntegerCheck<>(root, testResults, function);
 	}
 
 	public ROOT biggerThan(int value) {

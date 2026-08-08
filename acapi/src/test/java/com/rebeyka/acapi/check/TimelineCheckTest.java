@@ -29,6 +29,7 @@ public class TimelineCheckTest {
 		MockitoAnnotations.openMocks(this);
 		
 		when(actionable.getParent()).thenReturn(play);
+		when(actionable.getGame()).thenReturn(game);
 		when(play.getGame()).thenReturn(game);
 		when(actionable.getId()).thenReturn("actionable");
 	}
@@ -37,7 +38,7 @@ public class TimelineCheckTest {
 	public void testSinceStartAndIdExtraction() {
 		when(game.countActionables("actionable", "")).thenReturn(1);
 
-		ActionableCheck check = whenActionable().hasId().isEqualsTo("actionable").happened().sinceStart();
+		ActionableCheck check = whenActionable().id().isEqualsTo("actionable").happened().sinceStart();
 		
 		assertThat(check.check(actionable)).isTrue();
 	}

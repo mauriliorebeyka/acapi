@@ -9,8 +9,8 @@ import com.rebeyka.acapi.actionables.gameflow.EndRoundActionable;
 import com.rebeyka.acapi.actionables.gameflow.EndTurnActionable;
 import com.rebeyka.acapi.entities.Game;
 
-public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
-		extends AbstractCheck<TimelineCheck<BASE, ROOT>, ROOT, BASE, Integer> {
+public class BacktrackingTimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
+		extends AbstractCheck<BacktrackingTimelineCheck<BASE, ROOT>, ROOT, BASE, Integer> {
 
 	private int times;
 
@@ -24,8 +24,8 @@ public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 	
 	private Function<BASE, Game> gameAcessor;
 
-	protected TimelineCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Game> gameAcessor, String searchedActionable) {
-		super(root, testResults, null, gameAcessor);
+	protected BacktrackingTimelineCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Game> gameAcessor, String searchedActionable) {
+		super(root, testResults, null);
 		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
 		this.gameAcessor = gameAcessor;
 		this.searchedActionable = searchedActionable;
@@ -33,40 +33,40 @@ public class TimelineCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 	}
 
 	@Override
-	protected TimelineCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		return new TimelineCheck<>(root, testResults, gameAcessor, searchedActionable);
+	protected BacktrackingTimelineCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
+		return new BacktrackingTimelineCheck<>(root, testResults, gameAcessor, searchedActionable);
 	}
 
-	public TimelineCheck<BASE, ROOT> atLeast(int number) {
+	public BacktrackingTimelineCheck<BASE, ROOT> atLeast(int number) {
 		times = number;
 		timesPredicate = i -> i >= number;
 		predicateDescription = "happened at least %s times since %s";
 		return this;
 	}
 
-	public TimelineCheck<BASE, ROOT> atLeastOnce() {
+	public BacktrackingTimelineCheck<BASE, ROOT> atLeastOnce() {
 		return atLeast(1);
 	}
 
-	public TimelineCheck<BASE, ROOT> atMost(int number) {
+	public BacktrackingTimelineCheck<BASE, ROOT> atMost(int number) {
 		times = number;
 		timesPredicate = i -> i <= number;
 		predicateDescription = "happened at most %s times since %s";
 		return this;
 	}
 
-	public TimelineCheck<BASE, ROOT> atMostOnce() {
+	public BacktrackingTimelineCheck<BASE, ROOT> atMostOnce() {
 		return atMost(1);
 	}
 
-	public TimelineCheck<BASE, ROOT> exactly(int number) {
+	public BacktrackingTimelineCheck<BASE, ROOT> exactly(int number) {
 		times = number;
 		timesPredicate = i -> i == number;
 		predicateDescription = "happened exactly %s times since %s";
 		return this;
 	}
 
-	public TimelineCheck<BASE, ROOT> once() {
+	public BacktrackingTimelineCheck<BASE, ROOT> once() {
 		return exactly(1);
 	}
 

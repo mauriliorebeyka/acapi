@@ -17,7 +17,7 @@ public class BacktrackingAttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, B
 
 	protected BacktrackingAttributeCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function,
 			String attributeName) {
-		super(root, testResults, function, g -> function.apply(g).getGame());
+		super(root, testResults, function);
 		this.attributeName = attributeName;
 		this.prepareFunctions(p -> p.getAttribute(attributeName), v -> v.getValue());
 	}

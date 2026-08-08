@@ -3,29 +3,26 @@ package com.rebeyka.acapi.check;
 import java.util.List;
 import java.util.function.Function;
 
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.Player;
 
 public class BacktrackingPlayerCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
 		extends AbstractCheck<BacktrackingPlayerCheck<BASE, ROOT>, ROOT, BASE, Player> {
 
-	public BacktrackingPlayerCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Player> function,
-			Function<BASE, Game> gameAcessor) {
-		super(root, testResults, function, gameAcessor);
+	public BacktrackingPlayerCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Player> function) {
+		super(root, testResults, function);
 	}
 
-	protected BacktrackingPlayerCheck(List<TestResult<BASE>> testResults, Function<BASE, Player> function,
-			Function<BASE, Game> gameAcessor) {
-		super(testResults, function, gameAcessor);
+	protected BacktrackingPlayerCheck(List<TestResult<BASE>> testResults, Function<BASE, Player> function) {
+		super(testResults, function);
 	}
 
 	@Override
 	protected BacktrackingPlayerCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		return new BacktrackingPlayerCheck<BASE, ROOT>(root, testResults, function, gameAcessor);
+		return new BacktrackingPlayerCheck<BASE, ROOT>(root, testResults, function);
 	}
 
 	public BacktrackingStringCheck<BASE, ROOT> id() {
-		return new BacktrackingStringCheck<>(root, testResults, f -> function.apply(f).getId(), gameAcessor);
+		return new BacktrackingStringCheck<>(root, testResults, f -> function.apply(f).getId());
 	}
 
 	public ROOT isCurrentPlayer() {

@@ -9,23 +9,19 @@ import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.view.VisibilityType;
 
 public class BacktrackingPlayableCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
-		extends AbstractCheck<BacktrackingPlayableCheck<BASE, ROOT>, ROOT, BASE, Playable> {
+		extends GameEntityCheck<BASE, ROOT, Playable> {
 
 	protected BacktrackingPlayableCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
-		super(root, testResults, function, g -> function.apply(g).getGame());
+		super(root, testResults, function);
 	}
 
 	protected BacktrackingPlayableCheck(List<TestResult<BASE>> testResults, Function<BASE, Playable> function) {
-		super(testResults, function, g -> function.apply(g).getGame());
+		super(testResults, function);
 	}
 
 	@Override
 	protected BacktrackingPlayableCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
 		return new BacktrackingPlayableCheck<>(root, testResults, this.function);
-	}
-
-	public BacktrackingStringCheck<BASE, ROOT> hasId() {
-		return new BacktrackingStringCheck<>(root, testResults,  p -> function.apply(p).getId(), gameAcessor);
 	}
 
 	public ROOT isPlayer() {
@@ -44,13 +40,12 @@ public class BacktrackingPlayableCheck<BASE, ROOT extends AbstractCheck<?, ?, BA
 
 	public BacktrackingPlayerCheck<BASE, ROOT> controller() {
 		return new BacktrackingPlayerCheck<BASE, ROOT>(root, testResults,
-				p -> function.apply(p).getGame().find().playArea(function.apply(p)).getOwner(), gameAcessor);
+				p -> function.apply(p).getGame().find().playArea(function.apply(p)).getOwner());
 	}
 
 	public BacktrackingPlayerCheck<BASE, ROOT> owner() {
 		return new BacktrackingPlayerCheck<BASE, ROOT>(root, testResults,
-				p -> function.apply(p) instanceof BasePlayable bp ? bp.getOwner() : (Player) function.apply(p),
-				gameAcessor);
+				p -> function.apply(p) instanceof BasePlayable bp ? bp.getOwner() : (Player) function.apply(p));
 	}
 
 	public ROOT visibility(VisibilityType visibility) {

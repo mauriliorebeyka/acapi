@@ -8,8 +8,6 @@ import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.rebeyka.acapi.entities.Game;
-
 @SuppressWarnings("unchecked")
 public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE, T>, ROOT extends AbstractCheck<?, ?, BASE, ?>, BASE, T>
 		implements Checkable<BASE> {
@@ -22,22 +20,18 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 
 	private boolean negate;
 
-	protected Function<BASE, Game> gameAcessor;
-
 	protected ROOT root;
 
-	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function,
-			Function<BASE, Game> gameAcessor) {
+	protected AbstractCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
 		LOG.trace("New Instance {}",this);
 		this.testResults = new ArrayList<TestResult<BASE>>(testResults);
 		this.function = function;
 		this.negate = false;
-		this.gameAcessor = gameAcessor;
 		this.root = (ROOT) this;
 	}
 
-	protected AbstractCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, T> function, Function<BASE, Game> gameAcessor) {
-		this(testResults, function, gameAcessor);
+	protected AbstractCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, T> function) {
+		this(testResults, function);
 		LOG.trace("Using ROOT {}", root);
 		this.root = root;
 	}
@@ -120,18 +114,6 @@ public abstract class AbstractCheck<SELF extends AbstractCheck<SELF, ROOT, BASE,
 		}
 		long passedTests = testResults.stream().map(p -> p.test(testedValue)).filter(b -> b == true).count();
 		return passedTests == testResults.size();
-	}
-
-	public BacktrackingGameCheck<BASE,ROOT> game() {
-		return new BacktrackingGameCheck<>(root, testResults, gameAcessor);
-	}
-
-	public TimelineCheck<BASE, ROOT> happened() {
-		return happened("");
-	}
-
-	public TimelineCheck<BASE, ROOT> happened(String actionableId) {
-		return new TimelineCheck<>(root, testResults, gameAcessor, actionableId);
 	}
 
 }

@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.PlayArea;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.view.VisibilityType;
@@ -12,14 +11,13 @@ import com.rebeyka.acapi.view.VisibilityType;
 public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T extends PlayArea<Collection<?>, ?>>
 		extends AbstractCheck<BacktrackingPlayAreaCheck<BASE, ROOT, T>, ROOT, BASE, T> {
 
-	protected BacktrackingPlayAreaCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function,
-			Function<BASE, Game> gameAcessor) {
-		super(testResults, function, gameAcessor);
+	protected BacktrackingPlayAreaCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
+		super(testResults, function);
 	}
 
 	@Override
 	protected BacktrackingPlayAreaCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
-		return new BacktrackingPlayAreaCheck<BASE, ROOT, T>(testResults, function, gameAcessor);
+		return new BacktrackingPlayAreaCheck<BASE, ROOT, T>(testResults, function);
 	}
 
 	public ROOT empty() {
@@ -27,7 +25,7 @@ public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE
 	}
 
 	public BacktrackingIntegerCheck<BASE, ROOT> size() {
-		return new BacktrackingIntegerCheck<>(root, testResults, p -> function.apply(p).getAll().size(), gameAcessor);
+		return new BacktrackingIntegerCheck<>(root, testResults, p -> function.apply(p).getAll().size());
 	}
 
 	public ROOT constains(String id) {
