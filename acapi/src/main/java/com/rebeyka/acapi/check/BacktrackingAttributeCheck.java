@@ -6,7 +6,7 @@ import java.util.function.Function;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 
-public class BacktrackingAttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
+public class BacktrackingAttributeCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>>
 		extends ValueCheck<BASE, ROOT, Playable> {
 
 	private String attributeName;
@@ -15,29 +15,29 @@ public class BacktrackingAttributeCheck<BASE, ROOT extends AbstractCheck<?, ?, B
 
 	protected Function<Attribute<?>, ?> attributeValueAcessor;
 
-	protected BacktrackingAttributeCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Playable> function,
+	protected BacktrackingAttributeCheck(AbstractCheck<?,BASE,?> root, Function<BASE, Playable> function,
 			String attributeName) {
-		super(root, testResults, function);
+		super(root, function);
 		this.attributeName = attributeName;
 		this.prepareFunctions(p -> p.getAttribute(attributeName), v -> v.getValue());
 	}
 
 	protected BacktrackingAttributeCheck<BASE, ROOT> self(Function<Playable, Attribute<?>> attributeAcessor,
 			Function<Attribute<?>, ?> valueAcessor) {
-		BacktrackingAttributeCheck<BASE, ROOT> newInstance = new BacktrackingAttributeCheck<>(root, testResults, function, attributeName);
+		BacktrackingAttributeCheck<BASE, ROOT> newInstance = new BacktrackingAttributeCheck<>(this, function, attributeName);
 		newInstance.prepareFunctions(attributeAcessor, valueAcessor);
 		;
 		return newInstance;
 	}
 
-	@Override
-	protected BacktrackingAttributeCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		BacktrackingAttributeCheck<BASE, ROOT> newInstanceCheck = new BacktrackingAttributeCheck<>(root, testResults, function, attributeName);
-		newInstanceCheck.attributeAcessor = this.attributeAcessor;
-		newInstanceCheck.attributeValueAcessor = this.attributeValueAcessor;
-		newInstanceCheck.prepareFunctions(this.attributeAcessor, this.attributeValueAcessor);
-		return newInstanceCheck;
-	}
+//	@Override
+//	protected BacktrackingAttributeCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
+//		BacktrackingAttributeCheck<BASE, ROOT> newInstanceCheck = new BacktrackingAttributeCheck<>(root, testResults, function, attributeName);
+//		newInstanceCheck.attributeAcessor = this.attributeAcessor;
+//		newInstanceCheck.attributeValueAcessor = this.attributeValueAcessor;
+//		newInstanceCheck.prepareFunctions(this.attributeAcessor, this.attributeValueAcessor);
+//		return newInstanceCheck;
+//	}
 
 	private void prepareFunctions(Function<Playable, Attribute<?>> attributeAcessor,
 			Function<Attribute<?>, ?> valueAcessor) {

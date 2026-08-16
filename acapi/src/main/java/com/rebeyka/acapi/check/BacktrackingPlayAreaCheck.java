@@ -8,16 +8,11 @@ import com.rebeyka.acapi.entities.PlayArea;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.view.VisibilityType;
 
-public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE,?>, T extends PlayArea<Collection<?>, ?>>
-		extends AbstractCheck<BacktrackingPlayAreaCheck<BASE, ROOT, T>, ROOT, BASE, T> {
+public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>, T extends PlayArea<Collection<?>, ?>>
+		extends AbstractCheck<ROOT, BASE, T> {
 
-	protected BacktrackingPlayAreaCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
-		super(testResults, function);
-	}
-
-	@Override
-	protected BacktrackingPlayAreaCheck<BASE, ROOT, T> self(List<TestResult<BASE>> testResults) {
-		return new BacktrackingPlayAreaCheck<BASE, ROOT, T>(testResults, function);
+	protected BacktrackingPlayAreaCheck(AbstractCheck<?,BASE,?> root, Function<BASE, T> function) {
+		super(root, function);
 	}
 
 	public ROOT empty() {
@@ -25,7 +20,7 @@ public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE
 	}
 
 	public BacktrackingIntegerCheck<BASE, ROOT> size() {
-		return new BacktrackingIntegerCheck<>(root, testResults, p -> function.apply(p).getAll().size());
+		return new BacktrackingIntegerCheck<>(this, p -> function.apply(p).getAll().size());
 	}
 
 	public ROOT constains(String id) {
@@ -39,6 +34,6 @@ public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,?,BASE
 	//TODO Needs method to check for occurrence group by a specific attribute.
 	
 	public BacktrackingPlayableCheck<BASE,ROOT> playable(String id) {
-		return new BacktrackingPlayableCheck<BASE,ROOT>(testResults, p -> function.apply(p).get(id));
+		return new BacktrackingPlayableCheck<BASE,ROOT>(this, p -> function.apply(p).get(id));
 	}
 }

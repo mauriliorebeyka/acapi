@@ -34,7 +34,7 @@ public class PlayableCheckTest {
 				.thenReturn(attribute);
 		
 		PlayableCheck checker = Checker.whenPlayable();
-		checker = checker.not().isExactly(another).attribute("title").asString().isEqualsTo("A TITLE").attribute("title").asString().not().isEqualsTo("TITLE").isActivePlayer();
+		checker = checker.not().isExactly(another).attribute("title").asString().isEqualsTo("A TITLE").not().attribute("title").asString().isEqualsTo("TITLE").isActivePlayer();
 		assertThat(checker.check(player)).isTrue();
 	}
 

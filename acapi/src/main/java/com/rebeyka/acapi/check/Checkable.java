@@ -1,6 +1,13 @@
 package com.rebeyka.acapi.check;
 
-public interface Checkable<BASE> {
+import java.util.ArrayList;
+import java.util.List;
 
-	boolean check(BASE value);
+public abstract class Checkable<BASE> {
+
+	protected List<TestResult<BASE>> testResults;
+
+	protected boolean negate;
+	
+	public abstract boolean check(BASE value);
 }

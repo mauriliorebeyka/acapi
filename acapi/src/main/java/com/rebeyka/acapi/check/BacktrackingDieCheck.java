@@ -5,18 +5,14 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.random.Die;
 
-public class BacktrackingDieCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>>
+public class BacktrackingDieCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>>
 		extends ValueCheck<BASE, ROOT, Die<?>> {
 
-	protected BacktrackingDieCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, Die<?>> function) {
-		super(root, testResults, function);
+	protected BacktrackingDieCheck(ROOT root, Function<BASE, Die<?>> function) {
+		super(root, function);
 		this.valueAcessor = d -> d.getValue();
 	}
 
-	@Override
-	protected BacktrackingDieCheck<BASE, ROOT> self(List<TestResult<BASE>> testResults) {
-		return new BacktrackingDieCheck<>(root, testResults, function);
-	}
 
 	public ROOT isRolled() {
 		return addTest(p -> p.isRolled(), "is", "rolled");

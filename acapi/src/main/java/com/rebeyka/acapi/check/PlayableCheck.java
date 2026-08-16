@@ -1,22 +1,21 @@
 package com.rebeyka.acapi.check;
 
-import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Playable;
 
-public class PlayableCheck extends BacktrackingPlayableCheck<Playable, PlayableCheck>{
+public class PlayableCheck extends BacktrackingPlayableCheck<Playable, PlayableCheck> implements RootChecker<Playable,PlayableCheck>{
 
-	protected PlayableCheck(PlayableCheck root, List<TestResult<Playable>> testResults, Function<Playable, Playable> function) {
-		super(root, testResults, function);
+	protected PlayableCheck(PlayableCheck root, Function<Playable, Playable> function) {
+		super(root, function);
 	}
 	
-	protected PlayableCheck(List<TestResult<Playable>> testResults, Function<Playable, Playable> function) {
-		super(testResults, function);
+	protected PlayableCheck() {
+		super(null, Function.identity());
 	}
 
 	@Override
-	protected PlayableCheck self(List<TestResult<Playable>> testResults) {
-		return new PlayableCheck(this, testResults, function);
+	public PlayableCheck self() {
+		return new PlayableCheck(this, function);
 	}
 }

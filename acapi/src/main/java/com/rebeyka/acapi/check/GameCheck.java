@@ -1,23 +1,22 @@
 package com.rebeyka.acapi.check;
 
-import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Game;
 
-public class GameCheck extends BacktrackingGameCheck<Game, GameCheck>{
+public class GameCheck extends BacktrackingGameCheck<Game, GameCheck> implements RootChecker<Game,GameCheck>{
 
-	protected GameCheck(GameCheck root, List<TestResult<Game>> testResults, Function<Game, Game> function) {
-		super(root, testResults, function);
+	protected GameCheck(GameCheck root, Function<Game, Game> function) {
+		super(root, function);
 	}
 
-	protected GameCheck(List<TestResult<Game>> testResults, Function<Game, Game> function) {
-		super(testResults, function);
+	protected GameCheck() {
+		super(null, Function.identity());
 	}
 	
 	@Override
-	protected GameCheck self(List<TestResult<Game>> testResults) {
-		return new GameCheck(root,testResults,function);
+	public GameCheck self() {
+		return new GameCheck(root,function);
 	}
 
 }

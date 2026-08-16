@@ -1,22 +1,21 @@
 package com.rebeyka.acapi.check;
 
-import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Player;
 
-public class PlayerCheck extends BacktrackingPlayerCheck<Player,PlayerCheck>{
+public class PlayerCheck extends BacktrackingPlayerCheck<Player,PlayerCheck> implements RootChecker<Player, PlayerCheck>{
 
-	protected PlayerCheck(PlayerCheck root, List<TestResult<Player>> testResults, Function<Player, Player> function) {
-		super(root, testResults, function);
+	protected PlayerCheck(PlayerCheck root, Function<Player, Player> function) {
+		super(root, function);
 	}
 
-	protected PlayerCheck(List<TestResult<Player>> testResults, Function<Player, Player> function) {
-		super(testResults, function);
+	protected PlayerCheck() {
+		super(null, Function.identity());
 	}
 	
 	@Override
-	protected PlayerCheck self(List<TestResult<Player>> testResults) {
-		return new PlayerCheck(this, testResults, function);
+	public PlayerCheck self() {
+		return new PlayerCheck(this, function);
 	}
 }

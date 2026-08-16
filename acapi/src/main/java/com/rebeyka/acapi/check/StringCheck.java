@@ -1,21 +1,20 @@
 package com.rebeyka.acapi.check;
 
-import java.util.List;
 import java.util.function.Function;
 
-public class StringCheck extends BacktrackingStringCheck<String, StringCheck> {
+public class StringCheck extends BacktrackingStringCheck<String, StringCheck>
+		implements RootChecker<String, StringCheck> {
 
-	protected StringCheck(StringCheck root, List<TestResult<String>> testResults,
-			Function<String, String> function) {
-		super(root, testResults, function);
+	protected StringCheck(StringCheck root, Function<String, String> function) {
+		super(root, function);
 	}
 
-	protected StringCheck(List<TestResult<String>> testResults, Function<String, String> function) {
-		super(testResults, function);
+	protected StringCheck() {
+		super(null, Function.identity());
 	}
-	
+
 	@Override
-	protected StringCheck self(List<TestResult<String>> testResults) {
-		return new StringCheck(root, testResults, function);
+	public StringCheck self() {
+		return new StringCheck(root, function);
 	}
 }

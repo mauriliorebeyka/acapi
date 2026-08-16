@@ -1,20 +1,19 @@
 package com.rebeyka.acapi.check;
 
-import java.util.List;
 import java.util.function.Function;
 
-public class IntegerCheck extends BacktrackingIntegerCheck<Integer, IntegerCheck>{
+public class IntegerCheck extends BacktrackingIntegerCheck<Integer, IntegerCheck> implements RootChecker<Integer,IntegerCheck>{
 	
-	protected IntegerCheck(IntegerCheck root, List<TestResult<Integer>> testResults, Function<Integer, Integer> function) {
-		super(root, testResults, function);
+	protected IntegerCheck(IntegerCheck root, Function<Integer, Integer> function) {
+		super(root, function);
 	}
 
-	protected IntegerCheck(List<TestResult<Integer>> testResults, Function<Integer, Integer> function) {
-		super(testResults, function);
+	protected IntegerCheck() {
+		super(null, Function.identity());
 	}
 	
 	@Override
-	protected IntegerCheck self(List<TestResult<Integer>> testResults) {
-		return new IntegerCheck(this, testResults, function);
+	public IntegerCheck self() {
+		return new IntegerCheck(this, function);
 	}
 }

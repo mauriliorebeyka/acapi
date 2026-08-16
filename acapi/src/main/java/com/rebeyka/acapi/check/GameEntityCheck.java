@@ -5,19 +5,15 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.GameEntity;
 
-public abstract class GameEntityCheck<BASE, ROOT extends AbstractCheck<?, ?, BASE, ?>, T extends GameEntity>
-		extends AbstractCheck<GameEntityCheck<BASE, ROOT, T>, ROOT, BASE, T> {
+public abstract class GameEntityCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>, T extends GameEntity>
+		extends AbstractCheck<ROOT, BASE, T> {
 	
-	protected GameEntityCheck(ROOT root, List<TestResult<BASE>> testResults, Function<BASE, T> function) {
-		super(root, testResults, function);
-	}
-
-	protected GameEntityCheck(List<TestResult<BASE>> testResults, Function<BASE, T> function) {
-		super(testResults, function);
+	protected GameEntityCheck(AbstractCheck<?,BASE,?> root, Function<BASE, T> function) {
+		super(root, function);
 	}
 	
 	public BacktrackingGameCheck<BASE,ROOT> game() {
-		return new BacktrackingGameCheck<BASE,ROOT>(root, testResults, g -> function.apply(g).getGame());
+		return new BacktrackingGameCheck<BASE,ROOT>(this, g -> function.apply(g).getGame());
 	}
 	
 	public BacktrackingTimelineCheck<BASE,ROOT> happened() {
@@ -25,10 +21,10 @@ public abstract class GameEntityCheck<BASE, ROOT extends AbstractCheck<?, ?, BAS
 	}
 	
 	public BacktrackingTimelineCheck<BASE, ROOT> happened(String actionableId) {
-		return new BacktrackingTimelineCheck<>(root, testResults, g -> function.apply(g).getGame(), actionableId);
+		return new BacktrackingTimelineCheck<>(this, g -> function.apply(g).getGame(), actionableId);
 	}
 	
 	public BacktrackingStringCheck<BASE,ROOT> id() {
-		return new BacktrackingStringCheck<BASE,ROOT>(root, testResults, e -> function.apply(e).getId());
+		return new BacktrackingStringCheck<BASE,ROOT>(this, e -> function.apply(e).getId());
 	}
 }
