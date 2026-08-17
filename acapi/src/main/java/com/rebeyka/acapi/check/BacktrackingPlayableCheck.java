@@ -7,10 +7,10 @@ import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.entities.Player;
 import com.rebeyka.acapi.view.VisibilityType;
 
-public class BacktrackingPlayableCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>>
+public class BacktrackingPlayableCheck<BASE, ROOT extends Checkable<BASE>>
 		extends GameEntityCheck<BASE, ROOT, Playable> {
 
-	protected BacktrackingPlayableCheck(AbstractCheck<?,BASE,?> root, Function<BASE, Playable> function) {
+	protected BacktrackingPlayableCheck(Checkable<BASE> root, Function<BASE, Playable> function) {
 		super(root, function);
 	}
 

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.actionables.Actionable;
-public class BacktrackingActionableCheck<BASE,ROOT extends AbstractCheck<?,BASE,?>> extends GameEntityCheck<BASE, ROOT, Actionable> {
+public class BacktrackingActionableCheck<BASE,ROOT extends Checkable<BASE>> extends GameEntityCheck<BASE, ROOT, Actionable> {
 	
-	protected BacktrackingActionableCheck(AbstractCheck<?,BASE,?> root, Function<BASE, Actionable> function) {
+	protected BacktrackingActionableCheck(Checkable<BASE> root, Function<BASE, Actionable> function) {
 		super(root, function);
 	}
 	

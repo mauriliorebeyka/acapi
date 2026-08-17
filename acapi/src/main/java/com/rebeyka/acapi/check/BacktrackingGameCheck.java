@@ -4,9 +4,9 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Game;
 
-public class BacktrackingGameCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>> extends AbstractCheck<ROOT, BASE, Game> {
+public class BacktrackingGameCheck<BASE, ROOT extends Checkable<BASE>> extends AbstractCheck<ROOT, BASE, Game> {
 
-	protected BacktrackingGameCheck(AbstractCheck<?,BASE,?> root, Function<BASE, Game> function) {
+	protected BacktrackingGameCheck(Checkable<BASE> root, Function<BASE, Game> function) {
 		super(root, function);
 	}
 

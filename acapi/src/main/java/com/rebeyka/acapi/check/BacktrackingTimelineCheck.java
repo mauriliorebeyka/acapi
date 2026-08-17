@@ -9,7 +9,7 @@ import com.rebeyka.acapi.actionables.gameflow.EndRoundActionable;
 import com.rebeyka.acapi.actionables.gameflow.EndTurnActionable;
 import com.rebeyka.acapi.entities.Game;
 
-public class BacktrackingTimelineCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>>
+public class BacktrackingTimelineCheck<BASE, ROOT extends Checkable<BASE>>
 		extends AbstractCheck<ROOT, BASE, Integer> {
 
 	private int times;
@@ -24,7 +24,7 @@ public class BacktrackingTimelineCheck<BASE, ROOT extends AbstractCheck<?,BASE,?
 	
 	private Function<BASE, Game> gameAcessor;
 
-	protected BacktrackingTimelineCheck(AbstractCheck<?,BASE,?> root, Function<BASE, Game> gameAcessor, String searchedActionable) {
+	protected BacktrackingTimelineCheck(Checkable<BASE> root, Function<BASE, Game> gameAcessor, String searchedActionable) {
 		super(root, null);
 		this.function = f -> gameAcessor.apply(f).countActionables(getSearchedActionableId(f), bound);
 		this.gameAcessor = gameAcessor;

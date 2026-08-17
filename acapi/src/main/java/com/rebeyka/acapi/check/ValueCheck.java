@@ -2,12 +2,12 @@ package com.rebeyka.acapi.check;
 
 import java.util.function.Function;
 
-public abstract class ValueCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>, T>
+public abstract class ValueCheck<BASE, ROOT extends Checkable<BASE>, T>
 		extends AbstractCheck<ROOT, BASE, T> {
 
 	protected Function<T, ?> valueAcessor;
 
-	public ValueCheck(AbstractCheck<?,BASE,?> root, Function<BASE, T> function) {
+	public ValueCheck(Checkable<BASE> root, Function<BASE, T> function) {
 		super(root, function);
 	}
 

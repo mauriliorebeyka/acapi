@@ -8,10 +8,10 @@ import com.rebeyka.acapi.entities.PlayArea;
 import com.rebeyka.acapi.entities.Playable;
 import com.rebeyka.acapi.view.VisibilityType;
 
-public class BacktrackingPlayAreaCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>, T extends PlayArea<Collection<?>, ?>>
+public class BacktrackingPlayAreaCheck<BASE, ROOT extends Checkable<BASE>, T extends PlayArea<Collection<?>, ?>>
 		extends AbstractCheck<ROOT, BASE, T> {
 
-	protected BacktrackingPlayAreaCheck(AbstractCheck<?,BASE,?> root, Function<BASE, T> function) {
+	protected BacktrackingPlayAreaCheck(Checkable<BASE> root, Function<BASE, T> function) {
 		super(root, function);
 	}
 

@@ -4,10 +4,10 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Player;
 
-public class BacktrackingPlayerCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>>
+public class BacktrackingPlayerCheck<BASE, ROOT extends Checkable<BASE>>
 		extends AbstractCheck<ROOT, BASE, Player> {
 
-	public BacktrackingPlayerCheck(AbstractCheck<?,BASE,?> root, Function<BASE, Player> function) {
+	public BacktrackingPlayerCheck(Checkable<BASE> root, Function<BASE, Player> function) {
 		super(root, function);
 	}
 

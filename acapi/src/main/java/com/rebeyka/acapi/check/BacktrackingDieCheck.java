@@ -5,10 +5,10 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.random.Die;
 
-public class BacktrackingDieCheck<BASE, ROOT extends AbstractCheck<?,BASE,?>>
+public class BacktrackingDieCheck<BASE, ROOT extends Checkable<BASE>>
 		extends ValueCheck<BASE, ROOT, Die<?>> {
 
-	protected BacktrackingDieCheck(ROOT root, Function<BASE, Die<?>> function) {
+	protected BacktrackingDieCheck(Checkable<BASE> root, Function<BASE, Die<?>> function) {
 		super(root, function);
 		this.valueAcessor = d -> d.getValue();
 	}

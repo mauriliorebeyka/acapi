@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractCheck<ROOT extends AbstractCheck<?,BASE,?>, BASE, T>
+public abstract class AbstractCheck<ROOT extends Checkable<BASE>, BASE, T>
 		extends Checkable<BASE> {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -18,7 +18,7 @@ public abstract class AbstractCheck<ROOT extends AbstractCheck<?,BASE,?>, BASE, 
 
 	protected ROOT root;
 
-	protected AbstractCheck(AbstractCheck<?,BASE,?> base, Function<BASE, T> function) {
+	protected AbstractCheck(Checkable<BASE> base, Function<BASE, T> function) {
 		LOG.trace("New instance {} with root {} and {} tests",this,base,base != null ? base.testResults.size() : 0);
 		this.testResults = new ArrayList<>();
 		this.function = function;
@@ -31,10 +31,6 @@ public abstract class AbstractCheck<ROOT extends AbstractCheck<?,BASE,?>, BASE, 
 			this.testResults.addAll(base.testResults);
 			this.negate = base.negate;
 		}
-	}
-	
-	protected AbstractCheck(Function<BASE, T> function) {
-		this(null, function);
 	}
 	
 	public ROOT always() {
@@ -50,17 +46,17 @@ public abstract class AbstractCheck<ROOT extends AbstractCheck<?,BASE,?>, BASE, 
 	}
 
 	public ROOT not() {
-		AbstractCheck<?,BASE,?> newRoot = ((RootChecker<BASE,?>)root).self();
+		Checkable<BASE> newRoot = ((RootChecker<BASE,?>)root).self();
 		newRoot.negate = !newRoot.negate;
 		newRoot.testResults = new ArrayList<>(testResults);
 		return (ROOT)newRoot;
 	}
 
 	@SafeVarargs
-	public final ROOT anyOf(AbstractCheck<?, T, ?>... checks) {
+	public final ROOT anyOf(Checkable<T>... checks) {
 		Predicate<T> any = _ -> false;
 		String message = "any of (";
-		for (AbstractCheck<?, T, ?> check : checks) {
+		for (Checkable<T> check : checks) {
 			any = check.testResults.stream().map(TestResult::getPredicate).reduce(any, Predicate::or);
 			message = check.testResults.stream().map(TestResult::getBaseMessage).reduce(message,
 					(l, r) -> l + r + ", ");
@@ -70,10 +66,10 @@ public abstract class AbstractCheck<ROOT extends AbstractCheck<?,BASE,?>, BASE, 
 	}
 
 	@SafeVarargs
-	public final ROOT allOf(AbstractCheck<?, T, ?>... checks) {
+	public final ROOT allOf(Checkable<T>... checks) {
 		Predicate<T> all = _ -> true;
 		String message = "all of (";
-		for (AbstractCheck<?, T, ?> check : checks) {
+		for (Checkable<T> check : checks) {
 			all = check.testResults.stream().map(TestResult::getPredicate).reduce(all, Predicate::and);
 			message = check.testResults.stream().map(TestResult::getBaseMessage).reduce(message,
 					(l, r) -> l + r + ", ");
@@ -97,7 +93,7 @@ public abstract class AbstractCheck<ROOT extends AbstractCheck<?,BASE,?>, BASE, 
 		Function<BASE, ?> finalValue = t -> valueExtractor.apply(function.apply(t));
 		List<TestResult<BASE>> newTests = new ArrayList<>(testResults);
 		newTests.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
-		AbstractCheck<?,BASE,?> newRoot = ((RootChecker) root).self();
+		Checkable<BASE> newRoot = ((RootChecker) root).self();
 		newRoot.testResults.addAll(root.testResults);
 		newRoot.testResults.addAll(newTests);
 		LOG.trace("new Root {} now contain {} tests",newRoot, newRoot.testResults.size());
