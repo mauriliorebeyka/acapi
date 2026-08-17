@@ -1,6 +1,5 @@
 package com.rebeyka.acapi.check;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Checkable<BASE> {

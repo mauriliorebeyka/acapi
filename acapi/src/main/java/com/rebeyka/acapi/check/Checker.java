@@ -1,8 +1,5 @@
 package com.rebeyka.acapi.check;
 
-import java.util.ArrayList;
-import java.util.function.Function;
-
 public class Checker{
 	
 	public static GameCheck whenGame() {

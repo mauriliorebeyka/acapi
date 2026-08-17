@@ -22,6 +22,7 @@ public class AttributeCheckTest {
 	@Mock
 	private Attribute rawAttribute;
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void test() {
 		MockitoAnnotations.openMocks(this);

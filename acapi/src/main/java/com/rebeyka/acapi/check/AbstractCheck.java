@@ -93,7 +93,7 @@ public abstract class AbstractCheck<ROOT extends Checkable<BASE>, BASE, T>
 		Function<BASE, ?> finalValue = t -> valueExtractor.apply(function.apply(t));
 		List<TestResult<BASE>> newTests = new ArrayList<>(testResults);
 		newTests.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
-		Checkable<BASE> newRoot = ((RootChecker) root).self();
+		Checkable<BASE> newRoot = ((RootChecker<BASE,?>) root).self();
 		newRoot.testResults.addAll(root.testResults);
 		newRoot.testResults.addAll(newTests);
 		LOG.trace("new Root {} now contain {} tests",newRoot, newRoot.testResults.size());

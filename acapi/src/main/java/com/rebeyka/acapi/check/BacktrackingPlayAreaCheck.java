@@ -1,7 +1,6 @@
 package com.rebeyka.acapi.check;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.PlayArea;
