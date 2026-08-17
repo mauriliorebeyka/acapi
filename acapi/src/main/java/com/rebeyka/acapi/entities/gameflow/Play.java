@@ -1,6 +1,5 @@
 package com.rebeyka.acapi.entities.gameflow;
 
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -166,7 +165,7 @@ public class Play extends GameEntity {
 		
 		public Play build() {
 			if (id == null) {
-				throw new InvalidParameterException("name cannot be null");
+				throw new IllegalArgumentException("name cannot be null");
 			}
 			return new Play(this);
 		}

@@ -40,11 +40,12 @@ public class PlayableCheckTest {
 
 	@Test
 	public void testAnyOf() {
+		Playable playable = mock(Playable.class);
 		BacktrackingPlayableCheck<Playable,?> always = Checker.whenPlayable().always();
 		BacktrackingPlayableCheck<Playable,?> never = Checker.whenPlayable().not().always();
 		assertThat(Checker.whenPlayable().anyOf(always).check(mock(Playable.class))).isTrue();
-		assertThat(Checker.whenPlayable().anyOf(never).check(null)).isFalse();
+		assertThat(Checker.whenPlayable().anyOf(never).check(playable)).isFalse();
 		Checker.whenPlayable().attribute("").asString().anyOf(Checker.whenString().contains(""));
-		assertThat(Checker.whenPlayable().anyOf(always, never).check(null)).isTrue();
+		assertThat(Checker.whenPlayable().anyOf(always, never).check(playable)).isTrue();
 	}
 }
