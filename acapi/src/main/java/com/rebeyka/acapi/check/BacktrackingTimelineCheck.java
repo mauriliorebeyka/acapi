@@ -8,7 +8,7 @@ import com.rebeyka.acapi.actionables.gameflow.EndRoundActionable;
 import com.rebeyka.acapi.actionables.gameflow.EndTurnActionable;
 import com.rebeyka.acapi.entities.Game;
 
-public class BacktrackingTimelineCheck<BASE, ROOT extends Checkable<BASE>>
+public class BacktrackingTimelineCheck<BASE, ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>>
 		extends AbstractCheck<ROOT, BASE, Integer> {
 
 	private int times;

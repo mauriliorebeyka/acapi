@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.GameEntity;
 
-public abstract class GameEntityCheck<BASE, ROOT extends Checkable<BASE>, T extends GameEntity>
+public abstract class GameEntityCheck<BASE, ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>, T extends GameEntity>
 		extends AbstractCheck<ROOT, BASE, T> {
 	
 	protected GameEntityCheck(Checkable<BASE> root, Function<BASE, T> function) {

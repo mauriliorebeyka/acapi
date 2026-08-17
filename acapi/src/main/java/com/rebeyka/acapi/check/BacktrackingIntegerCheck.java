@@ -2,7 +2,7 @@ package com.rebeyka.acapi.check;
 
 import java.util.function.Function;
 
-public class BacktrackingIntegerCheck<BASE, ROOT extends Checkable<BASE>>
+public class BacktrackingIntegerCheck<BASE, ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>>
 		extends AbstractCheck<ROOT, BASE, Integer> {
 
 	protected BacktrackingIntegerCheck(Checkable<BASE> root, Function<BASE, Integer> function) {

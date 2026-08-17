@@ -5,7 +5,7 @@ import java.util.function.Function;
 import com.rebeyka.acapi.entities.Attribute;
 import com.rebeyka.acapi.entities.Playable;
 
-public class BacktrackingAttributeCheck<BASE, ROOT extends Checkable<BASE>>
+public class BacktrackingAttributeCheck<BASE, ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>>
 		extends ValueCheck<BASE, ROOT, Playable> {
 
 	private String attributeName;

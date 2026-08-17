@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("unchecked")
-public abstract class AbstractCheck<ROOT extends Checkable<BASE>, BASE, T>
+public abstract class AbstractCheck<ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>, BASE, T>
 		extends Checkable<BASE> {
 
 	private static final Logger LOG = LogManager.getLogger();
@@ -27,7 +27,7 @@ public abstract class AbstractCheck<ROOT extends Checkable<BASE>, BASE, T>
 			this.root = (ROOT) this;
 			this.negate = false;
 		} else {
-			this.root = (ROOT)((AbstractCheck<?,BASE,?>)base).root;
+			this.root = (ROOT) ((AbstractCheck<?,BASE,?>) base).root;
 			this.testResults.addAll(base.testResults);
 			this.negate = base.negate;
 		}
@@ -46,10 +46,10 @@ public abstract class AbstractCheck<ROOT extends Checkable<BASE>, BASE, T>
 	}
 
 	public ROOT not() {
-		Checkable<BASE> newRoot = ((RootChecker<BASE,?>)root).self();
+		ROOT newRoot = root.self();
 		newRoot.negate = !newRoot.negate;
 		newRoot.testResults = new ArrayList<>(testResults);
-		return (ROOT)newRoot;
+		return newRoot;
 	}
 
 	@SafeVarargs
@@ -93,12 +93,12 @@ public abstract class AbstractCheck<ROOT extends Checkable<BASE>, BASE, T>
 		Function<BASE, ?> finalValue = t -> valueExtractor.apply(function.apply(t));
 		List<TestResult<BASE>> newTests = new ArrayList<>(testResults);
 		newTests.add(new TestResult<BASE>(finalPredicate, finalValue, field, description));
-		Checkable<BASE> newRoot = ((RootChecker<BASE,?>) root).self();
+		ROOT newRoot = root.self();
 		newRoot.testResults.addAll(root.testResults);
 		newRoot.testResults.addAll(newTests);
 		LOG.trace("new Root {} now contain {} tests",newRoot, newRoot.testResults.size());
 		newRoot.negate = false;
-		return (ROOT) newRoot;
+		return newRoot;
 	}
 
 	protected ROOT addTest(Predicate<T> predicate, String field, String description) {

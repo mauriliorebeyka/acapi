@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.entities.Player;
 
-public class BacktrackingPlayerCheck<BASE, ROOT extends Checkable<BASE>>
+public class BacktrackingPlayerCheck<BASE, ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>>
 		extends AbstractCheck<ROOT, BASE, Player> {
 
 	public BacktrackingPlayerCheck(Checkable<BASE> root, Function<BASE, Player> function) {

@@ -4,7 +4,7 @@ import java.util.function.Function;
 
 import com.rebeyka.acapi.random.Die;
 
-public class BacktrackingDieCheck<BASE, ROOT extends Checkable<BASE>>
+public class BacktrackingDieCheck<BASE, ROOT extends Checkable<BASE> & RootChecker<BASE, ROOT>>
 		extends ValueCheck<BASE, ROOT, Die<?>> {
 
 	protected BacktrackingDieCheck(Checkable<BASE> root, Function<BASE, Die<?>> function) {

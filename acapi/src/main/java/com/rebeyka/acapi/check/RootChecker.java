@@ -1,6 +1,7 @@
 package com.rebeyka.acapi.check;
 
-public interface RootChecker<BASE,ROOT extends Checkable<BASE>> {
-    
+public interface RootChecker<BASE, ROOT> {
+
 	public ROOT self();
+
 }
