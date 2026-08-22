@@ -12,6 +12,7 @@ import com.rebeyka.acapi.entities.Cost;
 import com.rebeyka.acapi.entities.Game;
 import com.rebeyka.acapi.entities.GameEntity;
 import com.rebeyka.acapi.entities.Playable;
+import com.rebeyka.acapi.entities.Player;
 
 public class Play extends GameEntity {
 
@@ -21,7 +22,11 @@ public class Play extends GameEntity {
 
 	private Cost cost;
 
+	private Checkable<Player> enabledPlayers;
+	
 	private Checkable<Playable> condition;
+	
+	private Checkable<Playable> validTarget;
 
 	private List<Actionable> actionables;
 
@@ -32,7 +37,9 @@ public class Play extends GameEntity {
 		this.origin = builder.origin;
 		this.targets = builder.targets;
 		this.cost = builder.cost;
+		this.enabledPlayers = builder.enablePlayers;
 		this.condition = builder.condition;
+		this.validTarget = builder.validTarget;
 		this.actionables = builder.actionables;
 		this.triggeredBy = builder.triggeredBy;
 		setGame(builder.game);
@@ -50,10 +57,19 @@ public class Play extends GameEntity {
 	public Cost getCost() {
 		return cost;
 	}
+	
+	public Checkable<Player> getEnabledPlayers() {
+		return enabledPlayers;
+	}
+	
 	public Checkable<Playable> getCondition() {
 		return condition;
 	}
 
+	public Checkable<Playable> getValidTarget() {
+		return validTarget;
+	}
+	
 	public List<Actionable> getActionables() {
 		return actionables.stream().map(actionable -> actionable.copy(this)).collect(Collectors.toList());
 	}
@@ -67,10 +83,17 @@ public class Play extends GameEntity {
 		return triggeredBy;
 	}
 
+	public boolean isEnabledToPlayer(Player player) {
+		return getEnabledPlayers().check(player);
+	}
+	
 	public boolean isPossible() {
 		return getCondition().check(origin);
 	}
 	
+	public boolean areTargetsValid() {
+		return getTargets().stream().allMatch(t -> validTarget.check(t));
+	}
 	public Builder copy() {
 		return new Builder(this);
 	}
@@ -87,7 +110,11 @@ public class Play extends GameEntity {
 
 		private Cost cost;
 
+		private Checkable<Player> enablePlayers;
+		
 		private Checkable<Playable> condition;
+		
+		private Checkable<Playable> validTarget;
 
 		private List<Actionable> actionables;
 		
@@ -95,7 +122,9 @@ public class Play extends GameEntity {
 
 		
 		public Builder() {
-			this.condition = Checker.whenPlayable().always();
+			this.enablePlayers = Checker.always();
+			this.condition = Checker.always();
+			this.validTarget = Checker.always();
 			this.actionables = new ArrayList<>();
 		}
 
@@ -104,7 +133,9 @@ public class Play extends GameEntity {
 			this.origin = copy.getOrigin();
 			this.targets = copy.getTargets();
 			this.cost = copy.getCost();
+			this.enablePlayers = copy.getEnabledPlayers();
 			this.condition = copy.getCondition();
+			this.validTarget = copy.getValidTarget();
 			this.actionables = copy.getActionableTemplates();
 
 			this.game = copy.getGame();
@@ -139,8 +170,18 @@ public class Play extends GameEntity {
 			return this;
 		}
 		
+		public Builder enabledForPlayers(Checkable<Player> enablePlayers) {
+			this.enablePlayers = enablePlayers;
+			return this;
+		}
+		
 		public Builder condition(Checkable<Playable> condition) {
 			this.condition = condition;
+			return this;
+		}
+		
+		public Builder validTargets(Checkable<Playable> validTarget) {
+			this.validTarget = validTarget;
 			return this;
 		}
 		

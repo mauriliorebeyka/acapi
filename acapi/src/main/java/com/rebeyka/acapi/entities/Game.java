@@ -107,19 +107,22 @@ public class Game {
 		return id;
 	}
 
-	public boolean declarePlay(Play play) {
-		return declarePlay(play, Collections.emptyList(), false);
+	public boolean declarePlay(Player declaringPlayer, Play play) {
+		return declarePlay(declaringPlayer, play, Collections.emptyList(), false);
 	}
 	
-	public boolean declarePlay(Play play, Playable target) {
-		return declarePlay(play, List.of(target), false);
+	public boolean declarePlay(Player declaringPlayer, Play play, Playable target) {
+		return declarePlay(declaringPlayer, play, List.of(target), false);
 	}
 
-	public boolean declarePlay(Play play, List<Playable> targets, boolean skipQueue) {
-		LOG.info("{} declaring play {} with skipQueue {}", play.getOrigin(), play.getId(), skipQueue);
+	public boolean declarePlay(Player declaringPlayer, Play play, List<Playable> targets, boolean skipQueue) {
+		if (!play.isEnabledToPlayer(declaringPlayer)) {
+			LOG.info("Player {} cannot declare play {}", declaringPlayer, play.getId());
+		}
+		LOG.info("{} declaring play {} from {} with skipQueue {}", declaringPlayer, play.getId(), play.getOrigin(), skipQueue);
 		Play newPlay = playFactory.copyOf(play, targets);
 		if (!timeline.hasNext() || skipQueue) {
-			if (play.isPossible()) {
+			if (play.isPossible() && play.areTargetsValid()) {
 				timeline.queue(newPlay, skipQueue);
 				return true;
 			}
@@ -215,7 +218,7 @@ public class Game {
 			while (!timeline.hasNext() && !queuedPlays.isEmpty()) {
 				LOG.debug("Timeline finished last queued actionable, checking for more queued plays");
 				Play nextPlay = queuedPlays.removeFirst();
-				if (nextPlay.isPossible()) {
+				if (nextPlay.isPossible() && nextPlay.areTargetsValid()) {
 					timeline.queue(nextPlay);
 				}
 			}

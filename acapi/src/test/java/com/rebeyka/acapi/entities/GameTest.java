@@ -57,13 +57,17 @@ public class GameTest {
 	public void testDeclarePlay() {
 		Play play = mock(Play.class);
 		when(play.isPossible()).thenReturn(true);
+		when(play.isEnabledToPlayer(mockPlayer)).thenReturn(true);
+		when(play.areTargetsValid()).thenReturn(true);
 		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(false);
 
-		assertThat(game.declarePlay(play, mockPlayer)).isTrue();
+		assertThat(game.declarePlay(mockPlayer, play, mockPlayer)).isTrue();
 		verify(mockTimeline).hasNext();
 		verify(mockTimeline).queue(play, false);
+		verify(play).isEnabledToPlayer(mockPlayer);
 		verify(play).isPossible();
+		verify(play).areTargetsValid();
 		verify(play).getOrigin();
 		verify(play).getId();
 		verifyNoMoreInteractions(mockTimeline);
@@ -74,11 +78,13 @@ public class GameTest {
 	@Test
 	public void testDeclarePlayQueued() {
 		Play play = mock(Play.class);
+		when(play.isEnabledToPlayer(mockPlayer)).thenReturn(true);
 		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(true);
 
-		assertThat(game.declarePlay(play, mockPlayer)).isTrue();
+		assertThat(game.declarePlay(mockPlayer, play, mockPlayer)).isTrue();
 		verify(mockTimeline).hasNext();
+		verify(play).isEnabledToPlayer(mockPlayer);
 		verify(play).getOrigin();
 		verify(play).getId();
 		verifyNoMoreInteractions(mockTimeline);
@@ -90,12 +96,14 @@ public class GameTest {
 	public void testPlayNotPossible() {
 		Play play = mock(Play.class);
 		when(play.isPossible()).thenReturn(false);
+		when(play.isEnabledToPlayer(mockPlayer)).thenReturn(true);
 		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(false);
 
-		assertThat(game.declarePlay(play, mockPlayer)).isFalse();
+		assertThat(game.declarePlay(mockPlayer, play, mockPlayer)).isFalse();
 		verify(mockTimeline).hasNext();
 		verify(play).getOrigin();
+		verify(play).isEnabledToPlayer(mockPlayer);
 		verify(play).getId();
 		verify(play).isPossible();
 		verifyNoMoreInteractions(mockTimeline);
@@ -107,13 +115,17 @@ public class GameTest {
 	public void testPlaySkipQueue() {
 		Play play = mock(Play.class);
 		when(play.isPossible()).thenReturn(true);
+		when(play.areTargetsValid()).thenReturn(true);
+		when(play.isEnabledToPlayer(mockPlayer)).thenReturn(true);
 		when(mockPlayFactory.copyOf(play, List.of(mockPlayer))).thenReturn(play);
 		when(mockTimeline.hasNext()).thenReturn(true);
 
-		assertThat(game.declarePlay(play, List.of(mockPlayer), true)).isTrue();
+		assertThat(game.declarePlay(mockPlayer, play, List.of(mockPlayer), true)).isTrue();
 		verify(mockTimeline).hasNext();
 		verify(mockTimeline).queue(play, true);
+		verify(play).isEnabledToPlayer(mockPlayer);
 		verify(play).isPossible();
+		verify(play).areTargetsValid();
 		verify(play).getOrigin();
 		verify(play).getId();
 		verifyNoMoreInteractions(mockTimeline);
@@ -132,6 +144,8 @@ public class GameTest {
 		when(mockTimeline.hasNext()).thenReturn(false);
 		when(mockTimeline.executeNext()).thenReturn(true);
 		when(queuedPlay1.isPossible()).thenReturn(true);
+		when(queuedPlay1.isEnabledToPlayer(mockPlayer)).thenReturn(true);
+		when(queuedPlay1.areTargetsValid()).thenReturn(true);
 		when(queuedPlay2.isPossible()).thenReturn(false);
 
 		assertThat(game.executeNext()).isTrue();
@@ -139,6 +153,7 @@ public class GameTest {
 		verify(mockTimeline).executeNext();
 		verify(mockTimeline).queue(queuedPlay1);
 		verify(queuedPlay1).isPossible();
+		verify(queuedPlay1).areTargetsValid();
 		verify(queuedPlay2).isPossible();
 		verify(ranking, times(2)).updateRanking(List.of(mockPlayer, mockOpponent));
 		verifyNoMoreInteractions(mockTimeline, queuedPlay1, queuedPlay2, ranking);
